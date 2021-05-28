@@ -26,9 +26,7 @@ public class AppUserController {
     }
 
     @GetMapping(path = "suca/suca")
-    public String suca(){
-        return "lol";
+    public String suca(){        return "lol";
     }
-
 
 }

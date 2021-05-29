@@ -52,4 +52,10 @@ public class LoginService {
         }
         return token;
     }
+
+    public void logout(String token) {
+        Optional<Login> existingToken = loginRepository.findByToken(token);
+        if(!existingToken.isPresent()) throw new IllegalArgumentException("Token not referring to any user");
+        loginRepository.delete(existingToken.get());
+    }
 }

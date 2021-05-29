@@ -27,7 +27,7 @@ public class Config extends WebSecurityConfigurerAdapter {
 
         appAdminService.signUpAdmin(new AppAdmin("admin@conad.it", "conad", AppUserRole.ADMIN, 1000L));
         appAdminService.signUpAdmin(new AppAdmin("admin@deco.it", "deco", AppUserRole.ADMIN, 2000L));
-        appAdminService.signUpAdmin(new AppAdmin("admin@coop.it", "copp", AppUserRole.ADMIN, 3000L));
+        appAdminService.signUpAdmin(new AppAdmin("admin@coop.it", "coop", AppUserRole.ADMIN, 3000L));
 
         supermarketService.addNewSupermarket( new Supermarket("Conad", 1000L));
         supermarketService.addNewSupermarket( new Supermarket("Deco", 2000L));

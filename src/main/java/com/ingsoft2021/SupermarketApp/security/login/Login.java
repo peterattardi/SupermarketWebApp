@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -24,7 +21,7 @@ public class Login {
 
     @Id
     private String email;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
     private String token;
     private LocalDateTime createdAt;

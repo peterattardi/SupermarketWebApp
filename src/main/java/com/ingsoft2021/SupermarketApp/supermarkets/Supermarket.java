@@ -14,7 +14,6 @@ public class Supermarket {
         return "Supermarket{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", catalogue=" + catalogue +
                 ", adminId=" + adminId +
                 '}';
     }
@@ -32,8 +31,6 @@ public class Supermarket {
 
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "supermarket")
-    private List<Product> catalogue;
     private Long adminId;
 
     public Supermarket() {

@@ -1,26 +1,21 @@
 package com.ingsoft2021.SupermarketApp.catalogue;
 
-import com.ingsoft2021.SupermarketApp.appuser.AppUser;
-import com.ingsoft2021.SupermarketApp.supermarkets.Supermarket;
-import com.ingsoft2021.SupermarketApp.supermarkets.SupermarketRepository;
+
+
 import lombok.AllArgsConstructor;
-import net.bytebuddy.implementation.bind.annotation.Super;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @AllArgsConstructor
 @Service
 public class ProductService {
 
-    private ProductRepository productRepository;
-    private SupermarketRepository supermarketRepository;
+    private final ProductRepository productRepository;
 
     public void addProduct(ProductRequest productRequest){
-
-        Optional<Supermarket> supermarket = supermarketRepository.findById(productRequest.getSupermarketId());
 
         productRepository.save(new Product(
                 productRequest.getProductName(),
@@ -30,15 +25,21 @@ public class ProductService {
                 productRequest.getSupplierId(),
                 productRequest.getUnitCost(),
                 productRequest.getUnitType(),
-                supermarket.get()
+                productRequest.getSupermarketId()
         ));
     }
 
-    public List<Product> getCatalogue(String supermarketName){
-        Optional<Supermarket> supermarket = supermarketRepository.findByName(supermarketName);
-        return productRepository.findBySupermarketId(supermarket.get().getId());
+
+    public void deleteProduct(ProductDeleteRequest request, Long supermarketId) {
+        productRepository.delete(
+                productRepository.findByProductNameAndProductBrandAndSupermarketId(request.getProductName(),
+                                                    request.getProductBrand()
+                                                    ,supermarketId
+                ).get()
+        );
     }
 
-
-
+    public List<Product> findAllBySupermarketId(Long supermarketId) {
+        return productRepository.findAllBySupermarketId(supermarketId);
+    }
 }

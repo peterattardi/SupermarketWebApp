@@ -13,6 +13,7 @@ import java.util.Optional;
 @Transactional
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findBySupermarketId(Long supermarketId);
 
+    List<Product> findAllBySupermarketId(Long supermarketId);
+    Optional<Product> findByProductNameAndProductBrandAndSupermarketId(String productBrand, String productBrand1, Long supermarketId);
 }

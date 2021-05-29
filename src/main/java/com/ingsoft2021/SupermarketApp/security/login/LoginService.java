@@ -58,4 +58,8 @@ public class LoginService {
         if(!existingToken.isPresent()) throw new IllegalArgumentException("Token not referring to any user");
         loginRepository.delete(existingToken.get());
     }
+
+    public Optional<Login> findByToken(String token){
+        return loginRepository.findByToken(token);
+    }
 }

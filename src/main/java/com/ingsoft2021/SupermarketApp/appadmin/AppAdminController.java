@@ -37,7 +37,7 @@ public class AppAdminController {
             return ResponseEntity.status(200).body(true);
         }catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.status(400).body(false);
+            return ResponseEntity.status(401).body(false);
         }
     }
 

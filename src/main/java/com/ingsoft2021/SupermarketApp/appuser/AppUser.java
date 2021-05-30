@@ -60,41 +60,6 @@ public class AppUser implements UserDetails {
         return userId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public AppUserRole getAppUserRole() {
-        return appUserRole;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCap() {
-        return cap;
-    }
-
-    public void setCap(String cap) {
-        this.cap = cap;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
 
     public AppUser(String firstName, String lastName, String email, String password, AppUserRole appUserRole, String address, String cap, String city) {
         this.firstName = firstName;
@@ -111,6 +76,8 @@ public class AppUser implements UserDetails {
     public String getPassword() {
         return password;
     }
+
+
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;

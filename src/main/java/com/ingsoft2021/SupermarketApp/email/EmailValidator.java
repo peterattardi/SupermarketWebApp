@@ -1,4 +1,4 @@
-package com.ingsoft2021.SupermarketApp.registration;
+package com.ingsoft2021.SupermarketApp.email;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

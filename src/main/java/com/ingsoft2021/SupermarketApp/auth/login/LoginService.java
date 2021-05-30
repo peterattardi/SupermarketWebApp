@@ -1,10 +1,9 @@
-package com.ingsoft2021.SupermarketApp.security.login;
+package com.ingsoft2021.SupermarketApp.auth.login;
 
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminRepository;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRepository;
-import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,33 +23,35 @@ public class LoginService {
     private final AppAdminRepository appAdminRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public String login(LoginRequest loginRequest) {
-        String token = "invalid-token-not-expected";
+    public AuthResponse login(LoginRequest loginRequest) {
+        AuthResponse response = new AuthResponse(null, null, null);
         switch (loginRequest.getAppUserRole()){
             case "ADMIN":
                 Optional<AppAdmin> appAdmin = appAdminRepository.findByEmail(loginRequest.getEmail());
-                if(!appAdmin.isPresent()) throw new IllegalArgumentException("Wrong username or/and password");
+                if(!appAdmin.isPresent()) throw new IllegalArgumentException("EMAIL_NOT_FOUND");
                 if(bCryptPasswordEncoder.matches(loginRequest.getPassword(), appAdmin.get().getPassword())) {
-                    token = UUID.randomUUID().toString();
+                    String token = UUID.randomUUID().toString();
                     LocalDateTime createdAt = LocalDateTime.now();
                     LocalDateTime expiresAt = LocalDateTime.now().plusHours(2);
                     loginRepository.save(new Login(appAdmin.get().getEmail(), ADMIN, token, createdAt, expiresAt));
-                }else throw new IllegalArgumentException("Wrong username or/and password");
+                    response = new AuthResponse(token, appAdmin.get().getEmail(), expiresAt);
+                }else throw new IllegalArgumentException("INVALID_PASSWORD");
                 break;
             case "USER":
                 Optional<AppUser> appUser = appUserRepository.findByEmail(loginRequest.getEmail());
-                if(!appUser.isPresent()) throw new IllegalArgumentException("Wrong username or/and password");
+                if(!appUser.isPresent()) throw new IllegalArgumentException("EMAIL_NOT_FOUND");
                 if(bCryptPasswordEncoder.matches(loginRequest.getPassword(), appUser.get().getPassword())) {
-                    token = UUID.randomUUID().toString();
+                    String token = UUID.randomUUID().toString();
                     LocalDateTime createdAt = LocalDateTime.now();
                     LocalDateTime expiresAt = LocalDateTime.now().plusHours(2);
                     loginRepository.save(new Login(appUser.get().getEmail(), USER, token, createdAt, expiresAt));
-                }else throw new IllegalArgumentException("Wrong username or/and password");
+                    response = new AuthResponse(token, appUser.get().getEmail(), expiresAt);
+                }else throw new IllegalArgumentException("INVALID_PASSWORD");
                 break;
             default:
                 throw new IllegalArgumentException("Wrong username or/and password");
         }
-        return token;
+        return response;
     }
 
     public void logout(String token) {

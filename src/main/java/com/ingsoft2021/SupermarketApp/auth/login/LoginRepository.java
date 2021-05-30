@@ -1,4 +1,4 @@
-package com.ingsoft2021.SupermarketApp.security.login;
+package com.ingsoft2021.SupermarketApp.auth.login;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

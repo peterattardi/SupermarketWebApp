@@ -1,4 +1,4 @@
-package com.ingsoft2021.SupermarketApp.registration;
+package com.ingsoft2021.SupermarketApp.auth.register;
 
 import lombok.EqualsAndHashCode;
 

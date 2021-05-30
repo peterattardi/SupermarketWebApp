@@ -1,70 +1,82 @@
-package com.ingsoft2021.SupermarketApp.registration;
+package com.ingsoft2021.SupermarketApp.auth.register;
 
 
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserService;
+import com.ingsoft2021.SupermarketApp.email.EmailValidator;
 import com.ingsoft2021.SupermarketApp.email.EmailSender;
-import com.ingsoft2021.SupermarketApp.registration.token.ConfirmationToken;
-import com.ingsoft2021.SupermarketApp.registration.token.ConfirmationTokenService;
+
+import com.ingsoft2021.SupermarketApp.auth.login.AuthResponse;
 import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class RegistrationService {
     private final AppUserService appUserService;
     private final EmailValidator emailValidator;
-    private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+    private final RegistrationRepository registrationRepository;
 
-    public String register(RegistrationRequest request) {
+    public AuthResponse register(RegistrationRequest request) {
         boolean isValid = emailValidator.test(request.getEmail());
-        if (!isValid) throw new IllegalArgumentException("Email not valid");
-        String token = appUserService.signUpUser(
-                new AppUser(
-                        request.getFirstName(),
-                        request.getLastName(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        AppUserRole.USER,
-                        request.getAddress(),
-                        request.getCap(),
-                        request.getCity()
-                )
-        );
+        if (!isValid) throw new IllegalArgumentException("WRONG_EMAIL_FORMAT");
+        AppUser appUser =
+                new AppUser(request.getFirstName(),
+                            request.getLastName(),
+                            request.getEmail(),
+                            request.getPassword(),
+                            AppUserRole.USER,
+                            request.getAddress(),
+                            request.getCap(),
+                            request.getCity());
+
+        appUserService.signUpUser(appUser);
+        String token = UUID.randomUUID().toString();
+        LocalDateTime createdAt = LocalDateTime.now();
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(15);
+        Registration registration = new Registration(appUser.getEmail(), AppUserRole.ADMIN, token, createdAt,expiresAt);
+        registrationRepository.save(registration);
+        AuthResponse authResponse = new AuthResponse(token, appUser.getEmail(), expiresAt);
 
         String link = "http://localhost:8080/registration/confirm?token=" + token;
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
 
-
-
-
-        return token;
+        return authResponse;
     }
+    public void enableAppUser(String email) {
+        appUserService.enableAppUser(email);
+    }
+
+    public Optional<Registration> findByToken(String token){
+        return registrationRepository.findByToken(token);
+    }
+
     @Transactional
     public void confirmToken(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService
-                .getToken(token)
+        Registration registration = findByToken(token)
                 .orElseThrow(() ->
-                        new IllegalStateException("token not found"));
+                        new IllegalStateException("TOKEN_NOT_FOUND"));
 
-        if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
+        if (registration.getConfirmedAt() != null) {
+            throw new IllegalStateException("TOKEN_ALREADY_CONFIRMED");
         }
 
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
+        LocalDateTime expiredAt = registration.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
+            throw new IllegalStateException("TOKEN_EXPIRED");
         }
 
-        confirmationTokenService.setConfirmedAt(token);
-        appUserService.enableAppUser(
-                confirmationToken.getAppUser().getUsername());
+        registration.setConfirmedAt(LocalDateTime.now());
+        enableAppUser(registration.getEmail());
     }
 
     private String buildEmail(String name, String link) {

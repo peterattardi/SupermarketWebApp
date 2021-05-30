@@ -7,9 +7,8 @@ import com.ingsoft2021.SupermarketApp.catalogue.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.catalogue.ProductRequest;
 import com.ingsoft2021.SupermarketApp.catalogue.ProductService;
 
-import com.ingsoft2021.SupermarketApp.security.login.Login;
-import com.ingsoft2021.SupermarketApp.security.login.LoginService;
-import com.sun.xml.bind.v2.runtime.output.SAXOutput;
+import com.ingsoft2021.SupermarketApp.auth.login.Login;
+import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

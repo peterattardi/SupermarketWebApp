@@ -1,13 +1,9 @@
-package com.ingsoft2021.SupermarketApp.security.login;
+package com.ingsoft2021.SupermarketApp.auth.login;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
 
-import javax.swing.text.html.parser.Entity;
-import javax.websocket.server.PathParam;
 
 @AllArgsConstructor
 @RestController
@@ -17,12 +13,12 @@ public class LoginController {
     private  final LoginService loginService;
 
     @PostMapping(path = "/login")
-    String login(@RequestBody LoginRequest loginRequest){
+    ResponseEntity login(@RequestBody LoginRequest loginRequest){
         try {
-            String token = loginService.login(loginRequest);
-            return token;
+            AuthResponse authResponse = loginService.login(loginRequest);
+            return ResponseEntity.status(200).body(authResponse);
         }catch (IllegalArgumentException e){
-            return e.getMessage();
+            return ResponseEntity.status(401).body(e.getMessage());
         }
     }
 

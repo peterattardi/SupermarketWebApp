@@ -1,23 +1,21 @@
-package com.ingsoft2021.SupermarketApp.security.login;
+package com.ingsoft2021.SupermarketApp.auth.register;
 
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
-import com.ingsoft2021.SupermarketApp.registration.token.ConfirmationToken;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "logged_user")
-public class Login {
+@Table(name = "register")
+public class Registration {
 
     @Id
     private String email;
@@ -25,7 +23,14 @@ public class Login {
     private AppUserRole appUserRole;
     private String token;
     private LocalDateTime createdAt;
+    private LocalDateTime confirmedAt;
     private LocalDateTime expiresAt;
 
-
+    public Registration(String email, AppUserRole appUserRole, String token, LocalDateTime createdAt, LocalDateTime expiresAt) {
+        this.email = email;
+        this.appUserRole = appUserRole;
+        this.token = token;
+        this.createdAt = createdAt;
+        this.expiresAt = expiresAt;
+    }
 }

@@ -15,11 +15,17 @@ class AppAdminRepositoryTest {
 
 
     @Test
-    void findByEmailTest() {
+    void shouldReturnTrueWhenTryingToFindAnExistingAdmin() {
         AppAdmin admin = new AppAdmin("admin@admin.it", "lol", AppUserRole.ADMIN, 200L);
         appAdminRepository.save(admin);
 
         assertTrue(appAdminRepository.findByEmail(admin.getEmail()).isPresent());
 
+    }
+
+    @Test
+    void shouldReturnTrueWhenTryingToFindANonExistingAdmin(){
+
+        assertFalse(appAdminRepository.findByEmail("not@existing.com").isPresent());
     }
 }

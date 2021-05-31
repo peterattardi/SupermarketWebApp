@@ -34,7 +34,7 @@ public class Config extends WebSecurityConfigurerAdapter {
         supermarketService.addNewSupermarket( new Supermarket("Conad"));
         supermarketService.addNewSupermarket( new Supermarket("Deco"));
         supermarketService.addNewSupermarket( new Supermarket("Coop"));
-        supermarketService.addNewSupermarket( new Supermarket("despar"));
+        supermarketService.addNewSupermarket( new Supermarket("Despar"));
     }
 
 

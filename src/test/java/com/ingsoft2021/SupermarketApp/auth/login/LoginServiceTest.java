@@ -32,7 +32,7 @@ class LoginServiceTest {
 
     AppAdmin user = new AppAdmin("email@email.it","pass", AppUserRole.ADMIN,"conad");
 
-    
+
 
 
 

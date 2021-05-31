@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:4200/")
 public class AppAdminController {
 
     private final AppAdminService appAdminService;

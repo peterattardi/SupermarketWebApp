@@ -1,0 +1,16 @@
+<a
+  style="cursor: pointer;"
+  [routerLink]="[index]"
+  routerLinkActive="active"
+  class="list-group-item clearfix">
+  <div class="pull-left">
+    <h4 class="list-group-item-heading">{{ product.name }}</h4>
+  </div>
+  <span class="pull-right">
+        <img
+          [src]="product.imagePath"
+          alt="{{ product.name }}"
+          class="img-responsive"
+          style="max-height: 100px;">
+      </span>
+</a>

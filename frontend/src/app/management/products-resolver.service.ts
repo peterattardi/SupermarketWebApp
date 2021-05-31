@@ -5,24 +5,24 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 
-import { Recipe } from './recipe.model';
+import { Product } from './product.model';
 import { DataStorageService } from '../shared/data-storage.service';
-import { RecipeService } from './recipe.service';
+import { ManagementService } from './management.service';
 
 @Injectable({ providedIn: 'root' })
-export class RecipesResolverService implements Resolve<Recipe[]> {
+export class ProductsResolverService implements Resolve<Product[]> {
   constructor(
     private dataStorageService: DataStorageService,
-    private recipesService: RecipeService
+    private managementService: ManagementService
   ) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
-    const recipes = this.recipesService.getRecipes();
-
-    if (recipes.length === 0) {
-      return this.dataStorageService.fetchRecipes();
+    const products = this.managementService.getProducts();
+    debugger;
+    if (products.length === 0) {
+      return this.dataStorageService.fetchProducts();
     } else {
-      return recipes;
+      return products;
     }
   }
 }

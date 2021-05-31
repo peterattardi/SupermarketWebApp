@@ -1,25 +1,8 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <p>You are in your Admin Area</p>
-      <br/>
-    </div>
+<div class="row">
+  <div class="col-md-5">
+    <app-product-list></app-product-list>
   </div>
-  <div class="row">
-    <div class="col-xs-4">
-      <button class="btn btn-primary">
-        Add a product
-      </button>
-    </div>
-    <div class="col-xs-4">
-      <button class="btn btn-primary">
-        Edit a product
-      </button>
-    </div>
-    <div class="col-xs-4">
-      <button class="btn btn-primary">
-        Delete a product
-      </button>
-    </div>
+  <div class="col-md-7">
+    <router-outlet></router-outlet>
   </div>
 </div>

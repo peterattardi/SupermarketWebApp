@@ -2,18 +2,22 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
+import {DataStorageService} from '../shared/data-storage.service';
 
 @Component({
   selector: 'app-header',
-  templateUrl: './header.component.html'
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   isAdmin = false;
   private userSub: Subscription;
+  private fetchSub: Subscription;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private dataStorageService: DataStorageService
   ) {}
 
   ngOnInit(): void {
@@ -27,11 +31,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
+  onSaveData(): void {
+    this.dataStorageService.storeProducts();
+  }
+
+  onFetchData(): void {
+    this.fetchSub = this.dataStorageService.fetchProducts().subscribe();
+  }
+
+
   onLogout(): void {
     this.authService.logout();
   }
 
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
+    this.fetchSub.unsubscribe();
   }
 }

@@ -10,6 +10,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AuthModule} from './auth/auth.module';
 import {HomeModule} from './home/home.module';
 import {ManagementModule} from './management/management.module';
+import {AccountModule} from './account/account.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {ManagementModule} from './management/management.module';
     SharedModule,
     AuthModule,
     HomeModule,
-    ManagementModule
+    ManagementModule,
+    AccountModule
   ],
   providers: [],
   bootstrap: [AppComponent]

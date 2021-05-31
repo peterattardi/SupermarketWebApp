@@ -1,21 +1,17 @@
 
-export class User {
+export class UserInfo {
 
   constructor(
+    public firstName: string,
+    public lastName: string,
     public email: string,
-    private _token: string,
-    private _tokenExpirationDate: Date,
-    private _role: string) {}
+    public locked?: boolean,
+    public enabled?: boolean,
+    public address?: string,
+    public cap?: string,
+    public city?: string,
+    public supermarketId?: string,
+    public supermarketName?: string) {}
 
-  get token(): string {
-    if (!this._tokenExpirationDate || new Date() > this._tokenExpirationDate) {
-      return null;
-    }
-    return this._token;
-  }
-
-  get role(): string {
-    return this._role;
-  }
 }
 

@@ -1,1 +1,11 @@
-<p>account works!</p>
+<div class="container" *ngIf="error">
+  <div class="row">
+    <div class="col-xs-12">
+      An error occurred while processing data. Re-try again please.
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="!error">
+  <app-admin *ngIf="isAdmin"></app-admin>
+  <app-client *ngIf="!isAdmin"></app-client>
+</div>

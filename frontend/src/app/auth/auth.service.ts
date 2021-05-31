@@ -22,13 +22,15 @@ export enum Role {
 export class AuthService {
   user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
+  MOCK_REG = 'https://60b3a9594ecdc1001747fac2.mockapi.io/registration';
+  API = 'http://7112a34482c0.ngrok.io';
 
   constructor(private http: HttpClient, private router: Router) {}
 
   signup(signupForm: SignupForm): Observable<AuthResponseData> {
     return this.http
       .post<AuthResponseData>(
-        'https://60b3a9594ecdc1001747fac2.mockapi.io/registration',
+        this.API + '/registration',
         {
           firstName: signupForm.firstName,
           lastName: signupForm.lastName,
@@ -55,9 +57,9 @@ export class AuthService {
   login(email: string, password: string, role: string): Observable<AuthResponseData> {
     return this.http
       .post<AuthResponseData>(
-        'https://60b3a9594ecdc1001747fac2.mockapi.io/login',
+        this.API + '/login',
         {
-          username: email,
+          email,
           password,
           appUserRole: role
         }
@@ -98,7 +100,7 @@ export class AuthService {
       const expirationDuration =
         new Date(userData._tokenExpirationDate).getTime() -
         new Date().getTime();
-      this.autoLogout(expirationDuration);
+      // this.autoLogout(expirationDuration);
     }
   }
 
@@ -112,11 +114,11 @@ export class AuthService {
     this.tokenExpirationTimer = null;
   }
 
-  autoLogout(expirationDuration: number): void {
-    this.tokenExpirationTimer = setTimeout(() => {
-      this.logout();
-    }, expirationDuration);
-  }
+  // autoLogout(expirationDuration: number): void {
+  //   this.tokenExpirationTimer = setTimeout(() => {
+  //     this.logout();
+  //   }, expirationDuration);
+  // }
 
   private handleAuthentication(
     email: string,
@@ -126,16 +128,17 @@ export class AuthService {
   ): void {
     const user = new User(email, token, expirationDate, role);
     this.user.next(user);
-    this.autoLogout((new Date(expirationDate)).getTime() - (new Date()).getTime());
+    // this.autoLogout((new Date(expirationDate)).getTime() - (new Date()).getTime());
+    // TODO: fix autoLogoutgo
     localStorage.setItem('userData', JSON.stringify(user));
   }
 
   private handleError(errorRes: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
-    if (!errorRes.error || !errorRes.error.error) {
-      return throwError(errorMessage);
+    if (!errorRes.error && !errorRes.error.error) {
+      return throwError('An unknown error occurred!');
     }
-    switch (errorRes.error.error.message) {
+    let errorMessage = errorRes.error;
+    switch (errorMessage) {
       case 'EMAIL_EXISTS':
         errorMessage = 'This email exists already';
         break;

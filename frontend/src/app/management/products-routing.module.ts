@@ -1,30 +1,30 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { RecipesComponent } from './recipes.component';
-import { AuthGuard } from '../auth/auth.guard';
-import { RecipeStartComponent } from './recipe-start/recipe-start.component';
-import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
-import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
-import { RecipesResolverService } from './recipes-resolver.service';
+import {ManagementComponent} from './management.component';
+import {ProductStartComponent} from './product-start/product-start.component';
+import {ProductEditComponent} from './product-edit/product-edit.component';
+import {ProductDetailComponent} from './product-detail/product-detail.component';
+import {ProductsResolverService} from './products-resolver.service';
+import {AdminGuard} from './admin.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: RecipesComponent,
-    canActivate: [AuthGuard],
+    component: ManagementComponent,
+    canActivate: [AdminGuard],
     children: [
-      { path: '', component: RecipeStartComponent },
-      { path: 'new', component: RecipeEditComponent },
+      { path: '', component: ProductStartComponent},
+      { path: 'new', component: ProductEditComponent },
       {
         path: ':id',
-        component: RecipeDetailComponent,
-        resolve: [RecipesResolverService]
+        component: ProductDetailComponent,
+        resolve: [ProductsResolverService]
       },
       {
         path: ':id/edit',
-        component: RecipeEditComponent,
-        resolve: [RecipesResolverService]
+        component: ProductEditComponent,
+        resolve: [ProductsResolverService]
       }
     ]
   }

@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SupermarketRepository extends JpaRepository<Supermarket, Long> {
-    Optional<Supermarket> findById(Long id);
-    Optional<Supermarket> findByName(String name);
-
+public interface SupermarketRepository extends JpaRepository<Supermarket, String> {
+    List<Supermarket> findAllByName(String name);
 }

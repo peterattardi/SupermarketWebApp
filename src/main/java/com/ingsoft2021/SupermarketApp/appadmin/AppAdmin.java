@@ -3,6 +3,7 @@ package com.ingsoft2021.SupermarketApp.appadmin;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,28 +19,21 @@ import java.util.Collections;
 public class AppAdmin implements UserDetails {
 
     @Id
-    @SequenceGenerator(
-            name = "admin_sequence",
-            sequenceName = "admin_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "admin_sequence"
-    )
-
-    private Long id;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
-    private Long supermarketId;
+    private String supermarketName;
 
-    public AppAdmin(String email, String password, AppUserRole appUserRole, Long supermarketId) {
+    public AppAdmin(String email, String password,AppUserRole appUserRole,String supermarketName) {
+        if (email.isEmpty() || email == null ||
+            password.isEmpty() || password == null ||
+            appUserRole == null ||
+            supermarketName.isEmpty() || supermarketName == null) throw  new IllegalStateException("Attempt to create invalid admin");
         this.email = email;
         this.password = password;
         this.appUserRole = appUserRole;
-        this.supermarketId = supermarketId;
+        this.supermarketName = supermarketName;
     }
 
     @Override
@@ -48,13 +42,7 @@ public class AppAdmin implements UserDetails {
         return Collections.singletonList(authority);
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getEmail() {
         return email;
@@ -76,12 +64,12 @@ public class AppAdmin implements UserDetails {
         this.appUserRole = appUserRole;
     }
 
-    public Long getSupermarketId() {
-        return supermarketId;
+    public String getSupermarketName() {
+        return supermarketName;
     }
 
-    public void setSupermarketId(Long supermarketId) {
-        this.supermarketId = supermarketId;
+    public void setSupermarketId(String supermarketName) {
+        this.supermarketName = supermarketName;
     }
 
     @Override

@@ -17,7 +17,7 @@ public class RegistrationController {
         try {
             AuthResponse authResponse = registrationService.register(request);
             return ResponseEntity.status(200).body(authResponse);
-        }catch (IllegalArgumentException e){
+        }catch (IllegalStateException e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }

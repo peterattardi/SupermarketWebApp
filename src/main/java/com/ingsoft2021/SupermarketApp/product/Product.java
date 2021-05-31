@@ -1,28 +1,35 @@
-package com.ingsoft2021.SupermarketApp.catalogue;
+package com.ingsoft2021.SupermarketApp.product;
 
-import com.ingsoft2021.SupermarketApp.supermarkets.Supermarket;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
+import javax.persistence.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@Entity
+@IdClass(ProductId.class)
+@Table(name = "catalogue")
+public class Product {
 
-public class ProductRequest {
 
 
+    @Id
     private String productName;
+    @Id
     private String productBrand;
     private String productDescription;
     private String nutritionFacts;
     private Long supplierId;
     private double unitCost;
     private String unitType;
-    private Long supermarketId;
+    @Id
+    private String supermarketName;
 
 
-    public ProductRequest(String productName, String productBrand, String productDescription, String nutritionFacts, Long supplierId, double unitCost, String unitType) {
+    public Product(String productName, String productBrand, String productDescription, String nutritionFacts, Long supplierId, double unitCost, String unitType, String supermarketName) {
         this.productName = productName;
         this.productBrand = productBrand;
         this.productDescription = productDescription;
@@ -30,6 +37,7 @@ public class ProductRequest {
         this.supplierId = supplierId;
         this.unitCost = unitCost;
         this.unitType = unitType;
+        this.supermarketName = supermarketName;
     }
 
 }

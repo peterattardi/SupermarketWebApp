@@ -28,35 +28,35 @@ public class LoginService {
         switch (loginRequest.getAppUserRole()){
             case "ADMIN":
                 Optional<AppAdmin> appAdmin = appAdminRepository.findByEmail(loginRequest.getEmail());
-                if(!appAdmin.isPresent()) throw new IllegalArgumentException("EMAIL_NOT_FOUND");
+                if(!appAdmin.isPresent()) throw new IllegalStateException("EMAIL_NOT_FOUND");
                 if(bCryptPasswordEncoder.matches(loginRequest.getPassword(), appAdmin.get().getPassword())) {
                     String token = UUID.randomUUID().toString();
                     LocalDateTime createdAt = LocalDateTime.now();
                     LocalDateTime expiresAt = LocalDateTime.now().plusHours(2);
                     loginRepository.save(new Login(appAdmin.get().getEmail(), ADMIN, token, createdAt, expiresAt));
                     response = new AuthResponse(token, appAdmin.get().getEmail(), expiresAt);
-                }else throw new IllegalArgumentException("INVALID_PASSWORD");
+                }else throw new IllegalStateException("INVALID_PASSWORD");
                 break;
             case "USER":
                 Optional<AppUser> appUser = appUserRepository.findByEmail(loginRequest.getEmail());
-                if(!appUser.isPresent()) throw new IllegalArgumentException("EMAIL_NOT_FOUND");
+                if(!appUser.isPresent()) throw new IllegalStateException("EMAIL_NOT_FOUND");
                 if(bCryptPasswordEncoder.matches(loginRequest.getPassword(), appUser.get().getPassword())) {
                     String token = UUID.randomUUID().toString();
                     LocalDateTime createdAt = LocalDateTime.now();
                     LocalDateTime expiresAt = LocalDateTime.now().plusHours(2);
                     loginRepository.save(new Login(appUser.get().getEmail(), USER, token, createdAt, expiresAt));
                     response = new AuthResponse(token, appUser.get().getEmail(), expiresAt);
-                }else throw new IllegalArgumentException("INVALID_PASSWORD");
+                }else throw new IllegalStateException("INVALID_PASSWORD");
                 break;
             default:
-                throw new IllegalArgumentException("Wrong username or/and password");
+                throw new IllegalStateException("Wrong username or/and password");
         }
         return response;
     }
 
     public void logout(String token) {
         Optional<Login> existingToken = loginRepository.findByToken(token);
-        if(!existingToken.isPresent()) throw new IllegalArgumentException("Token not referring to any user");
+        if(!existingToken.isPresent()) throw new IllegalStateException("Token not referring to any user");
         loginRepository.delete(existingToken.get());
     }
 

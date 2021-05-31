@@ -27,7 +27,7 @@ public class RegistrationService {
 
     public AuthResponse register(RegistrationRequest request) {
         boolean isValid = emailValidator.test(request.getEmail());
-        if (!isValid) throw new IllegalArgumentException("WRONG_EMAIL_FORMAT");
+        if (!isValid) throw new IllegalStateException("WRONG_EMAIL_FORMAT");
         AppUser appUser =
                 new AppUser(request.getFirstName(),
                             request.getLastName(),

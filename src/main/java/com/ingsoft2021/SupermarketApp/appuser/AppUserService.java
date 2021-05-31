@@ -19,7 +19,7 @@ public class AppUserService{
 
     public void signUpUser(AppUser appUser) {
         boolean userExists = appUserRepository.findByEmail(appUser.getUsername()).isPresent();
-        if (userExists) throw new IllegalArgumentException("EMAIL_EXISTS");
+        if (userExists) throw new IllegalStateException("EMAIL_EXISTS");
         String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
         appUser.setPassword(encodedPassword);
         appUserRepository.save(appUser);

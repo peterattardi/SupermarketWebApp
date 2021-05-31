@@ -1,28 +1,30 @@
 package com.ingsoft2021.SupermarketApp.auth.login;
+
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import java.time.LocalDateTime;
+
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class LoginRepositoryTest {
 
     @Autowired
-    private LoginRepository loginRepository;
+    LoginRepository loginRepository;
 
+    Login login = new Login("email@email.it", AppUserRole.ADMIN,"token",null,null);
 
     @Test
-    void shouldReturnTrueWhenFindingAnExistingLoggedUser() {
-        loginRepository.save(new Login("email@email.com", AppUserRole.USER, "abc", LocalDateTime.now(), LocalDateTime.now()));
-
-        assertTrue(loginRepository.findByToken("abc").isPresent());
-
+    void shouldReturnLoggedUserWhenProvidingExistingToken() {
+        loginRepository.save(login);
+        assertEquals(loginRepository.findByToken("token").get().getToken(), login.getToken());
     }
 
     @Test
-    void shouldReturnFalseWhenFindingAnNonExistingLoggedUser() {
-        assertFalse(loginRepository.findByToken("cba").isPresent());
+    void shouldReturnEmptySetWhenProvidingNonExistingToken() {
+        assertTrue(loginRepository.findByToken("non-existing").isEmpty());
     }
 }

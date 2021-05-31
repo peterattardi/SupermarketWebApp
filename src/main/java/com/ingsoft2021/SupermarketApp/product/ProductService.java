@@ -1,4 +1,4 @@
-package com.ingsoft2021.SupermarketApp.catalogue;
+package com.ingsoft2021.SupermarketApp.product;
 
 
 
@@ -25,21 +25,21 @@ public class ProductService {
                 productRequest.getSupplierId(),
                 productRequest.getUnitCost(),
                 productRequest.getUnitType(),
-                productRequest.getSupermarketId()
+                productRequest.getSupermarketName()
         ));
     }
 
 
-    public void deleteProduct(ProductDeleteRequest request, Long supermarketId) {
+    public void deleteProduct(ProductDeleteRequest request, String supermarketName) {
         productRepository.delete(
-                productRepository.findByProductNameAndProductBrandAndSupermarketId(request.getProductName(),
+                productRepository.findByProductNameAndProductBrandAndSupermarketName(request.getProductName(),
                                                     request.getProductBrand()
-                                                    ,supermarketId
+                                                    ,supermarketName
                 ).get()
         );
     }
 
-    public List<Product> findAllBySupermarketId(Long supermarketId) {
-        return productRepository.findAllBySupermarketId(supermarketId);
+    public List<Product> findAllBySupermarketName(String supermarketName) {
+        return productRepository.findAllBySupermarketName(supermarketName);
     }
 }

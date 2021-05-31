@@ -1,4 +1,4 @@
-package com.ingsoft2021.SupermarketApp.catalogue;
+package com.ingsoft2021.SupermarketApp.product;
 
 
 import lombok.EqualsAndHashCode;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -16,5 +15,5 @@ import java.util.Objects;
 public class ProductId implements Serializable {
     private String productName;
     private String productBrand;
-    private Long supermarketId;
+    private String supermarketName;
 }

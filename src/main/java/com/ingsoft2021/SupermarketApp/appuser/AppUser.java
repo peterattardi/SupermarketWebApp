@@ -17,19 +17,9 @@ import java.util.Collections;
 public class AppUser implements UserDetails {
 
 
-    @Id
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
-    private Long userId;
     private String firstName;
     private String LastName;
+    @Id
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
@@ -56,9 +46,6 @@ public class AppUser implements UserDetails {
     }
 
 
-    public Long getUserId() {
-        return userId;
-    }
 
 
     public AppUser(String firstName, String lastName, String email, String password, AppUserRole appUserRole, String address, String cap, String city) {

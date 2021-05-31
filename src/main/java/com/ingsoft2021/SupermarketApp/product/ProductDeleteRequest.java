@@ -1,4 +1,4 @@
-package com.ingsoft2021.SupermarketApp.catalogue;
+package com.ingsoft2021.SupermarketApp.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

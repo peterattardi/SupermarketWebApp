@@ -5,27 +5,30 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class AppAdminRepositoryTest {
 
     @Autowired
-    private AppAdminRepository appAdminRepository;
+    AppAdminRepository appAdminRepository;
+
+    AppAdmin admin = new AppAdmin("email@email.it","pass", AppUserRole.ADMIN, "conad");
 
 
     @Test
-    void shouldReturnTrueWhenTryingToFindAnExistingAdmin() {
-        AppAdmin admin = new AppAdmin("admin@admin.it", "lol", AppUserRole.ADMIN, 200L);
+    void shouldReturnAnAdminWhenPassingACorrectEmail() {
         appAdminRepository.save(admin);
-
-        assertTrue(appAdminRepository.findByEmail(admin.getEmail()).isPresent());
-
+        Optional<AppAdmin> result = appAdminRepository.findByEmail("email@email.it");
+        assertEquals(result.get().getEmail(), admin.getEmail());
     }
 
     @Test
-    void shouldReturnTrueWhenTryingToFindANonExistingAdmin(){
-
-        assertFalse(appAdminRepository.findByEmail("not@existing.com").isPresent());
+    void shouldReturnEmptySetWhenPassingIncorrectEmail(){
+        appAdminRepository.save(admin);
+        Optional<AppAdmin> result = appAdminRepository.findByEmail("not@valid.it");
+        assertTrue(result.isEmpty());
     }
 }

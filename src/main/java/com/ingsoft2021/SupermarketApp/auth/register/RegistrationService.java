@@ -33,16 +33,16 @@ public class RegistrationService {
                             request.getLastName(),
                             request.getEmail(),
                             request.getPassword(),
-                            AppUserRole.USER,
                             request.getAddress(),
                             request.getCap(),
                             request.getCity());
 
+        appUser.setAppUserRole(AppUserRole.USER);
         appUserService.signUpUser(appUser);
         String token = UUID.randomUUID().toString();
         LocalDateTime createdAt = LocalDateTime.now();
         LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(15);
-        Registration registration = new Registration(appUser.getEmail(), AppUserRole.ADMIN, token, createdAt,expiresAt);
+        Registration registration = new Registration(appUser.getEmail(), token, createdAt,expiresAt);
         registrationRepository.save(registration);
         AuthResponse authResponse = new AuthResponse(token, appUser.getEmail(), expiresAt);
 

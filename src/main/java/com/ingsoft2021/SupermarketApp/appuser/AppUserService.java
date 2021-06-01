@@ -18,11 +18,12 @@ public class AppUserService{
     }
 
     public void signUpUser(AppUser appUser) {
-        boolean userExists = appUserRepository.findByEmail(appUser.getUsername()).isPresent();
+        boolean userExists = appUserRepository.findByEmail(appUser.getEmail()).isPresent();
         if (userExists) throw new IllegalStateException("EMAIL_EXISTS");
         String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
         appUser.setPassword(encodedPassword);
         appUserRepository.save(appUser);
+        //TODO: remove appUserRole from RequestBody of User
     }
 
     public void enableAppUser(String email){

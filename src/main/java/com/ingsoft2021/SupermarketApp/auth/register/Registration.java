@@ -19,16 +19,13 @@ public class Registration {
 
     @Id
     private String email;
-    @Enumerated(EnumType.STRING)
-    private AppUserRole appUserRole;
     private String token;
     private LocalDateTime createdAt;
     private LocalDateTime confirmedAt;
     private LocalDateTime expiresAt;
 
-    public Registration(String email, AppUserRole appUserRole, String token, LocalDateTime createdAt, LocalDateTime expiresAt) {
+    public Registration(String email, String token, LocalDateTime createdAt, LocalDateTime expiresAt) {
         this.email = email;
-        this.appUserRole = appUserRole;
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;

@@ -29,7 +29,7 @@ class AppAdminServiceTest {
     @Mock LoginService loginService;
     @Mock ProductRepository productRepository;
     @Mock ProductService productService;
-    AppAdmin admin = new AppAdmin("valid@email.it", "pass", AppUserRole.ADMIN, "conad");
+    AppAdmin admin = new AppAdmin("valid@email.it", "pass", "conad");
     Login login = new Login("valid@email.it", AppUserRole.ADMIN, "token", LocalDateTime.now(), LocalDateTime.now().plusHours(2));
     Product p1 = new Product("p1","p1b",null,null,null,1,null,"conad");
     Product p2 = new Product("p2","p2b",null,null,null,1,null,"conad");
@@ -39,7 +39,7 @@ class AppAdminServiceTest {
 
     @Test
     void shouldReturnListOfProductIfRequestedFromLoggedAdmin() {
-        when(loginService.findByToken("token")).thenReturn(Optional.of(login));
+        when(loginService.findAdminByToken("token")).thenReturn(login);
         when(appAdminRepository.findByEmail(login.getEmail())).thenReturn(Optional.of(admin));
         when(productService.findAllBySupermarketName(admin.getSupermarketName())).thenReturn(Arrays.asList(p1,p2,p3));
         assertTrue(appAdminService.findAllProducts("token").containsAll(Arrays.asList(p1,p2,p3)));
@@ -47,7 +47,7 @@ class AppAdminServiceTest {
 
     @Test
     void shouldThrowExceptionWhenRequestingProductsFromNonLoggedUser() {
-        when(loginService.findByToken("token")).thenThrow(IllegalStateException.class);
+        when(loginService.findAdminByToken("token")).thenThrow(IllegalStateException.class);
         assertThrows(IllegalStateException.class, () -> {appAdminService.findAllProducts("token");});
     }
 
@@ -55,7 +55,7 @@ class AppAdminServiceTest {
 
     @Test
     void deleteProduct() {
-        when(loginService.findByToken("token")).thenReturn(Optional.of(login));
+        when(loginService.findAdminByToken("token")).thenReturn(login);
         when(appAdminRepository.findByEmail(login.getEmail())).thenReturn(Optional.of(admin));
         doThrow(IllegalStateException.class).when(productService).deleteProduct(p1d, "conad");
         assertThrows(IllegalStateException.class, () -> {appAdminService.deleteProduct("token",p1d);});
@@ -64,14 +64,14 @@ class AppAdminServiceTest {
     @Test
     void shouldReturnAnAppAdminWhenProvidingCorrectToken() {
         when(appAdminRepository.findByEmail(admin.getEmail())).thenReturn(Optional.of(admin));
-        when(loginService.findByToken(anyString())).thenReturn(Optional.of(login));
+        when(loginService.findAdminByToken("token")).thenReturn(login);
         AppAdmin appAdmin = appAdminService.findAdminFromToken(login.getToken());
         assertNotNull(appAdmin);
     }
 
     @Test
     void shouldThrowExceptionWhenProvidingNonExistingToken(){
-        when(loginService.findByToken(anyString())).thenThrow(IllegalStateException.class);
+        when(loginService.findAdminByToken("token")).thenThrow(IllegalStateException.class);
         assertThrows(IllegalStateException.class, () -> {appAdminService.findAdminFromToken(anyString());});
     }
 

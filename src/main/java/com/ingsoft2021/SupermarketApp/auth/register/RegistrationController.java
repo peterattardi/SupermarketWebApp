@@ -27,7 +27,7 @@ public class RegistrationController {
     public ResponseEntity confirm(@RequestParam("token") String token) {
         try {
             registrationService.confirmToken(token);
-            return ResponseEntity.status(200).body(true);
+            return ResponseEntity.status(200).body("TOKEN_CONFIRMED");
         }catch (IllegalStateException e){
             return  ResponseEntity.status(400).body(e.getMessage());
         }

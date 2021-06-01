@@ -21,7 +21,7 @@ public class AppAdminController {
     private final AppAdminService appAdminService;
 
 
-    @GetMapping(path = "admin/get-products")
+    @GetMapping(path = "admin/products")
     public ResponseEntity findAllProducts(@RequestParam String token){
         try{
             List<Product> products = appAdminService.findAllProducts(token);
@@ -36,7 +36,7 @@ public class AppAdminController {
     public ResponseEntity addProduct(@RequestBody ProductRequest product, @RequestParam String token){
         try {
             appAdminService.addProduct(product, token);
-            return ResponseEntity.status(200).body(true);
+            return ResponseEntity.status(200).body("SUCCESS");
         }catch (IllegalStateException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
@@ -48,7 +48,7 @@ public class AppAdminController {
     public ResponseEntity deleteProduct(@RequestParam String token, @RequestBody ProductDeleteRequest request){
         try{
             appAdminService.deleteProduct(token, request);
-            return ResponseEntity.status(200).body(true);
+            return ResponseEntity.status(200).body("SUCCESS");
         }catch (IllegalStateException | NoSuchElementException e){
             return ResponseEntity.status(401).body(e.getMessage());
         }

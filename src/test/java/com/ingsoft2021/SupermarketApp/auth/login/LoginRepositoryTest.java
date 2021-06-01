@@ -17,14 +17,5 @@ class LoginRepositoryTest {
 
     Login login = new Login("email@email.it", AppUserRole.ADMIN,"token",null,null);
 
-    @Test
-    void shouldReturnLoggedUserWhenProvidingExistingToken() {
-        loginRepository.save(login);
-        assertEquals(loginRepository.findByToken("token").get().getToken(), login.getToken());
-    }
 
-    @Test
-    void shouldReturnEmptySetWhenProvidingNonExistingToken() {
-        assertTrue(loginRepository.findByToken("non-existing").isEmpty());
-    }
 }

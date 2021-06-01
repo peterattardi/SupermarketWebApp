@@ -30,7 +30,7 @@ class LoginServiceTest {
     @Mock
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    AppAdmin user = new AppAdmin("email@email.it","pass", AppUserRole.ADMIN,"conad");
+    AppAdmin user = new AppAdmin("email@email.it","pass", "conad");
 
 
 

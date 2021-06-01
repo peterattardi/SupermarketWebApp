@@ -25,10 +25,10 @@ public class Config extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").permitAll()
                 .anyRequest().permitAll();
 
-        appAdminService.signUpAdmin(new AppAdmin("admin@conad.it", "conad-conad", AppUserRole.ADMIN, "conad"));
-        appAdminService.signUpAdmin(new AppAdmin("admin@deco.it", "deco-deco", AppUserRole.ADMIN, "deco"));
-        appAdminService.signUpAdmin(new AppAdmin("admin@coop.it", "coop-coop", AppUserRole.ADMIN, "coop"));
-        appAdminService.signUpAdmin(new AppAdmin("admin@despar.it", "despar-despar", AppUserRole.ADMIN, "despar"));
+        appAdminService.signUpAdmin(new AppAdmin("admin@conad.it", "conad-conad", "conad"));
+        appAdminService.signUpAdmin(new AppAdmin("admin@deco.it", "deco-deco", "deco"));
+        appAdminService.signUpAdmin(new AppAdmin("admin@coop.it", "coop-coop", "coop"));
+        appAdminService.signUpAdmin(new AppAdmin("admin@despar.it", "despar-despar","despar"));
 
 
         supermarketService.addNewSupermarket( new Supermarket("Conad"));

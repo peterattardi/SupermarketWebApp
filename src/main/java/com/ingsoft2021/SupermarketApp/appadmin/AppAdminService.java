@@ -30,12 +30,12 @@ public class AppAdminService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-
     public void signUpAdmin(AppAdmin appAdmin) {
-        boolean userExists = appAdminRepository.findByEmail(appAdmin.getUsername()).isPresent();
+        boolean userExists = appAdminRepository.findByEmail(appAdmin.getEmail()).isPresent();
         if (userExists) throw new IllegalStateException("Admin already present");
         String encodedPassword = bCryptPasswordEncoder.encode(appAdmin.getPassword());
         appAdmin.setPassword(encodedPassword);
+        appAdmin.setAppUserRole(AppUserRole.ADMIN);
         appAdminRepository.save(appAdmin);
     }
 
@@ -61,17 +61,16 @@ public class AppAdminService {
 
     public AppAdmin findAdminFromToken(String token){
         //Is the request coming from a logged admin? And if yes, I need to store the admin supermarket id
-        Optional<Login> adminToken = loginService.findByToken(token);
-        if(adminToken.isEmpty()) throw new IllegalStateException("TOKEN_NOT_FOUND");
+        Login adminToken = loginService.findAdminByToken(token);
         //Now we know that the token is valid and it comes from a logged user. Let's find out his privileges
-        boolean isAdmin = adminToken.get().getAppUserRole() == AppUserRole.ADMIN;
+        boolean isAdmin = adminToken.getAppUserRole() == AppUserRole.ADMIN;
         if(!isAdmin) throw new IllegalStateException("UNAUTHORIZED");
         //Finally, is the token expired?
-        if(adminToken.get().getExpiresAt().isBefore(LocalDateTime.now())){
+        if(adminToken.getExpiresAt().isBefore(LocalDateTime.now())){
             throw new IllegalStateException("TOKEN_EXPIRED");
         }
         /* Okay, now we can proceed */
-        String email = adminToken.get().getEmail();
+        String email = adminToken.getEmail();
         //noinspection OptionalGetWithoutIsPresent
         return appAdminRepository.findByEmail(email).get();
 

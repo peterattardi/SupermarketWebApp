@@ -15,7 +15,7 @@ class AppAdminRepositoryTest {
     @Autowired
     AppAdminRepository appAdminRepository;
 
-    AppAdmin admin = new AppAdmin("email@email.it","pass", AppUserRole.ADMIN, "conad");
+    AppAdmin admin = new AppAdmin("email@email.it","pass", "conad");
 
 
     @Test

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,9 +32,10 @@ public class LoginService {
                 if(!appAdmin.isPresent()) throw new IllegalStateException("EMAIL_NOT_FOUND");
                 if(bCryptPasswordEncoder.matches(loginRequest.getPassword(), appAdmin.get().getPassword())) {
                     String token = UUID.randomUUID().toString();
+                    String cryptedToken = bCryptPasswordEncoder.encode(token);
                     LocalDateTime createdAt = LocalDateTime.now();
                     LocalDateTime expiresAt = LocalDateTime.now().plusHours(2);
-                    loginRepository.save(new Login(appAdmin.get().getEmail(), ADMIN, token, createdAt, expiresAt));
+                    loginRepository.save(new Login(appAdmin.get().getEmail(), ADMIN, cryptedToken, createdAt, expiresAt));
                     response = new AuthResponse(token, appAdmin.get().getEmail(), expiresAt);
                 }else throw new IllegalStateException("INVALID_PASSWORD");
                 break;
@@ -42,9 +44,10 @@ public class LoginService {
                 if(!appUser.isPresent()) throw new IllegalStateException("EMAIL_NOT_FOUND");
                 if(bCryptPasswordEncoder.matches(loginRequest.getPassword(), appUser.get().getPassword())) {
                     String token = UUID.randomUUID().toString();
+                    String cryptedToken = bCryptPasswordEncoder.encode(token);
                     LocalDateTime createdAt = LocalDateTime.now();
                     LocalDateTime expiresAt = LocalDateTime.now().plusHours(2);
-                    loginRepository.save(new Login(appUser.get().getEmail(), USER, token, createdAt, expiresAt));
+                    loginRepository.save(new Login(appUser.get().getEmail(), USER, cryptedToken, createdAt, expiresAt));
                     response = new AuthResponse(token, appUser.get().getEmail(), expiresAt);
                 }else throw new IllegalStateException("INVALID_PASSWORD");
                 break;
@@ -55,12 +58,19 @@ public class LoginService {
     }
 
     public void logout(String token) {
-        Optional<Login> existingToken = loginRepository.findByToken(token);
-        if(!existingToken.isPresent()) throw new IllegalStateException("Token not referring to any user");
-        loginRepository.delete(existingToken.get());
+        Login existingUser = findAdminByToken(token);
+        loginRepository.delete(loginRepository.findByEmail(existingUser.getEmail()).get());
     }
 
-    public Optional<Login> findByToken(String token){
-        return loginRepository.findByToken(token);
+
+    public Login findAdminByToken(String token) throws IllegalStateException{
+        List<Login> logins = loginRepository.findAll();
+        for(Login login : logins){
+            if(bCryptPasswordEncoder.matches(token, login.getToken())){
+                return login;
+            }
+        }
+        throw new IllegalStateException("TOKEN_NOT_FOUND");
     }
+
 }

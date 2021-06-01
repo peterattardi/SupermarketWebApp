@@ -1,6 +1,5 @@
 package com.ingsoft2021.SupermarketApp.appadmin;
 
-import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
@@ -10,9 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;

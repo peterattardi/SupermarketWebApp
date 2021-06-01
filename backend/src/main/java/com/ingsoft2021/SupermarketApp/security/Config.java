@@ -2,7 +2,6 @@ package com.ingsoft2021.SupermarketApp.security;
 
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminService;
-import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
 import com.ingsoft2021.SupermarketApp.supermarkets.Supermarket;
 import com.ingsoft2021.SupermarketApp.supermarkets.SupermarketService;
 import lombok.AllArgsConstructor;

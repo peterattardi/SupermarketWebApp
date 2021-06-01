@@ -77,6 +77,7 @@ export class AuthService {
       );
   }
 
+  // TODO: Fix autoLogin it doesn't retrieve correctly the user from UserData
   autoLogin(): void {
     const userData: {
       email: string;
@@ -114,12 +115,14 @@ export class AuthService {
     this.tokenExpirationTimer = null;
   }
 
+  // TODO: Fix autoLogout, probably expirationDuration value is wrong
   // autoLogout(expirationDuration: number): void {
   //   this.tokenExpirationTimer = setTimeout(() => {
   //     this.logout();
   //   }, expirationDuration);
   // }
 
+  // TODO: User is not set correctly in local storage
   private handleAuthentication(
     email: string,
     token: string,
@@ -129,7 +132,6 @@ export class AuthService {
     const user = new User(email, token, expirationDate, role);
     this.user.next(user);
     // this.autoLogout((new Date(expirationDate)).getTime() - (new Date()).getTime());
-    // TODO: fix autoLogoutgo
     localStorage.setItem('userData', JSON.stringify(user));
   }
 

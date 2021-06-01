@@ -25,18 +25,10 @@ public class RegistrationService {
     private final EmailSender emailSender;
     private final RegistrationRepository registrationRepository;
 
-    public AuthResponse register(RegistrationRequest request) {
-        boolean isValid = emailValidator.test(request.getEmail());
+    public AuthResponse register(AppUser appUser) throws NoSuchFieldException {
+        checkRequestField(appUser);
+        boolean isValid = emailValidator.test(appUser.getEmail());
         if (!isValid) throw new IllegalStateException("WRONG_EMAIL_FORMAT");
-        AppUser appUser =
-                new AppUser(request.getFirstName(),
-                            request.getLastName(),
-                            request.getEmail(),
-                            request.getPassword(),
-                            request.getAddress(),
-                            request.getCap(),
-                            request.getCity());
-
         appUser.setAppUserRole(AppUserRole.USER);
         appUserService.signUpUser(appUser);
         String token = UUID.randomUUID().toString();
@@ -47,10 +39,22 @@ public class RegistrationService {
         AuthResponse authResponse = new AuthResponse(token, appUser.getEmail(), expiresAt);
 
         String link = "http://localhost:8080/registration/confirm?token=" + token;
-        emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
+        emailSender.send(appUser.getEmail(), buildEmail(appUser.getFirstName(), link));
 
         return authResponse;
     }
+
+    private void checkRequestField(AppUser r) throws NoSuchFieldException {
+        if(r.getEmail() == null || r.getEmail().isEmpty()) throw new NoSuchFieldException("EMAIL_NULL_OR_EMPTY");
+        if(r.getAddress() == null || r.getAddress().isEmpty()) throw new NoSuchFieldException("ADDRESS_NULL_OR_EMPTY");
+        if(r.getCap() == null || r.getCap().isEmpty()) throw new NoSuchFieldException("CAP_NULL_OR_EMPTY");
+        if(r.getCity() == null || r.getCity().isEmpty()) throw new NoSuchFieldException("CITY_NULL_OR_EMPTY");
+        if(r.getPassword() == null || r.getPassword().isEmpty()) throw new NoSuchFieldException("PASSWORD_NULL_OR_EMPTY");
+        if(r.getFirstName() == null || r.getFirstName().isEmpty()) throw new NoSuchFieldException("NAME_NULL_OR_EMPTY");
+        if(r.getLastName() == null || r.getLastName().isEmpty()) throw new NoSuchFieldException("SURNAME_NULL_OR_EMPTY");
+        if(r.getPassword().length()<6) throw new IllegalStateException("INVALID_PASSWORD");
+    }
+
     public void enableAppUser(String email) {
         appUserService.enableAppUser(email);
     }
@@ -60,7 +64,7 @@ public class RegistrationService {
     }
 
     @Transactional
-    public void confirmToken(String token) {
+    public boolean confirmToken(String token) {
         Registration registration = findByToken(token)
                 .orElseThrow(() ->
                         new IllegalStateException("TOKEN_NOT_FOUND"));
@@ -77,9 +81,10 @@ public class RegistrationService {
 
         registration.setConfirmedAt(LocalDateTime.now());
         enableAppUser(registration.getEmail());
+        return true;
     }
 
-    private String buildEmail(String name, String link) {
+    public String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +

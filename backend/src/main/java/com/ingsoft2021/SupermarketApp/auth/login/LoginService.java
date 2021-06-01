@@ -24,8 +24,9 @@ public class LoginService {
     private final AppAdminRepository appAdminRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public AuthResponse login(LoginRequest loginRequest) {
+    public AuthResponse login(LoginRequest loginRequest) throws NoSuchFieldException {
         AuthResponse response = new AuthResponse(null, null, null);
+        checkLoginRequest(loginRequest);
         switch (loginRequest.getAppUserRole()){
             case "ADMIN":
                 Optional<AppAdmin> appAdmin = appAdminRepository.findByEmail(loginRequest.getEmail());
@@ -55,6 +56,14 @@ public class LoginService {
                 throw new IllegalStateException("Wrong username or/and password");
         }
         return response;
+    }
+
+    private void checkLoginRequest(LoginRequest l) throws NoSuchFieldException {
+        if(l.getEmail() == null || l.getEmail().isEmpty()) throw new NoSuchFieldException("EMAIL_NULL_OR_EMPTY");
+        if(l.getPassword() == null || l.getPassword().isEmpty()) throw new NoSuchFieldException("PASSWORD_NULL_OR_EMPTY");
+        if(l.getAppUserRole() == null || l.getAppUserRole().isEmpty()) throw new NoSuchFieldException("APPUSERROLE_NULL_OR_EMPTY");
+        if(l.getAppUserRole() != "USER" && l.getAppUserRole() != "ADMIN") throw new IllegalStateException("APPUSERROLE_NOT_VALID");
+
     }
 
     public void logout(String token) {

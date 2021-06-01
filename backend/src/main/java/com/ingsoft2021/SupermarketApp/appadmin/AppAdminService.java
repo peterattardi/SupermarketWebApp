@@ -4,7 +4,6 @@ package com.ingsoft2021.SupermarketApp.appadmin;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
 import com.ingsoft2021.SupermarketApp.product.Product;
 import com.ingsoft2021.SupermarketApp.product.ProductDeleteRequest;
-import com.ingsoft2021.SupermarketApp.product.ProductRequest;
 import com.ingsoft2021.SupermarketApp.product.ProductService;
 
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
@@ -45,13 +44,13 @@ public class AppAdminService {
     }
 
 
-    public void addProduct(ProductRequest product, String token) throws IllegalStateException {
+    public void addProduct(Product product, String token) throws IllegalStateException, NoSuchFieldException {
         AppAdmin admin = findAdminFromToken(token);
         product.setSupermarketName(admin.getSupermarketName());
         productService.addProduct(product);
     }
 
-    public void deleteProduct(String token, ProductDeleteRequest request) throws  IllegalStateException, NoSuchElementException {
+    public void deleteProduct(String token, ProductDeleteRequest request) throws IllegalStateException, NoSuchElementException, NoSuchFieldException {
         AppAdmin admin = findAdminFromToken(token);
         productService.deleteProduct(request, admin.getSupermarketName());
     }

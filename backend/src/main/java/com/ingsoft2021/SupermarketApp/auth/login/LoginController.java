@@ -18,7 +18,7 @@ public class LoginController {
         try {
             AuthResponse authResponse = loginService.login(loginRequest);
             return ResponseEntity.status(200).body(authResponse);
-        }catch (IllegalStateException e){
+        }catch (IllegalStateException | NoSuchFieldException e){
             return ResponseEntity.status(401).body(e.getMessage());
         }
     }

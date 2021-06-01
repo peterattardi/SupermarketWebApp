@@ -1,6 +1,7 @@
 package com.ingsoft2021.SupermarketApp.auth.register;
 
 
+import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.auth.login.AuthResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,11 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping(path = "/registration")
-    public ResponseEntity register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity register(@RequestBody AppUser request) {
         try {
             AuthResponse authResponse = registrationService.register(request);
             return ResponseEntity.status(200).body(authResponse);
-        }catch (IllegalStateException e){
+        }catch (IllegalStateException | NoSuchFieldException e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @IdClass(ProductId.class)
-@Table(name = "catalogue")
+@Table(name = "product")
 public class Product {
 
 

@@ -2,6 +2,8 @@ package com.ingsoft2021.SupermarketApp.product;
 
 
 
+import com.ingsoft2021.SupermarketApp.shop.ShopRepository;
+import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductRepository;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    private boolean checkFieldOfProduct(Product p) throws NoSuchFieldException {
+    public boolean checkFieldOfProduct(Product p) throws NoSuchFieldException {
         if(p.getProductName() == null || p.getProductName().isEmpty())
             throw new NoSuchFieldException("NAME_NULL_OR_EMPTY");
         if(p.getProductBrand() == null || p.getProductBrand().isEmpty())
@@ -32,11 +34,16 @@ public class ProductService {
         return true;
     }
 
+    public boolean checkFieldOfProduct(ProductDeleteRequest p, String supermarketName) throws NoSuchFieldException {
+        if(p.getProductName() == null || p.getProductName().isEmpty()) throw new NoSuchFieldException("NAME_NULL_OR_EMPTY");
+        if(p.getProductBrand() == null || p.getProductBrand().isEmpty()) throw new NoSuchFieldException("BRAND_NULL_OR_EMPTY");
+        if(supermarketName == null || supermarketName.isEmpty()) throw new NoSuchFieldException("SUPERMARKET_NULL_OR_EMPTY");
+        return true;
+    }
+
 
     public void deleteProduct(ProductDeleteRequest request, String supermarketName) throws NoSuchFieldException {
-        if(request.getProductName() == null || request.getProductName().isEmpty()) throw new NoSuchFieldException("NAME_NULL_OR_EMPTY");
-        if(request.getProductBrand() == null || request.getProductBrand().isEmpty()) throw new NoSuchFieldException("BRAND_NULL_OR_EMPTY");
-        if(supermarketName == null || supermarketName.isEmpty()) throw new NoSuchFieldException("SUPERMARKET_NULL_OR_EMPTY");
+        checkFieldOfProduct(request, supermarketName);
         Optional<Product> toDelete = productRepository.findByProductNameAndProductBrandAndSupermarketName(request.getProductName(),
                 request.getProductBrand()
                 ,supermarketName

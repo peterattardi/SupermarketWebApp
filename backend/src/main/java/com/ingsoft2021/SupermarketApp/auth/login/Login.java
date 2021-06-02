@@ -1,5 +1,5 @@
 package com.ingsoft2021.SupermarketApp.auth.login;
-import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
+import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

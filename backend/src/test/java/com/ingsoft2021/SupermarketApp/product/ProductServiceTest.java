@@ -1,12 +1,12 @@
 package com.ingsoft2021.SupermarketApp.product;
 
+import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

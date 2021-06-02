@@ -2,17 +2,16 @@ package com.ingsoft2021.SupermarketApp.auth.register;
 
 
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
-import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
+import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserService;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
-import com.ingsoft2021.SupermarketApp.email.EmailValidator;
-import com.ingsoft2021.SupermarketApp.email.EmailSender;
+import com.ingsoft2021.SupermarketApp.util.email.EmailValidator;
+import com.ingsoft2021.SupermarketApp.util.email.EmailSender;
 
-import com.ingsoft2021.SupermarketApp.auth.AuthResponse;
+import com.ingsoft2021.SupermarketApp.util.Request.AuthResponse;
 import lombok.AllArgsConstructor;
 
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

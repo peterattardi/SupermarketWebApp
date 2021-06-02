@@ -1,7 +1,7 @@
 package com.ingsoft2021.SupermarketApp.appadmin;
 
 import com.ingsoft2021.SupermarketApp.product.Product;
-import com.ingsoft2021.SupermarketApp.product.ProductDeleteRequest;
+import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -45,12 +45,14 @@ public class AppAdminController {
     @DeleteMapping(path = "admin/delete-product")
     public ResponseEntity deleteProduct(@RequestParam String token, @RequestBody ProductDeleteRequest request){
         try{
+            appAdminService.findAdminByToken(token);
             appAdminService.deleteProduct(token, request);
             return ResponseEntity.status(200).body("SUCCESS");
         }catch (IllegalStateException | NoSuchElementException| NoSuchFieldException e){
             return ResponseEntity.status(401).body(e.getMessage());
         }
     }
+
 
 
 

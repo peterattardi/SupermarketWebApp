@@ -4,7 +4,8 @@ import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminRepository;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRepository;
-import com.ingsoft2021.SupermarketApp.auth.AuthResponse;
+import com.ingsoft2021.SupermarketApp.util.Request.AuthResponse;
+import com.ingsoft2021.SupermarketApp.util.Request.LoginRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ingsoft2021.SupermarketApp.appuser.AppUserRole.*;
+import static com.ingsoft2021.SupermarketApp.util.Request.AppUserRole.*;
 
 @AllArgsConstructor
 @Service

@@ -49,79 +49,79 @@ public class Config extends WebSecurityConfigurerAdapter {
 
 
         shopRepository.save(new Shop(
-                "conad", 38.11906065501892, 13.34781686817128
+                "conad",  13.34781686817128,38.11906065501892
         ));
 
         shopRepository.save(new Shop(
-                "conad", 38.10861649947868, 13.338814651303492
-
-        ));
-
-        shopRepository.save(new Shop(
-                "conad", 38.131243615519516, 13.344307528812017
+                "conad", 13.338814651303492, 38.10861649947868
 
         ));
 
         shopRepository.save(new Shop(
-                "conad", 38.14493724540794, 13.329194159033769
+                "conad", 13.344307528812017, 38.131243615519516
 
         ));
 
         shopRepository.save(new Shop(
-                "conad", 38.14502186329422, 13.364306565766874
+                "conad", 13.329194159033769, 38.14493724540794
 
         ));
 
         shopRepository.save(new Shop(
-                "deco", 38.119204599012726, 13.348938524107508
+                "conad", 13.364306565766874, 38.14502186329422
 
         ));
 
         shopRepository.save(new Shop(
-                "deco", 38.111157771580544, 13.326717580438029
+                "deco", 13.348938524107508, 38.119204599012726
 
         ));
 
         shopRepository.save(new Shop(
-                "deco", 38.12642672468614, 13.287611741124737
+                "deco" , 13.326717580438029, 38.111157771580544
 
         ));
 
         shopRepository.save(new Shop(
-                "deco", 38.13868393399541, 13.338215581169198
+                "deco" , 13.287611741124737, 38.12642672468614
 
         ));
 
         shopRepository.save(new Shop(
-                "coop", 38.12518055500223, 13.327915896757844
-
-        ));
-        shopRepository.save(new Shop(
-                "coop", 38.130885762901386, 13.36010240413907
+                "deco",  13.338215581169198, 38.13868393399541
 
         ));
 
         shopRepository.save(new Shop(
-                "coop", 38.10239369399031, 13.352588478839639
+                "coop",  13.327915896757844, 38.12518055500223
 
         ));
         shopRepository.save(new Shop(
-                "coop", 38.09797605348673, 13.387826145066006
-
-        ));
-
-        shopRepository.save(new Shop(
-                "despar", 38.116509298202736, 13.342378227200042
+                "coop",  13.36010240413907, 38.130885762901386
 
         ));
 
         shopRepository.save(new Shop(
-                "despar", 38.12501731924669, 13.348558036333708
+                "coop",  13.352588478839639, 38.10239369399031
+
+        ));
+        shopRepository.save(new Shop(
+                "coop",  13.387826145066006, 38.09797605348673
 
         ));
 
         shopRepository.save(new Shop(
-                "despar", 38.097328853018496, 13.347528069442571
+                "despar",  13.342378227200042, 38.116509298202736
+
+        ));
+
+        shopRepository.save(new Shop(
+                "despar",  13.348558036333708, 38.12501731924669
+
+        ));
+
+        shopRepository.save(new Shop(
+                "despar",  13.347528069442571, 38.097328853018496
 
         ));
 

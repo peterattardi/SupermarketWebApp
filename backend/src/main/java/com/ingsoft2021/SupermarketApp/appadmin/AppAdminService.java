@@ -1,15 +1,14 @@
 package com.ingsoft2021.SupermarketApp.appadmin;
 
 
-import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
+import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
 import com.ingsoft2021.SupermarketApp.product.Product;
-import com.ingsoft2021.SupermarketApp.product.ProductDeleteRequest;
+import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.product.ProductService;
 
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
-import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductRepository;
-import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductService;
+import com.ingsoft2021.SupermarketApp.shop.ShopService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,7 +27,7 @@ public class AppAdminService {
     private final ProductService productService;
     private final LoginService loginService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ShopProductService shopProductService;
+    private final ShopService shopService;
 
 
     public void signUpAdmin(AppAdmin appAdmin) {
@@ -51,13 +50,13 @@ public class AppAdminService {
         AppAdmin admin = findAdminByToken(token);
         product.setSupermarketName(admin.getSupermarketName());
         productService.addProduct(product);
-        shopProductService.addInEveryShop(product, admin.getSupermarketName());
+        shopService.addInEveryShop(product, admin.getSupermarketName());
     }
 
     public void deleteProduct(String token, ProductDeleteRequest request) throws IllegalStateException, NoSuchElementException, NoSuchFieldException {
         AppAdmin admin = findAdminByToken(token);
         productService.deleteProduct(request, admin.getSupermarketName());
-        shopProductService.deleteInEveryShop(request, admin.getSupermarketName());
+        shopService.deleteInEveryShop(request, admin.getSupermarketName());
     }
 
 

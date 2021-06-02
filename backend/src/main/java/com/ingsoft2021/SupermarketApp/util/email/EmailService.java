@@ -1,4 +1,4 @@
-package com.ingsoft2021.SupermarketApp.email;
+package com.ingsoft2021.SupermarketApp.util.email;
 
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

@@ -1,5 +1,6 @@
 package com.ingsoft2021.SupermarketApp.product;
 
+import com.ingsoft2021.SupermarketApp.util.Request.ProductId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

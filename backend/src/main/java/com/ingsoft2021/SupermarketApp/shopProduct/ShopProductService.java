@@ -1,10 +1,9 @@
 package com.ingsoft2021.SupermarketApp.shopProduct;
 
 import com.ingsoft2021.SupermarketApp.product.Product;
-import com.ingsoft2021.SupermarketApp.product.ProductDeleteRequest;
-import com.ingsoft2021.SupermarketApp.product.ProductService;
+import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.shop.Shop;
-import com.ingsoft2021.SupermarketApp.shop.ShopService;
+import com.ingsoft2021.SupermarketApp.util.RequestChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +15,9 @@ import java.util.Optional;
 public class ShopProductService {
 
     private final ShopProductRepository shopProductRepository;
-    private final ShopService shopService;
-    private final ProductService productService;
 
-    public void addInEveryShop(Product product, String supermarketName) throws NoSuchFieldException {
-        productService.checkFieldOfProduct(product);
-        List<Shop> shopsOfThatSupermarket = shopService.findAllBySupermarketName(supermarketName);
+    public void addInEveryShop(Product product, String supermarketName, List<Shop> shopsOfThatSupermarket) throws NoSuchFieldException {
+        RequestChecker.check(product);
         for(Shop shop : shopsOfThatSupermarket){
             shopProductRepository.save(new ShopProduct(
                     shop.getShopId(), product.getProductName(),
@@ -30,9 +26,8 @@ public class ShopProductService {
         }
     }
 
-    public void deleteInEveryShop(ProductDeleteRequest product, String supermarketName) throws NoSuchFieldException {
-        productService.checkFieldOfProduct(product, supermarketName);
-        List<Shop> shopsOfThatSupermarket = shopService.findAllBySupermarketName(supermarketName);
+    public void deleteInEveryShop(ProductDeleteRequest product, String supermarketName, List<Shop> shopsOfThatSupermarket) throws NoSuchFieldException {
+        RequestChecker.check(product, supermarketName);
         for(Shop shop : shopsOfThatSupermarket){
             Optional<ShopProduct> shopProduct = shopProductRepository
                     .findByShopIdAndProductNameAndProductBrand(
@@ -42,6 +37,11 @@ public class ShopProductService {
             shopProductRepository.delete(shopProduct.get());
         }
     }
+
+    public List<ShopProduct> findAllByShopId(Long shopId){
+        return shopProductRepository.findAllByShopId(shopId);
+    }
+
 }
 
 

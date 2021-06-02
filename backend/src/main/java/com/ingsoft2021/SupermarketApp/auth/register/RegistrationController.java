@@ -2,7 +2,7 @@ package com.ingsoft2021.SupermarketApp.auth.register;
 
 
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
-import com.ingsoft2021.SupermarketApp.auth.AuthResponse;
+import com.ingsoft2021.SupermarketApp.util.Request.AuthResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

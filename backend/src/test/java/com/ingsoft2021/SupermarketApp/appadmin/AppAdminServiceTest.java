@@ -1,10 +1,10 @@
 package com.ingsoft2021.SupermarketApp.appadmin;
 
-import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
+import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import com.ingsoft2021.SupermarketApp.product.Product;
-import com.ingsoft2021.SupermarketApp.product.ProductDeleteRequest;
+import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.product.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -35,13 +35,13 @@ public class LoginController {
         }
     }
 
-    @PostMapping(path = "/user-logout")
+    @PostMapping(path = "/user/logout")
     ResponseEntity logout(@RequestParam String token){
         try {
             loginService.logout(token);
-            return ResponseEntity.status(200).body(true);
+            return ResponseEntity.status(200).body("SUCCESS");
         }catch (IllegalStateException e){
-            return ResponseEntity.status(401).body(false);
+            return ResponseEntity.status(401).body(e.getMessage());
         }
     }
 }

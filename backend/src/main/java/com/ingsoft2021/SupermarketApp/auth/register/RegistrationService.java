@@ -6,6 +6,7 @@ import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserService;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
+import com.ingsoft2021.SupermarketApp.util.RequestChecker;
 import com.ingsoft2021.SupermarketApp.util.email.EmailValidator;
 import com.ingsoft2021.SupermarketApp.util.email.EmailSender;
 
@@ -29,7 +30,7 @@ public class RegistrationService {
     private final LoginService loginService;
 
     public AuthResponse register(AppUser appUser) throws NoSuchFieldException {
-        checkRequestField(appUser);
+        RequestChecker.check(appUser);
         boolean isValid = emailValidator.test(appUser.getEmail());
         if (!isValid) throw new IllegalStateException("WRONG_EMAIL_FORMAT");
         appUser.setAppUserRole(AppUserRole.USER);
@@ -47,16 +48,7 @@ public class RegistrationService {
         return authResponse;
     }
 
-    private void checkRequestField(AppUser r) throws NoSuchFieldException {
-        if(r.getEmail() == null || r.getEmail().isEmpty()) throw new NoSuchFieldException("EMAIL_NULL_OR_EMPTY");
-        if(r.getAddress() == null || r.getAddress().isEmpty()) throw new NoSuchFieldException("ADDRESS_NULL_OR_EMPTY");
-        if(r.getCap() == null || r.getCap().isEmpty()) throw new NoSuchFieldException("CAP_NULL_OR_EMPTY");
-        if(r.getCity() == null || r.getCity().isEmpty()) throw new NoSuchFieldException("CITY_NULL_OR_EMPTY");
-        if(r.getPassword() == null || r.getPassword().isEmpty()) throw new NoSuchFieldException("PASSWORD_NULL_OR_EMPTY");
-        if(r.getFirstName() == null || r.getFirstName().isEmpty()) throw new NoSuchFieldException("NAME_NULL_OR_EMPTY");
-        if(r.getLastName() == null || r.getLastName().isEmpty()) throw new NoSuchFieldException("SURNAME_NULL_OR_EMPTY");
-        if(r.getPassword().length()<6) throw new IllegalStateException("INVALID_PASSWORD");
-    }
+
 
     public void enableAppUser(String email) {
         appUserService.enableAppUser(email);
@@ -89,7 +81,7 @@ public class RegistrationService {
 
     public AuthResponse registerAGuest(AppUser request, String loginToken) throws NoSuchFieldException {
         //is the request valid
-        checkRequestField(request);
+        RequestChecker.check(request);
         //does the token exist
         Login logged = loginService.findByToken(loginToken);
         //it exists so we delete ii

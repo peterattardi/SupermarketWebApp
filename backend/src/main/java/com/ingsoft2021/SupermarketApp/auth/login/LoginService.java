@@ -6,9 +6,11 @@ import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRepository;
 import com.ingsoft2021.SupermarketApp.util.Request.AuthResponse;
 import com.ingsoft2021.SupermarketApp.util.Request.LoginRequest;
+import com.ingsoft2021.SupermarketApp.util.RequestChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +30,7 @@ public class LoginService {
 
     public AuthResponse login(LoginRequest loginRequest) throws NoSuchFieldException {
         AuthResponse response = new AuthResponse(null, null, null);
-        checkLoginRequest(loginRequest);
+        RequestChecker.check(loginRequest);
         switch (loginRequest.getAppUserRole()){
             case "ADMIN":
                 Optional<AppAdmin> appAdmin = appAdminRepository.findByEmail(loginRequest.getEmail());
@@ -60,13 +62,7 @@ public class LoginService {
         return response;
     }
 
-    private void checkLoginRequest(LoginRequest l) throws NoSuchFieldException {
-        if(l.getEmail() == null || l.getEmail().isEmpty()) throw new NoSuchFieldException("EMAIL_NULL_OR_EMPTY");
-        if(l.getPassword() == null || l.getPassword().isEmpty()) throw new NoSuchFieldException("PASSWORD_NULL_OR_EMPTY");
-        if(l.getAppUserRole() == null || l.getAppUserRole().isEmpty()) throw new NoSuchFieldException("APPUSERROLE_NULL_OR_EMPTY");
-        if(!(l.getAppUserRole().equals("ADMIN") || l.getAppUserRole().equals("USER"))) throw new IllegalStateException("APPUSERROLE_NOT_VALID");
 
-    }
 
     public void logout(String token) {
         Login existingUser = findByToken(token);

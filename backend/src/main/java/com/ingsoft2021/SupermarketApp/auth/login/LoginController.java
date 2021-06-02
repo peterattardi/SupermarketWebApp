@@ -1,5 +1,7 @@
 package com.ingsoft2021.SupermarketApp.auth.login;
 
+import com.ingsoft2021.SupermarketApp.auth.AuthResponse;
+import com.ingsoft2021.SupermarketApp.shop.Position;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,18 @@ public class LoginController {
         }
     }
 
+    @PostMapping(path = "/guest/login")
+    ResponseEntity loginAsGuest(){
+        try{
+            AuthResponse authResponse = loginService.loginAsGuest();
+            return ResponseEntity.status(200).body(authResponse);
+        }catch (Exception e){
+            return  ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
+
     @PostMapping(path = "/user-logout")
-    ResponseEntity<Boolean> logout(@RequestParam String token){
+    ResponseEntity logout(@RequestParam String token){
         try {
             loginService.logout(token);
             return ResponseEntity.status(200).body(true);

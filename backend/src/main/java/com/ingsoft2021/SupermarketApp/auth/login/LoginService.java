@@ -4,6 +4,7 @@ import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminRepository;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRepository;
+import com.ingsoft2021.SupermarketApp.auth.AuthResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -62,17 +63,17 @@ public class LoginService {
         if(l.getEmail() == null || l.getEmail().isEmpty()) throw new NoSuchFieldException("EMAIL_NULL_OR_EMPTY");
         if(l.getPassword() == null || l.getPassword().isEmpty()) throw new NoSuchFieldException("PASSWORD_NULL_OR_EMPTY");
         if(l.getAppUserRole() == null || l.getAppUserRole().isEmpty()) throw new NoSuchFieldException("APPUSERROLE_NULL_OR_EMPTY");
-        if(l.getAppUserRole() != "USER" && l.getAppUserRole() != "ADMIN") throw new IllegalStateException("APPUSERROLE_NOT_VALID");
+        if(!(l.getAppUserRole().equals("ADMIN") || l.getAppUserRole().equals("USER"))) throw new IllegalStateException("APPUSERROLE_NOT_VALID");
 
     }
 
     public void logout(String token) {
-        Login existingUser = findAdminByToken(token);
+        Login existingUser = findByToken(token);
         loginRepository.delete(loginRepository.findByEmail(existingUser.getEmail()).get());
     }
 
 
-    public Login findAdminByToken(String token) throws IllegalStateException{
+    public Login findByToken(String token) throws IllegalStateException{
         List<Login> logins = loginRepository.findAll();
         for(Login login : logins){
             if(bCryptPasswordEncoder.matches(token, login.getToken())){
@@ -82,4 +83,28 @@ public class LoginService {
         throw new IllegalStateException("TOKEN_NOT_FOUND");
     }
 
+    public AuthResponse loginAsGuest() {
+        String token = UUID.randomUUID().toString();
+        String encrypted_token = bCryptPasswordEncoder.encode(token);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nowPlus2 = LocalDateTime.now().plusHours(2);
+        String anonymousEmail = "anonymous@"+UUID.randomUUID().toString().substring(0,7)+".guest";
+        loginRepository.save(new Login(anonymousEmail,GUEST,encrypted_token,now,nowPlus2));
+        return new AuthResponse(token,anonymousEmail,nowPlus2);
+    }
+
+    public void updateLogGuest(Login login){
+        loginRepository.save(login);
+    }
+
+    public void deleteByToken(String token){
+        List<Login> logins = loginRepository.findAll();
+        for(Login login : logins){
+            if(bCryptPasswordEncoder.matches(token, login.getToken())){
+                loginRepository.delete(login);
+                return;
+            }
+        }
+        throw new IllegalStateException("TOKEN_NOT_FOUND");
+    }
 }

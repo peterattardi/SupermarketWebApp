@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "logged_user")
 public class Login {
 
+
     @Id
     private String email;
     @Enumerated(EnumType.STRING)

@@ -1,4 +1,4 @@
-package com.ingsoft2021.SupermarketApp.auth.login;
+package com.ingsoft2021.SupermarketApp.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

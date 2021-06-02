@@ -39,27 +39,27 @@ public class AppAdminService {
 
 
     public List<Product> findAllProducts(String token){
-        AppAdmin appAdmin = findAdminFromToken(token);
+        AppAdmin appAdmin = findAdminByToken(token);
         return productService.findAllBySupermarketName(appAdmin.getSupermarketName());
     }
 
 
     public void addProduct(Product product, String token) throws IllegalStateException, NoSuchFieldException {
-        AppAdmin admin = findAdminFromToken(token);
+        AppAdmin admin = findAdminByToken(token);
         product.setSupermarketName(admin.getSupermarketName());
         productService.addProduct(product);
     }
 
     public void deleteProduct(String token, ProductDeleteRequest request) throws IllegalStateException, NoSuchElementException, NoSuchFieldException {
-        AppAdmin admin = findAdminFromToken(token);
+        AppAdmin admin = findAdminByToken(token);
         productService.deleteProduct(request, admin.getSupermarketName());
     }
 
 
 
-    public AppAdmin findAdminFromToken(String token){
+    public AppAdmin findAdminByToken(String token){
         //Is the request coming from a logged admin? And if yes, I need to store the admin supermarket id
-        Login adminToken = loginService.findAdminByToken(token);
+        Login adminToken = loginService.findByToken(token);
         //Now we know that the token is valid and it comes from a logged user. Let's find out his privileges
         boolean isAdmin = adminToken.getAppUserRole() == AppUserRole.ADMIN;
         if(!isAdmin) throw new IllegalStateException("UNAUTHORIZED");

@@ -2,7 +2,7 @@ package com.ingsoft2021.SupermarketApp.auth.register;
 
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserService;
-import com.ingsoft2021.SupermarketApp.auth.login.AuthResponse;
+import com.ingsoft2021.SupermarketApp.auth.AuthResponse;
 import com.ingsoft2021.SupermarketApp.email.EmailSender;
 import com.ingsoft2021.SupermarketApp.email.EmailValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ class RegistrationServiceTest {
     @BeforeEach
     void setUp() {
         appUser = new AppUser("name","surname","admin@conad.it","pass-pass","address","90","city");
-        authResponse = new AuthResponse("token", appUser.getEmail(), LocalDateTime.now());
+        authResponse = new AuthResponse("token", "admin@conad.it", LocalDateTime.now());
     }
 
     @Test

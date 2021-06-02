@@ -4,12 +4,15 @@ package com.ingsoft2021.SupermarketApp.auth.register;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserService;
+import com.ingsoft2021.SupermarketApp.auth.login.Login;
+import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import com.ingsoft2021.SupermarketApp.email.EmailValidator;
 import com.ingsoft2021.SupermarketApp.email.EmailSender;
 
-import com.ingsoft2021.SupermarketApp.auth.login.AuthResponse;
+import com.ingsoft2021.SupermarketApp.auth.AuthResponse;
 import lombok.AllArgsConstructor;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +27,7 @@ public class RegistrationService {
     private final EmailValidator emailValidator;
     private final EmailSender emailSender;
     private final RegistrationRepository registrationRepository;
+    private final LoginService loginService;
 
     public AuthResponse register(AppUser appUser) throws NoSuchFieldException {
         checkRequestField(appUser);
@@ -82,6 +86,26 @@ public class RegistrationService {
         registration.setConfirmedAt(LocalDateTime.now());
         enableAppUser(registration.getEmail());
         return true;
+    }
+
+    public AuthResponse registerAGuest(AppUser request, String loginToken) throws NoSuchFieldException {
+        //is the request valid
+        checkRequestField(request);
+        //does the token exist
+        Login logged = loginService.findByToken(loginToken);
+        //it exists so we delete ii
+        loginService.deleteByToken(loginToken);
+        //now we add the new one which contains an email
+        Login newLogin = new Login(request.getEmail(), AppUserRole.USER,
+                logged.getToken(), logged.getCreatedAt(), logged.getExpiresAt());
+        loginService.updateLogGuest(newLogin);
+        //now we can proceed with the regular registration and confirmation
+        return register(request);
+
+        /*
+        TODO: manage shopping cart for guest users.
+        */
+
     }
 
     public String buildEmail(String name, String link) {
@@ -152,6 +176,7 @@ public class RegistrationService {
                 "\n" +
                 "</div></div>";
     }
+
 
 
 }

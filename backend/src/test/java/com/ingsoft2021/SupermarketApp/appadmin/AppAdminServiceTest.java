@@ -1,9 +1,7 @@
 package com.ingsoft2021.SupermarketApp.appadmin;
 
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRole;
-import com.ingsoft2021.SupermarketApp.auth.login.AuthResponse;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
-import com.ingsoft2021.SupermarketApp.auth.login.LoginRequest;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import com.ingsoft2021.SupermarketApp.product.Product;
 import com.ingsoft2021.SupermarketApp.product.ProductDeleteRequest;
@@ -46,7 +44,7 @@ class AppAdminServiceTest {
     @Test
     void shouldReturnListOfProductWhenRequestFromValidAdmin() {
         when(appAdminRepository.findByEmail(admin.getEmail())).thenReturn(Optional.of(admin));
-        when(loginService.findAdminByToken("token")).thenReturn(new Login(
+        when(loginService.findByToken("token")).thenReturn(new Login(
                 admin.getEmail(), AppUserRole.ADMIN, "token", LocalDateTime.now(),  LocalDateTime.now().plusHours(2))
         );
         when(productService.findAllBySupermarketName("conad")).thenReturn(Arrays.asList(p1,p2,p3));
@@ -56,19 +54,19 @@ class AppAdminServiceTest {
 
     @Test
     void shouldThrowExceptionWhenAddingFromANotAdmin() {
-        when(loginService.findAdminByToken("token")).thenThrow(IllegalStateException.class);
+        when(loginService.findByToken("token")).thenThrow(IllegalStateException.class);
         assertThrows(IllegalStateException.class, () -> {underTest.addProduct(p1, "token");});
     }
 
     @Test
     void shouldThrowExceptionWhenDeletingFromANotAdmin() {
-        when(loginService.findAdminByToken("token")).thenThrow(IllegalStateException.class);
+        when(loginService.findByToken("token")).thenThrow(IllegalStateException.class);
         assertThrows(IllegalStateException.class, () -> {underTest.deleteProduct("token", pdr);});
     }
 
     @Test
     void shouldThrowExceptionWhenGettingFromANotAdmin() {
-        when(loginService.findAdminByToken("token")).thenThrow(IllegalStateException.class);
+        when(loginService.findByToken("token")).thenThrow(IllegalStateException.class);
         assertThrows(IllegalStateException.class, () -> {underTest.findAllProducts("token");});
     }
 

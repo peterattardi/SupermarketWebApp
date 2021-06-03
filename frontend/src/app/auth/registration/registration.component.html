@@ -1,5 +1,6 @@
 <div class="row">
   <div class="col-xs-12 col-md-6 col-md-offset-3">
+    <h3>Register in the blink of an eye!</h3>
     <div class="alert alert-danger" *ngIf="error">
       <p>{{ error }}</p> <br>
       <button (click)="onHandleError()">Clear</button>
@@ -33,7 +34,7 @@
         />
       </div>
 
-      <div class="form-group" *ngIf="!isLoginMode">
+      <div class="form-group">
         <label for="firstName">First Name</label>
         <input
           type="text"
@@ -44,7 +45,7 @@
           name="firstName"
         />
       </div>
-      <div class="form-group" *ngIf="!isLoginMode">
+      <div class="form-group">
         <label for="lastName">Last Name</label>
         <input
           type="text"
@@ -55,7 +56,7 @@
           required
         />
       </div>
-      <div class="form-group" *ngIf="!isLoginMode">
+      <div class="form-group">
         <label for="city">City</label>
         <input
           type="text"
@@ -67,7 +68,7 @@
         />
       </div>
 
-      <div class="form-group" *ngIf="!isLoginMode">
+      <div class="form-group">
         <label for="address">Address</label>
         <input
           type="text"
@@ -79,7 +80,7 @@
         />
       </div>
 
-      <div class="form-group" *ngIf="!isLoginMode">
+      <div class="form-group">
         <label for="cap">CAP</label>
         <input
           type="text"
@@ -96,16 +97,14 @@
           type="submit"
           [disabled]="!authForm.valid"
         >
-          {{ isLoginMode ? 'Login' : 'Sign Up' }}
+          Sign Up
         </button>
-        |
-        <button class="btn btn-primary" (click)="onSwitchMode()" type="button">
-          Switch to {{ isLoginMode ? 'Sign Up' : 'Login' }}
-        </button>
-        |
-        <button class="btn btn-secondary" (click)="onAdmin()" [disabled]="!isLoginMode" type="button">
-          Login as <b><i>{{ isAdmin && isLoginMode ? 'admin' : 'client' }}</i></b>
-        </button>
+      </div>
+      <div>
+        <h5>
+          Are you already registered?
+          <a routerLink="/auth">Log in here</a>
+        </h5>
       </div>
     </form>
   </div>

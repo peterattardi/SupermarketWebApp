@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
 import {catchError, map, tap} from 'rxjs/operators';
 import {throwError, BehaviorSubject, Observable} from 'rxjs';
@@ -31,7 +31,7 @@ export class AuthService {
 
   signup(signupForm: SignupForm): Observable<string> {
     return this.http
-      .post<{text: string}>(
+      .post(
         this.API + 'registration',
         {
           firstName: signupForm.firstName,
@@ -41,12 +41,13 @@ export class AuthService {
           address: signupForm.address,
           cap: signupForm.cap,
           city: signupForm.city
-        }
+        },
+        {responseType: 'text'}
       )
       .pipe(
         catchError(this.handleError),
         map(resData => {
-          return resData.text;
+          return resData;
         })
       );
   }
@@ -119,10 +120,10 @@ export class AuthService {
     }
   }
 
-  logout(): void {
+  logout(redirect: boolean = true): void {
     const token = this.user.value.token;
     this.user.next(null);
-    this.router.navigate(['/auth']);
+    if (redirect) { this.router.navigate(['/auth']); }
     localStorage.removeItem('userData');
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);

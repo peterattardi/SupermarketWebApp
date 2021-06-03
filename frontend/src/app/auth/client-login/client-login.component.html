@@ -45,15 +45,21 @@
         >
           Login
         </button>
-      </div>
-    </form>
-    <div>
-      <button
+        |
+        <button
         class="btn btn-default"
         type="button"
         (click)="onLoginGuest()">
         Login as a Guest
       </button>
     </div>
+      <div>
+        <h5>
+          Are you new here?
+          <a routerLink="/auth/register">Register here</a>
+        </h5>
+      </div>
+    </form>
+
   </div>
 </div>

@@ -1,6 +1,6 @@
 package com.ingsoft2021.SupermarketApp.appadmin;
 
-import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
+import com.ingsoft2021.SupermarketApp.util.AppUserRole;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

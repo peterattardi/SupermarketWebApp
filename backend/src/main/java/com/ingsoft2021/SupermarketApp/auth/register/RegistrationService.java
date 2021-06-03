@@ -2,15 +2,14 @@ package com.ingsoft2021.SupermarketApp.auth.register;
 
 
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
-import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
+import com.ingsoft2021.SupermarketApp.util.AppUserRole;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserService;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
-import com.ingsoft2021.SupermarketApp.util.RequestChecker;
+import com.ingsoft2021.SupermarketApp.util.Checker;
 import com.ingsoft2021.SupermarketApp.util.email.EmailValidator;
 import com.ingsoft2021.SupermarketApp.util.email.EmailSender;
 
-import com.ingsoft2021.SupermarketApp.util.Request.AuthResponse;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class RegistrationService {
     private final LoginService loginService;
 
     public void register(AppUser appUser) throws NoSuchFieldException {
-        RequestChecker.check(appUser);
+        Checker.check(appUser);
         boolean isValid = emailValidator.test(appUser.getEmail());
         if (!isValid) throw new IllegalStateException("WRONG_EMAIL_FORMAT");
         appUser.setAppUserRole(AppUserRole.USER);
@@ -78,7 +77,7 @@ public class RegistrationService {
 
     public void registerAGuest(AppUser request, String loginToken) throws NoSuchFieldException {
         //is the request valid
-        RequestChecker.check(request);
+        Checker.check(request);
         //does the token exist
         Login logged = loginService.findByToken(loginToken);
         //it exists so we delete it, but first we assert that we are not trying to

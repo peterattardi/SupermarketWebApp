@@ -1,7 +1,7 @@
 package com.ingsoft2021.SupermarketApp.appadmin;
 
 
-import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
+import com.ingsoft2021.SupermarketApp.util.AppUserRole;
 import com.ingsoft2021.SupermarketApp.product.Product;
 import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.product.ProductService;

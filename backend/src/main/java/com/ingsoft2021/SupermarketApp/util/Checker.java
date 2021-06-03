@@ -1,14 +1,14 @@
 package com.ingsoft2021.SupermarketApp.util;
 
+import com.ingsoft2021.SupermarketApp.CartItem.CartItem;
+import com.ingsoft2021.SupermarketApp.CartItem.CartItemRepository;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.product.Product;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
-import com.ingsoft2021.SupermarketApp.util.Request.LoginRequest;
-import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
-import com.ingsoft2021.SupermarketApp.util.Request.CatalogueRequest;
-import com.ingsoft2021.SupermarketApp.util.Request.SupermarketRequest;
+import com.ingsoft2021.SupermarketApp.util.Request.*;
+import com.ingsoft2021.SupermarketApp.util.email.EmailValidator;
 
-public class RequestChecker {
+public class Checker {
 
     public static boolean check(Product p) throws NoSuchFieldException {
         if(p.getProductName() == null || p.getProductName().isEmpty())
@@ -61,11 +61,41 @@ public class RequestChecker {
         return true;
     }
 
-    public static void check(ShopProduct s) throws NoSuchFieldException {
+    public static boolean check(ShopProduct s) throws NoSuchFieldException {
         if(s.getShopId() == null) throw  new NoSuchFieldException("SHOP_ID_NULL");
         if(s.getProductBrand() == null || s.getProductBrand().isEmpty()) throw  new NoSuchFieldException("BRAND_NULL_OR_EMPTY");
         if(s.getProductName() == null || s.getProductName().isEmpty()) throw  new NoSuchFieldException("NAME_NULL_OR_EMPTY");
         if( (Integer) s.getQuantity() == null) throw  new NoSuchFieldException("QUANTITY_NULL");
         if(  s.getQuantity() < 0) throw  new NoSuchFieldException("QUANTITY_NEGATIVE");
+        return true;
+    }
+
+    public static boolean check(CartItemDeleteRequest c) throws NoSuchFieldException {
+        if(c.getShopId() == null) throw new NoSuchFieldException("SHOP_ID_NULL");
+        if(c.getEmail() == null) throw new NoSuchFieldException("EMAIL_NULL");
+        if(!new EmailValidator().test(c.getEmail())) throw new IllegalStateException("WRONG_EMAIL_FORMAT");
+        if(c.getProductBrand() == null || c.getProductBrand().isEmpty()) throw  new NoSuchFieldException("BRAND_NULL_OR_EMPTY");
+        if(c.getProductName() == null || c.getProductName().isEmpty()) throw  new NoSuchFieldException("NAME_NULL_OR_EMPTY");
+        return true;
+    }
+
+    public static boolean check(CartItem c) throws NoSuchFieldException {
+        if(c.getShopId() == null) throw new NoSuchFieldException("SHOP_ID_NULL");
+        if(c.getEmail() == null) throw new NoSuchFieldException("EMAIL_NULL");
+        if(!new EmailValidator().test(c.getEmail())) throw new IllegalStateException("WRONG_EMAIL_FORMAT");
+        if(c.getProductBrand() == null || c.getProductBrand().isEmpty()) throw  new NoSuchFieldException("BRAND_NULL_OR_EMPTY");
+        if(c.getProductName() == null || c.getProductName().isEmpty()) throw  new NoSuchFieldException("NAME_NULL_OR_EMPTY");
+        if( (Integer) c.getQuantity() == null) throw  new NoSuchFieldException("QUANTITY_NULL");
+        if( c.getQuantity() < 0) throw  new NoSuchFieldException("QUANTITY_NEGATIVE");
+        return true;
+    }
+
+    public static boolean check(CartItemRequest c) throws NoSuchFieldException {
+        if(c.getShopId() == null) throw new NoSuchFieldException("SHOP_ID_NULL");
+        if(c.getProductBrand() == null || c.getProductBrand().isEmpty()) throw  new NoSuchFieldException("BRAND_NULL_OR_EMPTY");
+        if(c.getProductName() == null || c.getProductName().isEmpty()) throw  new NoSuchFieldException("NAME_NULL_OR_EMPTY");
+        if( (Integer) c.getQuantity() == null) throw  new NoSuchFieldException("QUANTITY_NULL");
+        if( c.getQuantity() < 1) throw  new NoSuchFieldException("QUANTITY_NEGATIVE");
+        return true;
     }
 }

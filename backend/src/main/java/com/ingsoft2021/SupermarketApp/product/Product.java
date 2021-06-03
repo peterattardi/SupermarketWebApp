@@ -1,6 +1,6 @@
 package com.ingsoft2021.SupermarketApp.product;
 
-import com.ingsoft2021.SupermarketApp.util.Request.ProductId;
+import com.ingsoft2021.SupermarketApp.util.compositeIds.ProductId;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package com.ingsoft2021.SupermarketApp.appadmin;
 
-import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
+import com.ingsoft2021.SupermarketApp.util.AppUserRole;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import com.ingsoft2021.SupermarketApp.product.Product;

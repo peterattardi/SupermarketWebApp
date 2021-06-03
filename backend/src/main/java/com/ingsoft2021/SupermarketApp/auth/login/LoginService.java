@@ -6,18 +6,17 @@ import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRepository;
 import com.ingsoft2021.SupermarketApp.util.Request.AuthResponse;
 import com.ingsoft2021.SupermarketApp.util.Request.LoginRequest;
-import com.ingsoft2021.SupermarketApp.util.RequestChecker;
+import com.ingsoft2021.SupermarketApp.util.Checker;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ingsoft2021.SupermarketApp.util.Request.AppUserRole.*;
+import static com.ingsoft2021.SupermarketApp.util.AppUserRole.*;
 
 @AllArgsConstructor
 @Service
@@ -30,7 +29,7 @@ public class LoginService {
 
     public AuthResponse login(LoginRequest loginRequest) throws NoSuchFieldException {
         AuthResponse response = new AuthResponse(null, null, null);
-        RequestChecker.check(loginRequest);
+        Checker.check(loginRequest);
         switch (loginRequest.getAppUserRole()){
             case "ADMIN":
                 Optional<AppAdmin> appAdmin = appAdminRepository.findByEmail(loginRequest.getEmail());

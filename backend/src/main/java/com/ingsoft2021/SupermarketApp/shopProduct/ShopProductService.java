@@ -3,7 +3,7 @@ package com.ingsoft2021.SupermarketApp.shopProduct;
 import com.ingsoft2021.SupermarketApp.product.Product;
 import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.shop.Shop;
-import com.ingsoft2021.SupermarketApp.util.RequestChecker;
+import com.ingsoft2021.SupermarketApp.util.Checker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class ShopProductService {
     private final ShopProductRepository shopProductRepository;
 
     public void addInEveryShop(Product product, String supermarketName, List<Shop> shopsOfThatSupermarket) throws NoSuchFieldException {
-        RequestChecker.check(product);
+        Checker.check(product);
         for(Shop shop : shopsOfThatSupermarket){
             shopProductRepository.save(new ShopProduct(
                     shop.getShopId(), product.getProductName(),
@@ -27,7 +27,7 @@ public class ShopProductService {
     }
 
     public void deleteInEveryShop(ProductDeleteRequest product, String supermarketName, List<Shop> shopsOfThatSupermarket) throws NoSuchFieldException {
-        RequestChecker.check(product, supermarketName);
+        Checker.check(product, supermarketName);
         for(Shop shop : shopsOfThatSupermarket){
             Optional<ShopProduct> shopProduct = shopProductRepository
                     .findByShopIdAndProductNameAndProductBrand(

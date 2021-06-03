@@ -1,12 +1,11 @@
 package com.ingsoft2021.SupermarketApp.shop;
 
 import com.ingsoft2021.SupermarketApp.product.Product;
-import com.ingsoft2021.SupermarketApp.supermarkets.Supermarket;
 import com.ingsoft2021.SupermarketApp.util.Request.CatalogueRequest;
 import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductService;
-import com.ingsoft2021.SupermarketApp.util.RequestChecker;
+import com.ingsoft2021.SupermarketApp.util.Checker;
 import com.ingsoft2021.SupermarketApp.util.ShopComparator;
 import com.ingsoft2021.SupermarketApp.util.ShopDistSupport;
 import lombok.AllArgsConstructor;
@@ -27,7 +26,7 @@ public class ShopService {
 
     public List<ShopProduct> getInventory(CatalogueRequest request) throws NoSuchFieldException {
         //checking the request format
-        RequestChecker.check(request);
+        Checker.check(request);
         List<ShopDistSupport> shopAndDistance = getNearestShopsOfSupermarket(request);
         //If the list is not empty, return the first element
         if(shopAndDistance.size() > 0){
@@ -107,7 +106,7 @@ public class ShopService {
     }
 
     public void updateQuantity(ShopProduct shopProduct) throws NoSuchFieldException {
-        RequestChecker.check(shopProduct);
+        Checker.check(shopProduct);
         Optional<Shop> shop = shopRepository.findByShopId(shopProduct.getShopId());
         if(shop.isEmpty()) throw new IllegalStateException("SHOP_ID_NOT_FOUND");
         shopProductService.update(shopProduct);

@@ -1,6 +1,6 @@
 package com.ingsoft2021.SupermarketApp.auth.login;
 
-import com.ingsoft2021.SupermarketApp.util.Request.AppUserRole;
+import com.ingsoft2021.SupermarketApp.util.AppUserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 

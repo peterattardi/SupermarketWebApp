@@ -3,9 +3,8 @@ package com.ingsoft2021.SupermarketApp.supermarkets;
 import com.ingsoft2021.SupermarketApp.shop.ShopService;
 import com.ingsoft2021.SupermarketApp.util.Request.CatalogueRequest;
 import com.ingsoft2021.SupermarketApp.util.Request.SupermarketRequest;
-import com.ingsoft2021.SupermarketApp.util.RequestChecker;
+import com.ingsoft2021.SupermarketApp.util.Checker;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class SupermarketService {
     }
 
     public List<Supermarket> findNearestSupermarkets(SupermarketRequest request) throws NoSuchFieldException {
-        RequestChecker.check(request);
+        Checker.check(request);
         List<Supermarket> supermarkets = supermarketRepository.findAll();
         return supermarkets.stream().filter(supermarket -> shopService.getNearestShopsOfSupermarket(
             new CatalogueRequest(request.getLongitude(), request.getLatitude(), supermarket.getName())

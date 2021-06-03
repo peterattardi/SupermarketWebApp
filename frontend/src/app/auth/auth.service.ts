@@ -16,7 +16,8 @@ export interface AuthResponseData {
 
 export enum Role {
   USER = 'USER',
-  ADMIN = 'ADMIN'
+  ADMIN = 'ADMIN',
+  GUEST = 'GUEST'
 }
 
 @Injectable({ providedIn: 'root' })
@@ -68,6 +69,24 @@ export class AuthService {
             resData.idToken,
             resData.expiresAt,
             role
+          );
+        })
+      );
+  }
+
+  loginGuest(): Observable<AuthResponseData> {
+    return this.http.post<AuthResponseData>(
+      this.API + 'guest/login',
+      {}
+      )
+      .pipe(
+        catchError(this.handleError),
+        tap(resData => {
+          this.handleAuthentication(
+            resData.email,
+            resData.idToken,
+            resData.expiresAt,
+            'GUEST'
           );
         })
       );

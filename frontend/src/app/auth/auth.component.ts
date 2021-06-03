@@ -65,6 +65,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
 
     let authObs: Observable<AuthResponseData>;
+    let registrationObs: Observable<string>;
 
     if (this.isLoginMode) {
       authObs = this.authService.login(
@@ -72,7 +73,24 @@ export class AuthComponent implements OnInit, OnDestroy {
         password,
         this.isAdmin ? Role.ADMIN : Role.USER);
     } else {
-      authObs = this.authService.signup(signupForm);
+      registrationObs = this.authService.signup(signupForm);
+    }
+
+    if (registrationObs) {
+      registrationObs.subscribe(
+        resData => {
+          console.log('Registration: ' + resData);
+          authObs = this.authService.login(
+            email,
+            password,
+            this.isAdmin ? Role.ADMIN : Role.USER);
+        },
+        errorMessage => {
+          console.log(errorMessage);
+          this.error = errorMessage;
+          this.isLoading = false;
+        }
+      );
     }
 
     authObs.subscribe(

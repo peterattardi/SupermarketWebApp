@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService, Role} from '../auth/auth.service';
 import {Subscription} from 'rxjs';
+import {User} from '../auth/user.model';
 
 @Component({
   selector: 'app-home',
@@ -15,12 +16,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe( user => {
-      if (user.role === Role.ADMIN) {
-        this.role = 'Admin';
-      } else if (user.role === Role.USER) {
-        this.role = 'Client';
-      } else {
-        this.role = 'Error while processing user';
+      if (user) {
+        if (user.role === Role.ADMIN) {
+          this.role = 'Admin';
+        } else if (user.role === Role.USER) {
+          this.role = 'Client';
+        } else {
+          this.role = 'Error while processing user';
+        }
       }
     });
   }

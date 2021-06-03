@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError, tap } from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {throwError, BehaviorSubject, Observable} from 'rxjs';
 
 import { User } from './user.model';
 import {SignupForm} from './signupform.model';
 
+
 export interface AuthResponseData {
-  token: string;
+  idToken: string;
   email: string;
-  expirationDate: Date;
+  expiresAt: Date;
 }
 
 export enum Role {
@@ -22,15 +23,15 @@ export enum Role {
 export class AuthService {
   user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
-  MOCK_REG = 'https://60b3a9594ecdc1001747fac2.mockapi.io/registration';
-  API = 'http://7112a34482c0.ngrok.io';
+  MOCK_API = 'https://60b3a9594ecdc1001747fac2.mockapi.io/';
+  API = 'http://0584a0884918.ngrok.io/';
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  signup(signupForm: SignupForm): Observable<AuthResponseData> {
+  signup(signupForm: SignupForm): Observable<string> {
     return this.http
-      .post<AuthResponseData>(
-        this.API + '/registration',
+      .post<{text: string}>(
+        this.API + 'registration',
         {
           firstName: signupForm.firstName,
           lastName: signupForm.lastName,
@@ -43,13 +44,8 @@ export class AuthService {
       )
       .pipe(
         catchError(this.handleError),
-        tap(resData => {
-          this.handleAuthentication(
-            resData.email,
-            resData.token,
-            resData.expirationDate,
-            Role.USER
-          );
+        map(resData => {
+          return resData.text;
         })
       );
   }
@@ -57,7 +53,7 @@ export class AuthService {
   login(email: string, password: string, role: string): Observable<AuthResponseData> {
     return this.http
       .post<AuthResponseData>(
-        this.API + '/login',
+        this.API + 'login',
         {
           email,
           password,
@@ -69,15 +65,14 @@ export class AuthService {
         tap(resData => {
           this.handleAuthentication(
             resData.email,
-            resData.token,
-            resData.expirationDate,
+            resData.idToken,
+            resData.expiresAt,
             role
           );
         })
       );
   }
 
-  // TODO: Fix autoLogin it doesn't retrieve correctly the user from UserData
   autoLogin(): void {
     const userData: {
       email: string;
@@ -101,11 +96,12 @@ export class AuthService {
       const expirationDuration =
         new Date(userData._tokenExpirationDate).getTime() -
         new Date().getTime();
-      // this.autoLogout(expirationDuration);
+      this.autoLogout(expirationDuration);
     }
   }
 
   logout(): void {
+    const token = this.user.value.token;
     this.user.next(null);
     this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
@@ -113,16 +109,18 @@ export class AuthService {
       clearTimeout(this.tokenExpirationTimer);
     }
     this.tokenExpirationTimer = null;
+    this.http.post<{text: string}>(
+      this.API + 'user/logout?token=' + token,
+      {}
+    );
   }
 
-  // TODO: Fix autoLogout, probably expirationDuration value is wrong
-  // autoLogout(expirationDuration: number): void {
-  //   this.tokenExpirationTimer = setTimeout(() => {
-  //     this.logout();
-  //   }, expirationDuration);
-  // }
+  autoLogout(expirationDuration: number): void {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logout();
+    }, expirationDuration);
+  }
 
-  // TODO: User is not set correctly in local storage
   private handleAuthentication(
     email: string,
     token: string,
@@ -131,7 +129,7 @@ export class AuthService {
   ): void {
     const user = new User(email, token, expirationDate, role);
     this.user.next(user);
-    // this.autoLogout((new Date(expirationDate)).getTime() - (new Date()).getTime());
+    this.autoLogout((new Date(expirationDate)).getTime() - (new Date()).getTime());
     localStorage.setItem('userData', JSON.stringify(user));
   }
 

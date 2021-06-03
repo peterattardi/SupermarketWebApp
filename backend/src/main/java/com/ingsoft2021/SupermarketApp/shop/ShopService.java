@@ -1,6 +1,7 @@
 package com.ingsoft2021.SupermarketApp.shop;
 
 import com.ingsoft2021.SupermarketApp.product.Product;
+import com.ingsoft2021.SupermarketApp.supermarkets.Supermarket;
 import com.ingsoft2021.SupermarketApp.util.Request.CatalogueRequest;
 import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
@@ -11,10 +12,7 @@ import com.ingsoft2021.SupermarketApp.util.ShopDistSupport;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -23,20 +21,37 @@ public class ShopService {
 
     private final ShopRepository shopRepository;
     private final ShopProductService shopProductService;
+    private static final int KM_RADIUS = 4;
+
 
 
     public List<ShopProduct> getInventory(CatalogueRequest request) throws NoSuchFieldException {
+        //checking the request format
         RequestChecker.check(request);
-        //I need to get a ShopId that corresponds to the closest supermarket to the user
-        //I need a list of shopId with distance
-        List<ShopDistSupport> shopAndDistance = findShopSortByDistaceFrom(request);
-        ShopComparator shopComparator = new ShopComparator();
-        Collections.sort(shopAndDistance, shopComparator);
+        List<ShopDistSupport> shopAndDistance = getNearestShopsOfSupermarket(request);
+        //If the list is not empty, return the first element
         if(shopAndDistance.size() > 0){
             return shopProductService.findAllByShopId(shopAndDistance.get(0).getShopID());
         }
+        //otherwise return an empty list;
         return new ArrayList<ShopProduct>(); //empty
     }
+
+
+    public List<ShopDistSupport> getNearestShopsOfSupermarket(CatalogueRequest request){
+        //Find a list of Objects that contain (ShopId, distance from user)
+        List<ShopDistSupport> shopAndDistance = findShopSortByDistaceFrom(request);
+        System.out.println(shopAndDistance.size());
+        //order this list by distance
+        ShopComparator shopComparator = new ShopComparator();
+        Collections.sort(shopAndDistance, shopComparator);
+        //filter only those in a radius of KM_RADIUS
+        shopAndDistance = shopAndDistance.stream().filter(shop -> shop.getDistance() < KM_RADIUS).collect(Collectors.toList());
+        System.out.println(shopAndDistance.size());
+        return shopAndDistance;
+    }
+
+
 
     private List<ShopDistSupport> findShopSortByDistaceFrom(CatalogueRequest request) {
         List<Shop> shops = shopRepository.findAllBySupermarketName(request.getSupermarketName());
@@ -83,5 +98,22 @@ public class ShopService {
 
     public double deg2rad(double deg) {
         return deg * (Math.PI/180);
+    }
+
+    public String getSupermarketName(Long shopId) {
+       Optional<Shop> shop = shopRepository.findByShopId(shopId);
+       if(shop.isEmpty()) throw new IllegalStateException("SHOP_ID_NOT_FOUND");
+       return shop.get().getSupermarketName();
+    }
+
+    public void updateQuantity(ShopProduct shopProduct) throws NoSuchFieldException {
+        RequestChecker.check(shopProduct);
+        Optional<Shop> shop = shopRepository.findByShopId(shopProduct.getShopId());
+        if(shop.isEmpty()) throw new IllegalStateException("SHOP_ID_NOT_FOUND");
+        shopProductService.update(shopProduct);
+    }
+
+    public List<Shop> findShopsBySupermarket(String supermarketName) {
+        return shopRepository.findAllBySupermarketName(supermarketName);
     }
 }

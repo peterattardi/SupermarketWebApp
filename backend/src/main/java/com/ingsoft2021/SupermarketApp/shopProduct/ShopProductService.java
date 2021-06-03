@@ -42,6 +42,14 @@ public class ShopProductService {
         return shopProductRepository.findAllByShopId(shopId);
     }
 
+    public void update(ShopProduct shopProduct) {
+        Optional<ShopProduct> old = shopProductRepository.findByShopIdAndProductNameAndProductBrand(
+          shopProduct.getShopId(), shopProduct.getProductName(), shopProduct.getProductBrand()
+        );
+        if (old.isEmpty()) throw new IllegalStateException("PRODUCT_NOT_FOUND");
+        shopProductRepository.delete(old.get());
+        shopProductRepository.save(shopProduct);
+    }
 }
 
 

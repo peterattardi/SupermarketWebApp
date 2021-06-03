@@ -11,6 +11,5 @@ public interface ShopProductRepository extends JpaRepository<ShopProduct, ShopPr
     Optional<Integer> findQuantityByShopIdAndProductNameAndProductBrand(
             Long shopId, String productName, String productBrand
     );
-
     Optional<ShopProduct> findByShopIdAndProductNameAndProductBrand(Long shopId, String productName, String productBrand);
 }

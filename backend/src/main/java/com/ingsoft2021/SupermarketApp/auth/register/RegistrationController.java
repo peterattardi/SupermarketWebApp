@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.ConnectException;
+
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200/")
@@ -17,8 +19,8 @@ public class RegistrationController {
     @PostMapping(path = "/registration")
     public ResponseEntity register(@RequestBody AppUser request) {
         try {
-            AuthResponse authResponse = registrationService.register(request);
-            return ResponseEntity.status(200).body(authResponse);
+            registrationService.register(request);
+            return ResponseEntity.status(200).body("SUCCESS");
         }catch (IllegalStateException | NoSuchFieldException e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
@@ -27,8 +29,8 @@ public class RegistrationController {
     @PostMapping(path = "/guest/registration")
     public ResponseEntity register(@RequestBody AppUser request, @RequestParam String token) {
         try {
-            AuthResponse authResponse = registrationService.registerAGuest(request,token);
-            return ResponseEntity.status(200).body(authResponse);
+            registrationService.registerAGuest(request,token);
+            return ResponseEntity.status(200).body("SUCCESS");
         }catch (IllegalStateException | NoSuchFieldException e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
@@ -43,5 +45,4 @@ public class RegistrationController {
             return  ResponseEntity.status(400).body(e.getMessage());
         }
     }
-
 }

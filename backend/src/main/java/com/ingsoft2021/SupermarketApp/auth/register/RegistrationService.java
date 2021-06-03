@@ -29,7 +29,7 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final LoginService loginService;
 
-    public AuthResponse register(AppUser appUser) throws NoSuchFieldException {
+    public void register(AppUser appUser) throws NoSuchFieldException {
         RequestChecker.check(appUser);
         boolean isValid = emailValidator.test(appUser.getEmail());
         if (!isValid) throw new IllegalStateException("WRONG_EMAIL_FORMAT");
@@ -40,12 +40,9 @@ public class RegistrationService {
         LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(15);
         Registration registration = new Registration(appUser.getEmail(), token, createdAt,expiresAt);
         registrationRepository.save(registration);
-        AuthResponse authResponse = new AuthResponse(token, appUser.getEmail(), expiresAt);
-
         String link = "http://localhost:8080/registration/confirm?token=" + token;
         emailSender.send(appUser.getEmail(), buildEmail(appUser.getFirstName(), link));
 
-        return authResponse;
     }
 
 
@@ -79,23 +76,20 @@ public class RegistrationService {
         return true;
     }
 
-    public AuthResponse registerAGuest(AppUser request, String loginToken) throws NoSuchFieldException {
+    public void registerAGuest(AppUser request, String loginToken) throws NoSuchFieldException {
         //is the request valid
         RequestChecker.check(request);
         //does the token exist
         Login logged = loginService.findByToken(loginToken);
-        //it exists so we delete ii
+        //it exists so we delete it, but first we assert that we are not trying to
+        //add an existing email. So we try to register it
+        register(request);
         loginService.deleteByToken(loginToken);
         //now we add the new one which contains an email
         Login newLogin = new Login(request.getEmail(), AppUserRole.USER,
                 logged.getToken(), logged.getCreatedAt(), logged.getExpiresAt());
         loginService.updateLogGuest(newLogin);
-        //now we can proceed with the regular registration and confirmation
-        return register(request);
 
-        /*
-        TODO: manage shopping cart for guest users.
-        */
 
     }
 

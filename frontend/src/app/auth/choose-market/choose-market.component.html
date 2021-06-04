@@ -1,5 +1,17 @@
 <div class="container">
   <button
+    type="button"
+    class="btn btn-success"
+    (click)="getMarkets()">
+    Reload
+  </button>
+  <div *ngIf="isLoading" style="text-align: center;">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+  <div *ngIf="!isLoading && (supermarkets === [])">
+    No supermarkets found
+  </div>
+  <button
     class="btn {{supermarket === chosenMarket ? 'btn-primary' : 'btn-default'}} btn-group-justified"
     type="button"
     id="{{supermarket.id}}"

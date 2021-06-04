@@ -5,9 +5,11 @@ import { HomeComponent } from './home.component';
 import { SharedModule } from '../shared/shared.module';
 import {RouterModule} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
+import { ShopsComponent } from './shops/shops.component';
+import { CatalogueComponent } from './catalogue/catalogue.component';
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, ShopsComponent, CatalogueComponent],
   imports: [
     CommonModule,
     RouterModule.forChild([{

@@ -1,6 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService, Role} from '../auth/auth.service';
 import {Subscription} from 'rxjs';
+import {MarketService, Supermarket} from '../auth/choose-market/market.service';
+import {Router} from '@angular/router';
 import {User} from '../auth/user.model';
 
 @Component({
@@ -9,22 +11,18 @@ import {User} from '../auth/user.model';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  role = 'Client';
+  user: User = null;
   userSub: Subscription;
+  marketSub: Subscription;
+  supermarket: Supermarket;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+              private marketService: MarketService,
+              private router: Router) { }
 
   ngOnInit(): void {
-    this.userSub = this.authService.user.subscribe( user => {
-      if (user) {
-        if (user.role === Role.ADMIN) {
-          this.role = 'Admin';
-        } else if (user.role === Role.USER) {
-          this.role = 'Client';
-        } else {
-          this.role = 'Error while processing user';
-        }
-      }
+    this.userSub = this.authService.user.subscribe(user => {
+      this.user = user;
     });
   }
 

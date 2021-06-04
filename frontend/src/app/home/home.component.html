@@ -1,7 +1,8 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <p>Home: {{role}}</p>
+      <app-catalogue *ngIf="user.role !== 'ADMIN'"></app-catalogue>
+      <app-shops *ngIf="user.role === 'ADMIN'"></app-shops>
     </div>
   </div>
 </div>

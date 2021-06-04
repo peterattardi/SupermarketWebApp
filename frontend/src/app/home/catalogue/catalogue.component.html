@@ -1,0 +1,10 @@
+<h3>Home: {{user.role}}</h3>
+<br>
+<div *ngIf="user.role !== 'ADMIN'">
+  <h4>
+    You have chosen: {{supermarket.supermarketName}}
+  </h4>
+  <a
+    (click)="onResetSupermarket()"
+    style="cursor: pointer">{{supermarket ? 'Change' : 'Choose a supermarket!'}}</a>
+</div>

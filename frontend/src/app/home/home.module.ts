@@ -3,20 +3,19 @@ import { CommonModule } from '@angular/common';
 
 import { HomeComponent } from './home.component';
 import { SharedModule } from '../shared/shared.module';
-import {RouterModule} from '@angular/router';
-import {AuthGuard} from '../auth/auth.guard';
-import { ShopsComponent } from './shops/shops.component';
+import { ChooseShopComponent } from './choose-shop/choose-shop.component';
 import { CatalogueComponent } from './catalogue/catalogue.component';
+import {HomeRoutingModule} from './home-routing.module';
 
 @NgModule({
-  declarations: [HomeComponent, ShopsComponent, CatalogueComponent],
+  declarations: [
+    HomeComponent,
+    ChooseShopComponent,
+    CatalogueComponent
+  ],
   imports: [
     CommonModule,
-    RouterModule.forChild([{
-      path: '',
-      component: HomeComponent,
-      canActivate: [AuthGuard]
-    }]),
+    HomeRoutingModule,
     SharedModule
   ]
 })

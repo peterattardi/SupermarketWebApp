@@ -16,9 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   marketSub: Subscription;
   supermarket: Supermarket;
 
-  constructor(private authService: AuthService,
-              private marketService: MarketService,
-              private router: Router) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe(user => {

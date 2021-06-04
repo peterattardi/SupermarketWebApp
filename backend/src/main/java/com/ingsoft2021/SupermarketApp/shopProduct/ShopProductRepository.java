@@ -8,8 +8,5 @@ import java.util.Optional;
 
 public interface ShopProductRepository extends JpaRepository<ShopProduct, ShopProductId> {
     List<ShopProduct> findAllByShopId(Long shopId);
-    Optional<Integer> findQuantityByShopIdAndProductNameAndProductBrand(
-            Long shopId, String productName, String productBrand
-    );
     Optional<ShopProduct> findByShopIdAndProductNameAndProductBrand(Long shopId, String productName, String productBrand);
 }

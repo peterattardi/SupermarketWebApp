@@ -1,6 +1,5 @@
 package com.ingsoft2021.SupermarketApp.CartItem;
 
-import com.ingsoft2021.SupermarketApp.util.Request.CartItemDeleteRequest;
 import com.ingsoft2021.SupermarketApp.util.Request.CartItemRequest;
 import com.ingsoft2021.SupermarketApp.util.compositeIds.CartId;
 import lombok.*;
@@ -37,5 +36,15 @@ public class CartItem {
         this.productBrand = request.getProductBrand();
         this.quantity = request.getQuantity();
         this.shopId = request.getShopId();
+    }
+
+    public CartItem(CartItem request, int quantity) {
+        this.email = request.getEmail();
+        this.productName = request.getProductName();
+        this.productBrand = request.getProductBrand();
+        this.quantity = request.getQuantity();
+        this.shopId = request.getShopId();
+        this.quantity = quantity;
+
     }
 }

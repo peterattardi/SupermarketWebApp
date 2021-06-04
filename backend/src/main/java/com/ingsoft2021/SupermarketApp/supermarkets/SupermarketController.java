@@ -19,7 +19,7 @@ public class SupermarketController {
         this.supermarketService = supermarketService;
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity getSupermarkets(@RequestBody SupermarketRequest request){
         try {
             return ResponseEntity.status(200).body(supermarketService.findNearestSupermarkets(request));
@@ -27,11 +27,5 @@ public class SupermarketController {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
-
-    @PostMapping
-    public void registerSupermarket(@RequestBody Supermarket supermarket){
-        supermarketService.addNewSupermarket(supermarket);
-    }
-
 
 }

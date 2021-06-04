@@ -1,6 +1,8 @@
 package com.ingsoft2021.SupermarketApp.auth.register;
 
 
+import com.ingsoft2021.SupermarketApp.CartItem.CartItem;
+import com.ingsoft2021.SupermarketApp.CartItem.CartItemService;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.util.AppUserRole;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,6 +30,7 @@ public class RegistrationService {
     private final EmailSender emailSender;
     private final RegistrationRepository registrationRepository;
     private final LoginService loginService;
+    private final CartItemService cartItemService;
 
     public void register(AppUser appUser) throws NoSuchFieldException {
         Checker.check(appUser);
@@ -88,8 +92,18 @@ public class RegistrationService {
         Login newLogin = new Login(request.getEmail(), AppUserRole.USER,
                 logged.getToken(), logged.getCreatedAt(), logged.getExpiresAt());
         loginService.updateLogGuest(newLogin);
-
-
+        //now we check if the guest had products in the cart
+        List<CartItem> cartItems = cartItemService.findAllByEmail(logged.getEmail());
+        //If yes, we have to update email and expiresAt
+        if(!cartItems.isEmpty()){
+            for(CartItem c : cartItems){
+                cartItemService.deleteCartItem(c);
+                CartItem toAdd = new CartItem(
+                        newLogin.getEmail(), c.getShopId(), c.getProductName(), c.getProductBrand(),
+                        c.getQuantity(), null);
+                cartItemService.addCartItem(toAdd);
+            }
+        }
     }
 
     public String buildEmail(String name, String link) {

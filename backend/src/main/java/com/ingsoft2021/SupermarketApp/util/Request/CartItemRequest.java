@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,5 +14,7 @@ public class CartItemRequest {
     private Long shopId;
     private String productName;
     private String productBrand;
+    @Nullable
     private int quantity;
+
 }

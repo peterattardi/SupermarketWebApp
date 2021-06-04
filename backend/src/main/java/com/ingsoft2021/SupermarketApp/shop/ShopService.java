@@ -73,7 +73,7 @@ public class ShopService {
 
     public void addInEveryShop(Product product, String supermarketName) throws NoSuchFieldException {
         List<Shop> shopsOfThatSupermarket = shopRepository.findAllBySupermarketName(supermarketName);
-        shopProductService.addInEveryShop(product, supermarketName, shopsOfThatSupermarket);
+        shopProductService.addInEveryShop(product, shopsOfThatSupermarket);
     }
 
     public void deleteInEveryShop(ProductDeleteRequest request, String supermarketName) throws NoSuchFieldException {
@@ -101,18 +101,24 @@ public class ShopService {
 
     public String getSupermarketName(Long shopId) {
        Optional<Shop> shop = shopRepository.findByShopId(shopId);
-       if(shop.isEmpty()) throw new IllegalStateException("SHOP_ID_NOT_FOUND");
+       if(shop.isEmpty()) throw new IllegalStateException("SHOP_NOT_FOUND");
        return shop.get().getSupermarketName();
     }
 
     public void updateQuantity(ShopProduct shopProduct) throws NoSuchFieldException {
         Checker.check(shopProduct);
         Optional<Shop> shop = shopRepository.findByShopId(shopProduct.getShopId());
-        if(shop.isEmpty()) throw new IllegalStateException("SHOP_ID_NOT_FOUND");
+        if(shop.isEmpty()) throw new IllegalStateException("SHOP_NOT_FOUND");
         shopProductService.update(shopProduct);
     }
 
     public List<Shop> findShopsBySupermarket(String supermarketName) {
         return shopRepository.findAllBySupermarketName(supermarketName);
+    }
+
+    public Shop findById(Long shopId){
+        Optional<Shop> shop = shopRepository.findByShopId(shopId);
+        if(shop.isEmpty()) throw  new IllegalStateException("SHOP_NOT_FOUND");
+        return shop.get();
     }
 }

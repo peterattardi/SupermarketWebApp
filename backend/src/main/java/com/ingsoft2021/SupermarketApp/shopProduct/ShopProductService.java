@@ -7,8 +7,10 @@ import com.ingsoft2021.SupermarketApp.util.Checker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -16,7 +18,7 @@ public class ShopProductService {
 
     private final ShopProductRepository shopProductRepository;
 
-    public void addInEveryShop(Product product, String supermarketName, List<Shop> shopsOfThatSupermarket) throws NoSuchFieldException {
+    public void addInEveryShop(Product product, List<Shop> shopsOfThatSupermarket) throws NoSuchFieldException {
         Checker.check(product);
         for(Shop shop : shopsOfThatSupermarket){
             shopProductRepository.save(new ShopProduct(
@@ -49,6 +51,21 @@ public class ShopProductService {
         if (old.isEmpty()) throw new IllegalStateException("PRODUCT_NOT_FOUND");
         shopProductRepository.delete(old.get());
         shopProductRepository.save(shopProduct);
+    }
+
+    public int findQuantityByShopIdAndProductNameAndProductBrand(
+        Long shopId, String productName, String productBrand
+    ){
+        Optional<ShopProduct> product = shopProductRepository.findByShopIdAndProductNameAndProductBrand(
+                shopId, productName, productBrand
+        );
+        if (product.isEmpty()) throw new IllegalStateException("PRODUCT_NOT_FOUND");
+        return  product.get().getQuantity();
+    }
+
+    public List<ShopProduct> findUnavailable(Long shopId) {
+        List<ShopProduct> products = findAllByShopId(shopId);
+        return products.stream().filter(product -> product.getQuantity() < 1).collect(Collectors.toList());
     }
 }
 

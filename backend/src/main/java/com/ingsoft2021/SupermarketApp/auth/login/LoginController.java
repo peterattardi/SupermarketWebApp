@@ -25,7 +25,7 @@ public class LoginController {
         }
     }
 
-    @PostMapping(path = "/guest/login")
+    @GetMapping(path = "/guest/login")
     ResponseEntity loginAsGuest(){
         try{
             AuthResponse authResponse = loginService.loginAsGuest();
@@ -35,7 +35,7 @@ public class LoginController {
         }
     }
 
-    @PostMapping(path = "/user/logout")
+    @GetMapping(path = "/user/logout")
     ResponseEntity logout(@RequestParam String token){
         try {
             loginService.logout(token);

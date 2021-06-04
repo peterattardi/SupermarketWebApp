@@ -2,7 +2,6 @@ package com.ingsoft2021.SupermarketApp.CartItem;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import com.ingsoft2021.SupermarketApp.util.Checker;
-import com.ingsoft2021.SupermarketApp.util.Request.CartItemDeleteRequest;
 import com.ingsoft2021.SupermarketApp.util.Request.CartItemRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,16 +39,16 @@ public class CartItemController {
     }
 
     @DeleteMapping("user/cart/delete")
-    public ResponseEntity deleteCartItem(@RequestParam String token, @RequestBody CartItemDeleteRequest cartItemDeleteRequest){
+    public ResponseEntity deleteCartItem(@RequestParam String token, @RequestBody CartItemRequest cartItem){
         try {
-            loginService.findByToken(token);
-            cartItemService.deleteCartItem(cartItemDeleteRequest);
+            Login login = loginService.findByToken(token);
+            CartItem toDelete = new CartItem(cartItem, login.getEmail());
+            cartItemService.deleteCartItem(toDelete);
             return ResponseEntity.status(200).body("SUCCESS");
         }catch (IllegalStateException | NoSuchFieldException e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
 
     }
-
 
 }

@@ -3,6 +3,7 @@ package com.ingsoft2021.SupermarketApp.shop;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminService;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
+import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductService;
 import com.ingsoft2021.SupermarketApp.util.Request.CatalogueRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,9 @@ public class ShopController {
 
     public final ShopService shopService;
     public final AppAdminService appAdminService;
+    public final ShopProductService shopProductService;
 
-    @GetMapping(path = "user/products")
+    @PostMapping(path = "user/products")
     public ResponseEntity getInventory(@RequestBody CatalogueRequest request){
         try{
             List<ShopProduct> inventory = shopService.getInventory(request);
@@ -53,6 +55,19 @@ public class ShopController {
 
         }catch (IllegalStateException | NoSuchFieldException e){
             return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @GetMapping(path= "admin/unavailable/{shopId}")
+    public ResponseEntity getUnavailable(@RequestParam String token, @PathVariable(name = "shopId") Long shopId){
+        try {
+            AppAdmin admin = appAdminService.findAdminByToken(token);
+            Shop shop = shopService.findById(shopId);
+            if(!admin.getSupermarketName().equals(shop.getSupermarketName())) throw new IllegalStateException("UNAUTHORIZED");
+            List<ShopProduct> unavailables = shopProductService.findUnavailable(shopId);
+            return ResponseEntity.status(200).body(unavailables);
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(401).body(e.getMessage());
         }
     }
 

@@ -70,14 +70,6 @@ public class Checker {
         return true;
     }
 
-    public static boolean check(CartItemDeleteRequest c) throws NoSuchFieldException {
-        if(c.getShopId() == null) throw new NoSuchFieldException("SHOP_ID_NULL");
-        if(c.getEmail() == null) throw new NoSuchFieldException("EMAIL_NULL");
-        if(!new EmailValidator().test(c.getEmail())) throw new IllegalStateException("WRONG_EMAIL_FORMAT");
-        if(c.getProductBrand() == null || c.getProductBrand().isEmpty()) throw  new NoSuchFieldException("BRAND_NULL_OR_EMPTY");
-        if(c.getProductName() == null || c.getProductName().isEmpty()) throw  new NoSuchFieldException("NAME_NULL_OR_EMPTY");
-        return true;
-    }
 
     public static boolean check(CartItem c) throws NoSuchFieldException {
         if(c.getShopId() == null) throw new NoSuchFieldException("SHOP_ID_NULL");

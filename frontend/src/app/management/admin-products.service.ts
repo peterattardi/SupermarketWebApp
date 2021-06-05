@@ -1,6 +1,7 @@
-import {Injectable} from '@angular/core'
-import {Subject} from 'rxjs';
-import {Product} from './product.model';
+import {Injectable} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
+import {Product} from './product/product.model';
+import {tap} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class ManagementService {
@@ -26,18 +27,25 @@ export class ManagementService {
   //   this.slService.addIngredients(ingredients);
   // }
 
-  addProduct(product: Product): void{
+  addProduct(product: Product): void {
+    // TODO: send http add-product [to dataStorageService]
     this.products.push(product);
     this.productsChanged.next(this.products.slice());
   }
 
   editProduct(index: number, newProduct: Product): void {
+    // TODO: send http add-product then delete-product of the old one [to dataStorageService[
+    // check if old product has the same key of new product
+    // if it has the same key then first delete the old one and then add the newest
+    // else add first, remove then
     this.products[index] = newProduct;
     this.productsChanged.next(this.products.slice());
   }
 
   deleteProduct(index: number): void {
+    // TODO: send http delete-product [to dataStorageService]
     this.products.splice(index, 1);
     this.productsChanged.next(this.products.slice());
   }
+
 }

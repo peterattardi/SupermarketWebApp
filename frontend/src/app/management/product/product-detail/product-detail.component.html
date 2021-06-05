@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="col-xs-12">
+    <img
+      [src]="(product.url ? product.url : 'http://placeimg.com/640/480')"
+      alt="{{ product.productName }}"
+      class="img-responsive"
+      style="max-height: 300px;">
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-8">
+    <h1 class="list-group-item">{{ product.productName }}</h1>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <h3 class="list-group-item-info text-center">[{{ product.productBrand }}]</h3>
+    </div>
+    <div class="col-xs-4">
+      <div
+        class="btn-group"
+        appDropdown>
+        <button
+          type="button"
+          class="btn btn-primary dropdown-toggle">
+          Manage Product <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <!--        <li><a (click)="onAddToShoppingList()" style="cursor: pointer;">To Shopping List</a></li>-->
+          <li><a style="cursor: pointer;" (click)="onEditProduct()">Edit Product</a></li>
+          <li><a style="cursor: pointer;" (click)="onDeleteProduct()">Delete Product</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-4">
+    <h4>Description</h4>
+  </div>
+  <div class="col-xs-8">
+    {{ product.productDescription }}
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-4">
+    Nutrition Facts
+  </div>
+  <div class="col-xs-8">
+    {{ product.nutritionFacts}}
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-4">
+    Supplier ID
+  </div>
+  <div class="col-xs-8">
+    {{ product.supplierId}}
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-4">
+    Supermarket Name
+  </div>
+  <div class="col-xs-8">
+    {{ product.supermarketName}}
+  </div>
+</div>

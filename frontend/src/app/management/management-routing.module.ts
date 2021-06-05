@@ -14,15 +14,15 @@ const routes: Routes = [
     component: ManagementComponent,
     canActivate: [AdminGuard],
     children: [
-      { path: '', component: ProductStartComponent},
-      { path: 'new', component: ProductEditComponent },
+      { path: 'products', component: ProductStartComponent},
+      { path: 'products/new', component: ProductEditComponent },
       {
-        path: ':id',
+        path: 'products/:id',
         component: ProductDetailComponent,
         resolve: [ProductsResolverService]
       },
       {
-        path: ':id/edit',
+        path: 'products/:id/edit',
         component: ProductEditComponent,
         resolve: [ProductsResolverService]
       }

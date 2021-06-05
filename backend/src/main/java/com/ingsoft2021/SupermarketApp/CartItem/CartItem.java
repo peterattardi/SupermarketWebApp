@@ -1,6 +1,6 @@
 package com.ingsoft2021.SupermarketApp.CartItem;
 
-import com.ingsoft2021.SupermarketApp.util.Request.CartItemRequest;
+import com.ingsoft2021.SupermarketApp.util.request.CartItemRequest;
 import com.ingsoft2021.SupermarketApp.util.compositeIds.CartId;
 import lombok.*;
 import org.springframework.lang.Nullable;

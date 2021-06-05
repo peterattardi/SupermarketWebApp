@@ -2,7 +2,7 @@ package com.ingsoft2021.SupermarketApp.auth.register;
 
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserService;
-import com.ingsoft2021.SupermarketApp.util.Request.AuthResponse;
+import com.ingsoft2021.SupermarketApp.util.response.AuthResponse;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import com.ingsoft2021.SupermarketApp.util.email.EmailSender;
 import com.ingsoft2021.SupermarketApp.util.email.EmailValidator;

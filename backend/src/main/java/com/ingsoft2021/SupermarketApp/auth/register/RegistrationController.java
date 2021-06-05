@@ -2,12 +2,9 @@ package com.ingsoft2021.SupermarketApp.auth.register;
 
 
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
-import com.ingsoft2021.SupermarketApp.util.Request.AuthResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.ConnectException;
 
 @RestController
 @AllArgsConstructor
@@ -16,7 +13,7 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
 
-    @PostMapping(path = "/registration")
+    @PostMapping(path = "/any-user/register")
     public ResponseEntity register(@RequestBody AppUser request) {
         try {
             registrationService.register(request);
@@ -26,7 +23,7 @@ public class RegistrationController {
         }
     }
 
-    @PostMapping(path = "/guest/registration")
+    @PostMapping(path = "/guest/register")
     public ResponseEntity register(@RequestBody AppUser request, @RequestParam String token) {
         try {
             registrationService.registerAGuest(request,token);

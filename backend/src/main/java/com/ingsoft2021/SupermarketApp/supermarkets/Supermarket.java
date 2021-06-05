@@ -13,7 +13,6 @@ import javax.persistence.*;
 @Table(name = "supermarket")
 public class Supermarket {
 
-
     @Id
     private String name;
 }

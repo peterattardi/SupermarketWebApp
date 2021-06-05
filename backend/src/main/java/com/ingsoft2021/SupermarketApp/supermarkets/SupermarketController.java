@@ -1,15 +1,12 @@
 package com.ingsoft2021.SupermarketApp.supermarkets;
 
-import com.ingsoft2021.SupermarketApp.util.Request.SupermarketRequest;
+import com.ingsoft2021.SupermarketApp.util.request.SupermarketRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @CrossOrigin(origins = "http://localhost:4200/")
-@RequestMapping(path = "supermarkets")
 public class SupermarketController {
 
     public final SupermarketService supermarketService;
@@ -19,7 +16,7 @@ public class SupermarketController {
         this.supermarketService = supermarketService;
     }
 
-    @PostMapping
+    @PostMapping(path= "user/nearest-supermarkets")
     public ResponseEntity getSupermarkets(@RequestBody SupermarketRequest request){
         try {
             return ResponseEntity.status(200).body(supermarketService.findNearestSupermarkets(request));

@@ -1,4 +1,4 @@
-package com.ingsoft2021.SupermarketApp.util.Request;
+package com.ingsoft2021.SupermarketApp.util.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

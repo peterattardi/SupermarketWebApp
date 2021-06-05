@@ -1,8 +1,8 @@
 package com.ingsoft2021.SupermarketApp.shop;
 
 import com.ingsoft2021.SupermarketApp.product.Product;
-import com.ingsoft2021.SupermarketApp.util.Request.CatalogueRequest;
-import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
+import com.ingsoft2021.SupermarketApp.util.request.CatalogueRequest;
+import com.ingsoft2021.SupermarketApp.util.request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductService;
 import com.ingsoft2021.SupermarketApp.util.Checker;
@@ -68,7 +68,7 @@ public class ShopService {
 
     public List<ShopProduct> getInventory(Long shopId){
         List<ShopProduct> products = shopProductService.findAllByShopId(shopId);
-        return products.stream().filter(p -> p.getQuantity() > 0).collect(Collectors.toList());
+        return products;
     }
 
     public void addInEveryShop(Product product, String supermarketName) throws NoSuchFieldException {

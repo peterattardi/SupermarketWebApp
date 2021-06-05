@@ -2,7 +2,7 @@ package com.ingsoft2021.SupermarketApp.CartItem;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import com.ingsoft2021.SupermarketApp.util.Checker;
-import com.ingsoft2021.SupermarketApp.util.Request.CartItemRequest;
+import com.ingsoft2021.SupermarketApp.util.request.CartItemRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200/")
 public class CartItemController {
     private final CartItemService cartItemService;
     private final LoginService loginService;

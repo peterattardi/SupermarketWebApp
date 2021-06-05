@@ -4,7 +4,7 @@ import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminRepository;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRepository;
-import com.ingsoft2021.SupermarketApp.util.Request.LoginRequest;
+import com.ingsoft2021.SupermarketApp.util.request.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,11 +1,10 @@
 package com.ingsoft2021.SupermarketApp.util;
 
 import com.ingsoft2021.SupermarketApp.CartItem.CartItem;
-import com.ingsoft2021.SupermarketApp.CartItem.CartItemRepository;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.product.Product;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
-import com.ingsoft2021.SupermarketApp.util.Request.*;
+import com.ingsoft2021.SupermarketApp.util.request.*;
 import com.ingsoft2021.SupermarketApp.util.email.EmailValidator;
 
 public class Checker {

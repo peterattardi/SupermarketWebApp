@@ -4,8 +4,8 @@ import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminRepository;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
 import com.ingsoft2021.SupermarketApp.appuser.AppUserRepository;
-import com.ingsoft2021.SupermarketApp.util.Request.AuthResponse;
-import com.ingsoft2021.SupermarketApp.util.Request.LoginRequest;
+import com.ingsoft2021.SupermarketApp.util.response.AuthResponse;
+import com.ingsoft2021.SupermarketApp.util.request.LoginRequest;
 import com.ingsoft2021.SupermarketApp.util.Checker;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -102,5 +102,24 @@ public class LoginService {
             }
         }
         throw new IllegalStateException("TOKEN_NOT_FOUND");
+    }
+
+    public Object getInfos(String token) {
+        Login logged = findByToken(token);
+        switch (logged.getAppUserRole().name()){
+            case "ADMIN":
+                AppAdmin admin = appAdminRepository.findByEmail(logged.getEmail()).get();
+                admin.setPassword(null);
+                return admin;
+            case "USER":
+                AppUser user = appUserRepository.findByEmail(logged.getEmail()).get();
+                user.setPassword(null);
+                return user;
+            case "GUEST":
+                logged.setToken(null);
+                return logged;
+            default:
+                return logged;
+        }
     }
 }

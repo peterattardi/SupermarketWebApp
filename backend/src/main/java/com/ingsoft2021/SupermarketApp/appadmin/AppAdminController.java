@@ -1,7 +1,7 @@
 package com.ingsoft2021.SupermarketApp.appadmin;
 
 import com.ingsoft2021.SupermarketApp.product.Product;
-import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
+import com.ingsoft2021.SupermarketApp.util.request.ProductDeleteRequest;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class AppAdminController {
     private final AppAdminService appAdminService;
 
 
-    @GetMapping(path = "admin/products")
+    @GetMapping(path = "admin/catalogue")
     public ResponseEntity findAllProducts(@RequestParam String token){
         try{
             List<Product> products = appAdminService.findAllProducts(token);
@@ -30,7 +30,7 @@ public class AppAdminController {
     }
 
 
-    @PostMapping(path = "admin/add-product")
+    @PostMapping(path = "admin/catalogue/add")
     public ResponseEntity addProduct(@RequestBody Product product, @RequestParam String token){
         try {
             appAdminService.addProduct(product, token);
@@ -42,7 +42,7 @@ public class AppAdminController {
 
     //For Riccardo: specify {"productName, productBrand"} in the body and I'll figure out supermarketId
     //by myself from the token
-    @DeleteMapping(path = "admin/delete-product")
+    @DeleteMapping(path = "admin/catalogue/delete")
     public ResponseEntity deleteProduct(@RequestParam String token, @RequestBody ProductDeleteRequest request){
         try{
             appAdminService.findAdminByToken(token);

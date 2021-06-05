@@ -4,13 +4,12 @@ import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminService;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductService;
-import com.ingsoft2021.SupermarketApp.util.Request.CatalogueRequest;
+import com.ingsoft2021.SupermarketApp.util.request.CatalogueRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -21,7 +20,7 @@ public class ShopController {
     public final AppAdminService appAdminService;
     public final ShopProductService shopProductService;
 
-    @PostMapping(path = "user/products")
+    @PostMapping(path = "user/nearest-shop/inventory")
     public ResponseEntity getInventory(@RequestBody CatalogueRequest request){
         try{
             List<ShopProduct> inventory = shopService.getInventory(request);
@@ -31,7 +30,7 @@ public class ShopController {
         }
     }
 
-    @GetMapping(path = "admin/products/{shopId}")
+    @GetMapping(path = "admin/inventory/{shopId}")
     public ResponseEntity getCatalogue(@RequestParam String token, @PathVariable(name = "shopId") Long shopId){
         try {
             AppAdmin admin = appAdminService.findAdminByToken(token);
@@ -44,7 +43,7 @@ public class ShopController {
         }
     }
 
-    @PutMapping(path= "admin/update-quantity")
+    @PutMapping(path= "admin/inventory/update")
     public ResponseEntity updateQuantity(@RequestParam String token, @RequestBody ShopProduct shopProduct){
         try{
             AppAdmin admin = appAdminService.findAdminByToken(token);
@@ -58,7 +57,7 @@ public class ShopController {
         }
     }
 
-    @GetMapping(path= "admin/unavailable/{shopId}")
+    @GetMapping(path= "admin/unavailables/{shopId}")
     public ResponseEntity getUnavailable(@RequestParam String token, @PathVariable(name = "shopId") Long shopId){
         try {
             AppAdmin admin = appAdminService.findAdminByToken(token);
@@ -71,7 +70,7 @@ public class ShopController {
         }
     }
 
-    @GetMapping(path = "admin/get-shops")
+    @GetMapping(path = "admin/shops")
     public ResponseEntity getShops(@RequestParam String token){
         try{
             AppAdmin admin = appAdminService.findAdminByToken(token);

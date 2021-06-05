@@ -2,7 +2,9 @@ package com.ingsoft2021.SupermarketApp.product;
 
 
 
-import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
+import com.ingsoft2021.SupermarketApp.supermarkets.Supermarket;
+import com.ingsoft2021.SupermarketApp.supermarkets.SupermarketService;
+import com.ingsoft2021.SupermarketApp.util.request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.util.Checker;
 import lombok.AllArgsConstructor;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final SupermarketService supermarketService;
 
     public void addProduct(Product product) throws NoSuchFieldException {
         Checker.check(product);
@@ -36,6 +39,8 @@ public class ProductService {
     }
 
     public List<Product> findAllBySupermarketName(String supermarketName) {
+        List<String> supermarkets = supermarketService.findAll();
+        if(!supermarkets.contains(supermarketName)) throw new IllegalStateException("SUPERMARKET_NOT_FOUND");
         return productRepository.findAllBySupermarketName(supermarketName);
     }
 

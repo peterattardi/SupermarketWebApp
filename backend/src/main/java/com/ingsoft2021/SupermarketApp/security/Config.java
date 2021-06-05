@@ -138,18 +138,18 @@ public class Config extends WebSecurityConfigurerAdapter {
         productRepository.save(new Product(
                 "Apple", "Melinda", "Delocious apple",
                 "200 kcal", 1L, 0.80, "piece",
-                "despar"));
+                "despar", null));
     }
 
     private void fillDeco() {
         productRepository.save(new Product(
                 "Apple", "Melinda", "Delocious apple",
                 "200 kcal", 1L, 0.80, "piece",
-                "deco"));
+                "deco", null));
         productRepository.save(new Product(
                 "Mayo", "Hellmanns", "Light Mayp",
                 "500 kcal", 1L, 1.50, "jar",
-                "deco"));
+                "deco", null));
 
     }
 
@@ -157,15 +157,15 @@ public class Config extends WebSecurityConfigurerAdapter {
         productRepository.save(new Product(
                 "Apple", "Melinda", "Delocious apple",
                 "200 kcal", 1L, 0.80, "piece",
-                "coop"));
+                "coop", null));
         productRepository.save(new Product(
                 "Outdoor plant", "Garden Life", "Very green plant",
                 "0 kcal", 5L, 10, "piece",
-                "coop"));
+                "coop", null));
         productRepository.save(new Product(
                 "Fish fingers", "Findus", "Fresh fish",
                 "200 kcal", 2L, 4, "piece",
-                "coop"));
+                "coop", null));
 
     }
 
@@ -173,23 +173,23 @@ public class Config extends WebSecurityConfigurerAdapter {
         productRepository.save(new Product(
                 "Apple", "Melinda", "Delicious apple",
                 "200 kcal", 1L, 0.80, "piece",
-                "conad"));
+                "conad", null));
         productRepository.save(new Product(
                 "Pear", "Melina", "Delicious pear",
                 "220 kcal", 1L, 0.40, "piece",
-                "conad"));
+                "conad", null));
         productRepository.save(new Product(
                 "Chicken Breast", "AIA", "Delocious chicken",
                 "300 kcal", 2L, 9, "100g",
-                "conad"));
+                "conad", null));
         productRepository.save(new Product(
                 "Toilet paper", "WC express", "Useful toilet paper",
                 "0 kcal", 3L, 2, "package",
-                "conad"));
+                "conad", null));
         productRepository.save(new Product(
                 "AAA battery", "Duracell", "Durable batteries",
                 "o kcal", 3L, 4, "package",
-                "conad"));
+                "conad", null));
 
 
     }

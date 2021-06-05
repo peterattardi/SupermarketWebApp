@@ -1,6 +1,6 @@
 package com.ingsoft2021.SupermarketApp.product;
 
-import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
+import com.ingsoft2021.SupermarketApp.util.request.ProductDeleteRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,9 +24,9 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        p1 = new Product("one","brand_one","no_desc","no_facts",2L,1,"grams","conad");
-        p2 = new Product("two","brand_two","no_desc","no_facts",2L,1,"grams","conad");
-        p3 = new Product("three","brand_three","no_desc","no_facts",2L,1,"grams","conad");
+        p1 = new Product("one","brand_one","no_desc","no_facts",2L,1,"grams","conad", null);
+        p2 = new Product("two","brand_two","no_desc","no_facts",2L,1,"grams","conad", null);
+        p3 = new Product("three","brand_three","no_desc","no_facts",2L,1,"grams","conad", null);
         pdr = new ProductDeleteRequest(p1.getProductName(), p1.getProductBrand());
     }
 

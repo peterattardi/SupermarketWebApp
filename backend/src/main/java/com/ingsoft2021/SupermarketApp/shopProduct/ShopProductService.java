@@ -1,7 +1,7 @@
 package com.ingsoft2021.SupermarketApp.shopProduct;
 
 import com.ingsoft2021.SupermarketApp.product.Product;
-import com.ingsoft2021.SupermarketApp.util.Request.ProductDeleteRequest;
+import com.ingsoft2021.SupermarketApp.util.request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.shop.Shop;
 import com.ingsoft2021.SupermarketApp.util.Checker;
 import lombok.AllArgsConstructor;

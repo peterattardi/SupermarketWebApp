@@ -65,5 +65,4 @@ public class CartItemService {
     }
 }
 
-//TODO: admin should see which products of wiche supermarket are no logenfer avaible
 

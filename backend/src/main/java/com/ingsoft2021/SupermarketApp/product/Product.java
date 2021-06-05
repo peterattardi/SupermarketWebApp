@@ -28,9 +28,10 @@ public class Product {
     private String unitType;
     @Id
     private String supermarketName;
+    private String url;
 
 
-    public Product(String productName, String productBrand, String productDescription, String nutritionFacts, Long supplierId, double unitCost, String unitType, String supermarketName) {
+    public Product(String productName, String productBrand, String productDescription, String nutritionFacts, Long supplierId, double unitCost, String unitType, String supermarketName, String url) {
         this.productName = productName;
         this.productBrand = productBrand;
         this.productDescription = productDescription;
@@ -39,6 +40,9 @@ public class Product {
         this.unitCost = unitCost;
         this.unitType = unitType;
         this.supermarketName = supermarketName;
+        this.url = url;
     }
 
 }
+
+

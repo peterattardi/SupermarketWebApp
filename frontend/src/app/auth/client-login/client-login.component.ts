@@ -90,7 +90,7 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
     );
   }
 
-  onHandleError(): void {
+  onClearError(): void {
     this.error = null;
   }
 

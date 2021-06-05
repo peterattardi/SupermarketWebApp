@@ -3,7 +3,7 @@ import {Observable, Subscription} from 'rxjs';
 import {AuthResponseData, AuthService, Role} from '../auth.service';
 import {Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
-import {MarketService, Supermarket} from '../choose-market/market.service';
+import {MarketService, Supermarket} from '../../shared/market.service';
 
 @Component({
   selector: 'app-client-login',
@@ -11,7 +11,7 @@ import {MarketService, Supermarket} from '../choose-market/market.service';
   styleUrls: ['./client-login.component.css']
 })
 export class ClientLoginComponent implements OnInit, OnDestroy {
-  isLoading = true;
+  isLoading = false;
   error: string = null;
   supermarket: Supermarket = null;
   userSub: Subscription;
@@ -29,10 +29,7 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
         this.router.navigate(['/home']);
       }
     });
-    this.marketSub = this.marketService.supermarket.subscribe( supermarket => {
-      this.isLoading = false;
-      this.supermarket = supermarket;
-    });
+    this.supermarket = this.marketService.getSupermarket();
   }
 
   onResetSupermarket(): void {
@@ -75,6 +72,7 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
 
   onLoginGuest(): void {
     let authObs: Observable<AuthResponseData>;
+    this.isLoading = true;
 
     authObs = this.authService.loginGuest();
 

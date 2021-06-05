@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12">
     <h4 *ngIf="supermarket">
-      You have chosen {{supermarket.supermarketName}}<br>
+      You have chosen {{supermarket.name.charAt(0).toUpperCase() + supermarket.name.substr(1)}}<br>
       <a
         (click)="onResetSupermarket()"
         style="cursor: pointer">Change</a>

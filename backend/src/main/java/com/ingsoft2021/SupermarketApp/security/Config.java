@@ -10,11 +10,14 @@ import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductRepository;
 import com.ingsoft2021.SupermarketApp.supermarkets.Supermarket;
 import com.ingsoft2021.SupermarketApp.supermarkets.SupermarketService;
+import com.opencsv.CSVIterator;
+import com.opencsv.CSVReader;
 import lombok.AllArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import java.io.FileReader;
 import java.util.List;
 import java.util.Random;
 
@@ -131,6 +134,9 @@ public class Config extends WebSecurityConfigurerAdapter {
         fillDespar();
 
         fillShops();
+
+
+
 
     }
 

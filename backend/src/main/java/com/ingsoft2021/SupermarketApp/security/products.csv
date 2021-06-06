@@ -1,0 +1,12 @@
+productName,productBrand,productDescription,nutritionFacts,supplierId,unitCost,unitType,supermarketName,url
+"Apple", "Melinda", "Delicious apple","200 kcal", 1L, 0.80, "piece","despar", null
+"Apple", "Melinda", "Delicious apple","200 kcal", 1L, 0.80, "piece","deco", null
+"Mayo", "Hellman's", "Light Mayo","500 kcal", 1L, 1.50, "jar","deco", null
+"Apple", "Melinda", "Delicious apple", "200 kcal", 1L, 0.80, "piece","coop", null
+"Outdoor plant", "Garden Life", "Very green plant","0 kcal", 5L, 10, "piece","coop", null
+"Fish fingers", "Findus", "Fresh fish","200 kcal", 2L, 4, "piece","coop", null
+"Apple", "Melinda", "Delicious apple","200 kcal", 1L, 0.80, "piece","conad", null
+"Pear", "Melina", "Delicious pear","220 kcal", 1L, 0.40, "piece","conad", null
+"Chicken Breast", "AIA", "Delicious chicken","300 kcal", 2L, 9, "100g","conad", null
+"Toilet paper", "WC express", "Useful toilet paper","0 kcal", 3L, 2, "package","conad", null
+"AAA battery", "Duracell", "Durable batteries","o kcal", 3L, 4, "package","conad", null

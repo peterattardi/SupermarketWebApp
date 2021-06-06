@@ -41,13 +41,11 @@ public class ShopService {
     public List<ShopDistSupport> getNearestShopsOfSupermarket(CatalogueRequest request){
         //Find a list of Objects that contain (ShopId, distance from user)
         List<ShopDistSupport> shopAndDistance = findShopSortByDistaceFrom(request);
-        System.out.println(shopAndDistance.size());
         //order this list by distance
         ShopComparator shopComparator = new ShopComparator();
         Collections.sort(shopAndDistance, shopComparator);
         //filter only those in a radius of KM_RADIUS
         shopAndDistance = shopAndDistance.stream().filter(shop -> shop.getDistance() < KM_RADIUS).collect(Collectors.toList());
-        System.out.println(shopAndDistance.size());
         return shopAndDistance;
     }
 

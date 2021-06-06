@@ -45,7 +45,7 @@ public class CartItemService {
         return cartItemRepository.findAllByEmail(email);
     }
 
-    public Object findAllByEmailAndSupermarketName(String email, String supermarketName) {
+    public List<CartItem> findAllByEmailAndSupermarketName(String email, String supermarketName) {
         return cartItemRepository.findAllByEmailAndSupermarketName(email, supermarketName);
     }
 }

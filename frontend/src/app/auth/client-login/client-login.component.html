@@ -52,10 +52,11 @@
         </button>
         |
         <button
+        [disabled]="isGuest"
         class="btn btn-default"
         type="button"
         (click)="onLoginGuest()">
-        Login as a Guest
+        {{ isGuest ? 'Logged as Guest' : 'Login as Guest'}}
       </button>
     </div>
       <div>

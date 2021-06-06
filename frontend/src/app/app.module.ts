@@ -11,11 +11,13 @@ import {AuthModule} from './auth/auth.module';
 import {HomeModule} from './home/home.module';
 import {ManagementModule} from './management/management.module';
 import {AccountModule} from './account/account.module';
+import { GuestAuthComponent } from './guest-auth/guest-auth.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
+    GuestAuthComponent,
   ],
   imports: [
     BrowserModule,

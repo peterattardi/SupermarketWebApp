@@ -47,13 +47,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
-  onDecrementQuantity(): void {
-    const newQuantity = this.product.quantity < 1 ? 0 : this.product.quantity - 1;
+  onDecrementQuantity(dec: number): void {
+    const newQuantity = this.product.quantity < dec ? 0 : this.product.quantity - dec;
     this.adminProductsService.updateQuantity(this.id, this.product, newQuantity);
   }
 
-  onIncrementQuantity(): void {
-    const newQuantity = !this.product.quantity ? 1 : this.product.quantity + 1;
+  onIncrementQuantity(inc: number): void {
+    const newQuantity = !this.product.quantity ? inc : this.product.quantity + inc;
     this.adminProductsService.updateQuantity(this.id, this.product, newQuantity);
   }
 

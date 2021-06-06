@@ -58,6 +58,29 @@ export class AuthService {
       );
   }
 
+  signupGuest(signupForm: SignupForm): Observable<string> {
+    return this.http
+      .post(
+        this.API + 'guest/register?token=' + (this.user.value ? this.user.value.token : ''),
+        {
+          firstName: signupForm.firstName,
+          lastName: signupForm.lastName,
+          email: signupForm.email,
+          password: signupForm.password,
+          address: signupForm.address,
+          cap: signupForm.cap,
+          city: signupForm.city
+        },
+        {responseType: 'text'}
+      )
+      .pipe(
+        catchError(this.handleError),
+        map(resData => {
+          return resData;
+        })
+      );
+  }
+
   login(email: string, password: string, role: string): Observable<AuthResponseData> {
     return this.http
       .post<AuthResponseData>(

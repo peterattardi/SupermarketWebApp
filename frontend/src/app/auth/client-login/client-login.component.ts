@@ -16,6 +16,7 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
   supermarket: Supermarket = null;
   userSub: Subscription;
   marketSub: Subscription;
+  isGuest = false;
 
   constructor(
     private authService: AuthService,
@@ -26,7 +27,11 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe( user => {
       if (!!user) {
-        this.router.navigate(['/home']);
+        if (user.role === 'GUEST') {
+          this.isGuest = true;
+        } else {
+          this.router.navigate(['/home']);
+        }
       }
     });
     this.supermarket = this.marketService.getSupermarket();

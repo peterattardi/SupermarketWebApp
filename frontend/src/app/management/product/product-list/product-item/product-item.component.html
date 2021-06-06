@@ -1,0 +1,21 @@
+<a
+  style="cursor: pointer;"
+  [routerLink]="[index]"
+  routerLinkActive="active"
+  class="list-group-item clearfix">
+  <div class="pull-left">
+    <h4 class="list-group-item-heading">{{ product.productName }}</h4>
+    <h6 class="list-group-item-info">{{ product.productBrand }}</h6>
+    <h5 class="list-group-item-success">
+      {{ product.unitCost}}€{{product.unitType !== '' ? '/' + product.unitType : ''}}
+    </h5>
+    <h4 class="list-group-item-heading">{{ product.quantity > 0 ? 'In stock: ' + product.quantity : 'Out of stock!'}}</h4>
+  </div>
+  <span class="pull-right">
+        <img
+          [src]="(product.url ? product.url : 'http://placeimg.com/640/480')"
+          alt="{{ product.productName }}"
+          class="img-responsive"
+          style="max-height: 100px;">
+      </span>
+</a>

@@ -15,6 +15,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   isLoading = false;
   error: string = null;
   userSub: Subscription;
+  isGuest = false;
 
   constructor(
     private authService: AuthService,
@@ -24,7 +25,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe( user => {
       if (!!user) {
-        this.router.navigate(['/home']);
+        if (user.role === 'GUEST') {
+          this.isGuest = true;
+        } else {
+          this.router.navigate(['/home']);
+        }
       }
     });
   }
@@ -98,7 +103,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     let loginObs: Observable<AuthResponseData>;
     let registrationObs: Observable<string>;
 
-    registrationObs = this.authService.signup(signupForm);
+    if (this.isGuest) {
+      registrationObs = this.authService.signupGuest(signupForm);
+    } else {
+      registrationObs = this.authService.signup(signupForm);
+    }
 
     register();
     form.reset();

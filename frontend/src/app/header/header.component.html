@@ -23,8 +23,13 @@
           <a routerLink="/auth/admin"
              *ngIf="!isAdmin">Admin Area</a>
         </li>
-        <li *ngIf="isAuthenticated">
+        <li *ngIf="isAuthenticated && !isGuest">
           <a style="cursor: pointer;" (click)="onLogout()">Logout</a>
+        </li>
+        <li *ngIf="isGuest">
+          <a
+            style="cursor: pointer;"
+            routerLink="/auth/register">Register</a>
         </li>
       </ul>
     </div>

@@ -1,6 +1,7 @@
 package com.ingsoft2021.SupermarketApp.CartItem;
+import com.ingsoft2021.SupermarketApp.product.Product;
+import com.ingsoft2021.SupermarketApp.product.ProductService;
 import com.ingsoft2021.SupermarketApp.shop.ShopService;
-import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductService;
 import com.ingsoft2021.SupermarketApp.util.Checker;
 import lombok.AllArgsConstructor;
@@ -13,27 +14,16 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CartItemService {
     private  final CartItemRepository cartItemRepository;
-    private  final ShopProductService shopProductService;
-    private  final ShopService shopService;
+    private  final ProductService productService;
 
     public void addCartItem(CartItem request) throws NoSuchFieldException {
         Checker.check(request);
-        shopService.findById(request.getShopId());
-        //look for the available quantity
-        int availableQuantity = shopProductService.findQuantityByShopIdAndProductNameAndProductBrand(
-                request.getShopId(), request.getProductName(), request.getProductBrand()
-        );
+        Optional<Product> product = productService.findByProductNameAndProductBrandAndSupermarketName(request.getProductName(),
+                request.getProductBrand(), request.getSupermarketName());
+        if(product.isEmpty()) throw new IllegalStateException("PRODUCT_NOT_FOUND");
 
-        //check if the request can be satisfied
-        if(request.getQuantity() > availableQuantity) throw new IllegalStateException("QUANTITY_INSUFFICIENT");
-        //reserve the quantity
-        shopService.updateQuantity(new ShopProduct(
-                request.getShopId(), request.getProductName(), request.getProductBrand(),
-                availableQuantity - request.getQuantity()
-        ));
-        //check if cartItem was already present. If it was then only modify quantity
-        Optional<CartItem> maybe_present = cartItemRepository.findByEmailAndShopIdAndProductNameAndProductBrand(
-                request.getEmail(), request.getShopId(), request.getProductName(), request.getProductBrand()
+        Optional<CartItem> maybe_present = cartItemRepository.findByEmailAndSupermarketNameAndProductNameAndProductBrand(
+                request.getEmail(), request.getSupermarketName(), request.getProductName(), request.getProductBrand()
         );
         if(maybe_present.isEmpty())
             cartItemRepository.save(request);
@@ -44,19 +34,10 @@ public class CartItemService {
 
     public void deleteCartItem(CartItem request) throws NoSuchFieldException {
         Checker.check(request);
-        shopService.findById(request.getShopId());
-        Optional<CartItem> cartItem = cartItemRepository.findByEmailAndShopIdAndProductNameAndProductBrand(
-                request.getEmail(), request.getShopId(), request.getProductName(), request.getProductBrand()
+        Optional<CartItem> cartItem = cartItemRepository.findByEmailAndSupermarketNameAndProductNameAndProductBrand(
+                request.getEmail(), request.getSupermarketName(), request.getProductName(), request.getProductBrand()
         );
         if(cartItem.isEmpty()) throw new IllegalStateException("CART_ITEM_NOT_FOUND");
-        int availableQuantity = shopProductService.findQuantityByShopIdAndProductNameAndProductBrand(
-                request.getShopId(), request.getProductName(), request.getProductBrand()
-        );
-        shopService.updateQuantity(new ShopProduct(
-                request.getShopId(), request.getProductName(), request.getProductBrand(),
-                availableQuantity + cartItem.get().getQuantity()
-        ));
-
         cartItemRepository.delete(cartItem.get());
     }
 
@@ -64,8 +45,8 @@ public class CartItemService {
         return cartItemRepository.findAllByEmail(email);
     }
 
-    public Object findAllByEmailAndShopId(String email, Long shopId) {
-        return cartItemRepository.findAllByEmailAndShopId(email, shopId);
+    public Object findAllByEmailAndSupermarketName(String email, String supermarketName) {
+        return cartItemRepository.findAllByEmailAndSupermarketName(email, supermarketName);
     }
 }
 

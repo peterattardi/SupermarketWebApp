@@ -5,6 +5,7 @@ import com.ingsoft2021.SupermarketApp.util.compositeIds.CartId;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -21,10 +22,13 @@ public class CartItem {
     @Id
     private String email;
     @Id
-    private Long shopId;
+    @Column(columnDefinition = "varchar(50)")
+    private String supermarketName;
     @Id
+    @Column(columnDefinition = "varchar(50)")
     private String productName;
     @Id
+    @Column(columnDefinition = "varchar(50)")
     private String productBrand;
     private int quantity;
     @Nullable
@@ -35,7 +39,7 @@ public class CartItem {
         this.productName = request.getProductName();
         this.productBrand = request.getProductBrand();
         this.quantity = request.getQuantity();
-        this.shopId = request.getShopId();
+        this.supermarketName = request.getSupermarketName();
     }
 
     public CartItem(CartItem request, int quantity) {
@@ -43,7 +47,7 @@ public class CartItem {
         this.productName = request.getProductName();
         this.productBrand = request.getProductBrand();
         this.quantity = request.getQuantity();
-        this.shopId = request.getShopId();
+        this.supermarketName = request.getSupermarketName();
         this.quantity = quantity;
 
     }

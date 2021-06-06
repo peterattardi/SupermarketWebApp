@@ -99,7 +99,7 @@ public class RegistrationService {
             for(CartItem c : cartItems){
                 cartItemService.deleteCartItem(c);
                 CartItem toAdd = new CartItem(
-                        newLogin.getEmail(), c.getShopId(), c.getProductName(), c.getProductBrand(),
+                        newLogin.getEmail(), c.getSupermarketName(), c.getProductName(), c.getProductBrand(),
                         c.getQuantity(), null);
                 cartItemService.addCartItem(toAdd);
             }

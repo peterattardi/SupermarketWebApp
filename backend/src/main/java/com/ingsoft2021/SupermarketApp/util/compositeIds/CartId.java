@@ -13,7 +13,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class CartId implements Serializable {
     private String email;
-    private Long shopId;
+    private String supermarketName;
     private String productName;
     private String productBrand;
 }

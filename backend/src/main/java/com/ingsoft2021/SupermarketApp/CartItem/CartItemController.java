@@ -53,14 +53,16 @@ public class CartItemController {
 
     }
 
-    @GetMapping("user/cart/{shopId}")
-    public ResponseEntity getCart(@RequestParam String token, @PathVariable(name = "shopId") Long shopId){
+    @GetMapping("user/cart/{supermarketName}")
+    public ResponseEntity getCart(@RequestParam String token, @PathVariable(name = "supermarketName") String supermarketName){
         try{
             Login logged = loginService.findByToken(token);
-            return ResponseEntity.status(200).body(cartItemService.findAllByEmailAndShopId(logged.getEmail(), shopId));
+            return ResponseEntity.status(200).body(cartItemService.findAllByEmailAndSupermarketName(logged.getEmail(), supermarketName));
         }catch (IllegalStateException e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
 }
+
+//TODO: for now, an user can have a cart for every shop but its wrong (should )

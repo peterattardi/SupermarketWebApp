@@ -11,10 +11,9 @@ import org.springframework.lang.Nullable;
 @Setter
 @Getter
 public class CartItemRequest {
-    private Long shopId;
+    private String supermarketName;
     private String productName;
     private String productBrand;
     @Nullable
     private int quantity;
-
 }

@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Shop, ShopService} from '../../shared/shop.service';
+import {AdminProductsService} from '../admin-products.service';
 
 @Component({
   selector: 'app-choose-shop',
@@ -24,6 +25,7 @@ export class ChooseShopComponent implements OnInit {
     private authService: AuthService,
     private marketService: MarketService,
     private shopService: ShopService,
+    private adminProductsService: AdminProductsService,
     private router: Router,
     private route: ActivatedRoute
   ) { }

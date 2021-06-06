@@ -47,6 +47,16 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
+  onDecrementQuantity(): void {
+    const newQuantity = this.product.quantity < 1 ? 0 : this.product.quantity - 1;
+    this.adminProductsService.updateQuantity(this.id, this.product, newQuantity);
+  }
+
+  onIncrementQuantity(): void {
+    const newQuantity = !this.product.quantity ? 1 : this.product.quantity + 1;
+    this.adminProductsService.updateQuantity(this.id, this.product, newQuantity);
+  }
+
   ngOnDestroy(): void {
     if (this.subProduct) {
       this.subProduct.unsubscribe();

@@ -3,3 +3,7 @@
 button {
   margin: 5px;
 }
+
+body {
+  transition: 0.5s;
+}

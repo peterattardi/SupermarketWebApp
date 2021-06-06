@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, Subject, throwError} from 'rxjs';
+import {Observable, Subject, Subscription, throwError} from 'rxjs';
 import {Product} from './product/product.model';
 import {catchError, map, tap} from 'rxjs/operators';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -120,9 +120,7 @@ export class AdminProductsService {
     );
   }
 
-  // TODO: delete Product
   deleteProduct(index: number): void {
-    // TODO: send http delete-product
     const deleteProd = this.products[index];
     this.http.post(
       this.API + 'admin/catalogue/delete?token=' +
@@ -172,7 +170,31 @@ export class AdminProductsService {
       );
   }
 
-  // TODO: Handle errors from add/delete
+  updateQuantity(index: number, product: Product, quantity: number): void {
+    this.http.put(
+      this.API + 'admin/inventory/update?token=' +
+      (this.authService.user.value ? this.authService.user.value.token : ''),
+      {
+        shopId: this.shopId,
+        productName: product.productName,
+        productBrand: product.productBrand,
+        quantity
+      },
+      {responseType: 'text'}
+    ).pipe(
+      catchError(this.handleError),
+      tap( response => {
+        console.log(response);
+      })
+    ).subscribe( response => {
+        console.log('updating quantity of product');
+        this.products[index].quantity = quantity;
+        this.productsChanged.next(this.products.slice());
+      }
+    );
+  }
+
+  // TODO: Handle errors from add/edit/delete
   private handleError(errorRes: HttpErrorResponse): Observable<never> {
     if (!errorRes.error && !errorRes.error.error) {
       return throwError('An unknown error occurred!');

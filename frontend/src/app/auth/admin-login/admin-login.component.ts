@@ -58,7 +58,7 @@ export class AdminLoginComponent implements OnDestroy {
     form.reset();
   }
 
-  onHandleError(): void {
+  onClearError(): void {
     this.error = null;
   }
 

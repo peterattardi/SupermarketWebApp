@@ -3,7 +3,7 @@
     <h3>Register in the blink of an eye!</h3>
     <div class="alert alert-danger" *ngIf="error">
       <p>{{ error }}</p> <br>
-      <button (click)="onHandleError()">Clear</button>
+      <button (click)="onClearError()">Clear</button>
     </div>
     <div *ngIf="isLoading" style="text-align: center;">
       <app-loading-spinner></app-loading-spinner>

@@ -2,7 +2,9 @@
   <div class="row">
     <div class="col-xs-12">
       <app-catalogue *ngIf="user.role !== 'ADMIN'"></app-catalogue>
-      <app-choose-shop *ngIf="user.role === 'ADMIN'"></app-choose-shop>
+      <div *ngIf="user.role === 'ADMIN'">
+        HOME ADMIN
+      </div>
     </div>
   </div>
 </div>

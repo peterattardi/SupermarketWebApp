@@ -1,42 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {FormGroup, FormControl, FormArray, Validators, AbstractControl} from '@angular/forms';
-import {ManagementService} from '../management.service';
+import {AdminProductsService} from '../../admin-products.service';
+import {MarketService, Supermarket} from '../../../shared/market.service';
+import {Subscription} from 'rxjs';
+import {Product} from '../product.model';
 
 @Component({
   selector: 'app-product-edit',
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.css']
 })
-export class ProductEditComponent implements OnInit {
+export class ProductEditComponent implements OnInit, OnDestroy {
   id: number;
   editMode = false;
   productForm: FormGroup;
+  marketSub: Subscription;
+  supermarket: Supermarket;
 
   constructor(
     private route: ActivatedRoute,
-    private managementService: ManagementService,
-    private router: Router
+    private adminProductsService: AdminProductsService,
+    private router: Router,
+    private marketService: MarketService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.id = +params['id'];
-      this.editMode = params['id'] !== null;
+      this.editMode = params['id'] !== undefined && params['id'] !== null ;
       this.initForm();
     });
+    this.marketSub = this.marketService.supermarket.subscribe(
+      supermarket => {
+        this.supermarket = supermarket;
+      }
+    );
   }
 
   onSubmit(): void {
-    // const newProduct = new Product(
-    //   this.productForm.value['name'],
-    //   this.productForm.value['description'],
-    //   this.productForm.value['url'],
-    //   this.productForm.value['ingredients']);
+    const newProduct = this.createProduct(this.productForm.value);
     if (this.editMode) {
-      this.managementService.editProduct(this.id, this.productForm.value);
+      this.adminProductsService.editProduct(this.id, newProduct);
     } else {
-      this.managementService.addProduct(this.productForm.value);
+      this.adminProductsService.addProduct(newProduct);
     }
     this.onCancel();
   }
@@ -45,22 +52,38 @@ export class ProductEditComponent implements OnInit {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
+  private createProduct(form: any): Product {
+    return new Product(
+      form.productName,
+      form.productBrand,
+      form.url,
+      form.productDescription,
+      form.nutritionFacts,
+      form.supplierId,
+      form.unitCost,
+      form.unitType,
+      this.supermarket.name
+    );
+  }
+
   private initForm(): void {
     let productName = '';
     let productBrand = '';
     let productImagePath = '';
     let productDescription = '';
     let nutritionFacts = '';
+    let supplierId = 0;
     let unitCost = 0.0;
     let unitType = '';
 
     if (this.editMode) {
-      const product = this.managementService.getProduct(this.id);
+      const product = this.adminProductsService.getProduct(this.id);
       productName = product.productName;
       productBrand = product.productBrand;
       productImagePath = product.url;
       productDescription = product.productDescription;
       nutritionFacts = product.nutritionFacts;
+      supplierId = product.supplierId;
       unitCost = product.unitCost;
       unitType = product.unitType;
     }
@@ -71,8 +94,15 @@ export class ProductEditComponent implements OnInit {
       url: new FormControl(productImagePath),
       productDescription: new FormControl(productDescription),
       nutritionFacts: new FormControl(nutritionFacts),
+      supplierId: new FormControl(supplierId),
       unitCost: new FormControl(unitCost),
       unitType: new FormControl(unitType)
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.marketSub) {
+      this.marketSub.unsubscribe();
+    }
   }
 }

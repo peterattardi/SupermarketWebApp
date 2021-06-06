@@ -19,9 +19,7 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     router: RouterStateSnapshot
-  ):
-    | boolean
-    | UrlTree
+  ): boolean | UrlTree
     | Promise<boolean | UrlTree>
     | Observable<boolean | UrlTree> {
     return this.authService.user.pipe(

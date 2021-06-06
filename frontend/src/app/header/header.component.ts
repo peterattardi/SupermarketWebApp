@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import {DataStorageService} from '../shared/data-storage.service';
 
+// TODO: Add "Login/Register" as a Guest
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -12,33 +13,27 @@ import {DataStorageService} from '../shared/data-storage.service';
 export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   isAdmin = false;
+  isGuest = false;
   private userSub: Subscription;
   private fetchSub: Subscription;
 
   constructor(
-    private authService: AuthService,
-    private dataStorageService: DataStorageService
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe(user => {
-      this.isAuthenticated = !!user;
       if (user) {
+        this.isGuest = user.role === 'GUEST';
         this.isAdmin = user.role === 'ADMIN';
+        this.isAuthenticated = true;
       } else {
+        this.isGuest = false;
         this.isAdmin = false;
+        this.isAuthenticated = false;
       }
     });
   }
-
-  onSaveData(): void {
-    this.dataStorageService.storeProducts();
-  }
-
-  onFetchData(): void {
-    this.fetchSub = this.dataStorageService.fetchProducts().subscribe();
-  }
-
 
   onLogout(): void {
     this.authService.logout();

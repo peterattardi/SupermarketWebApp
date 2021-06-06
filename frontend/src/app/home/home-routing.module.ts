@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    canActivate: [AuthGuard, SupermarketGuard]
+    canActivate: [SupermarketGuard, AuthGuard]
   }];
 
 @NgModule({

@@ -1,15 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import {AdminProductsService} from './admin-products.service';
+import {MarketService, Supermarket} from '../shared/market.service';
+import {ShopService} from '../shared/shop.service';
 
 @Component({
   selector: 'app-management',
-  templateUrl: './management.component.html',
-  styleUrls: ['./management.component.css']
+  templateUrl: './management.component.html'
 })
 export class ManagementComponent implements OnInit {
+  supermarket: Supermarket = null;
 
-  constructor() { }
+  constructor(
+    private adminProductsService: AdminProductsService,
+    private marketService: MarketService,
+    private shopService: ShopService) { }
 
   ngOnInit(): void {
+    this.supermarket = this.marketService.getSupermarket();
   }
 
 }

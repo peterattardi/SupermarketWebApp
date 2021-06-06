@@ -6,6 +6,8 @@ import {throwError, BehaviorSubject, Observable} from 'rxjs';
 
 import { User } from './user.model';
 import {SignupForm} from './signupform.model';
+import {MarketService, Supermarket} from '../shared/market.service';
+import {environment} from '../../environments/environment';
 
 
 export interface AuthResponseData {
@@ -25,14 +27,18 @@ export class AuthService {
   user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
   MOCK_API = 'https://60b3a9594ecdc1001747fac2.mockapi.io/';
-  API = 'http://0584a0884918.ngrok.io/';
+  API = environment.API;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private marketService: MarketService
+  ) {}
 
   signup(signupForm: SignupForm): Observable<string> {
     return this.http
       .post(
-        this.API + 'registration',
+        this.API + 'any-user/register',
         {
           firstName: signupForm.firstName,
           lastName: signupForm.lastName,
@@ -55,7 +61,8 @@ export class AuthService {
   login(email: string, password: string, role: string): Observable<AuthResponseData> {
     return this.http
       .post<AuthResponseData>(
-        this.API + 'login',
+        this.API + 'admin-user/login',
+        // this.MOCK_API + 'login',
         {
           email,
           password,
@@ -76,9 +83,9 @@ export class AuthService {
   }
 
   loginGuest(): Observable<AuthResponseData> {
-    return this.http.post<AuthResponseData>(
+    return this.http.get<AuthResponseData>(
       this.API + 'guest/login',
-      {}
+      // this.MOCK_API + 'login',
       )
       .pipe(
         catchError(this.handleError),
@@ -151,6 +158,16 @@ export class AuthService {
     this.user.next(user);
     this.autoLogout((new Date(expirationDate)).getTime() - (new Date()).getTime());
     localStorage.setItem('userData', JSON.stringify(user));
+    if (role === 'ADMIN') {
+      this.setAdminSupermarket(email);
+    }
+  }
+
+  setAdminSupermarket(email: string = (this.user.value ? this.user.value.email : null)): void {
+    if (email === null) { return; }
+    const afterAt = email.substr(email.indexOf('@') + 1); // admin@conad.it -> conad.it
+    const name = afterAt.substr(0, afterAt.indexOf('.')); // conad.it -> conad
+    this.marketService.chooseSupermarket(new Supermarket(name));
   }
 
   private handleError(errorRes: HttpErrorResponse): Observable<never> {
@@ -158,17 +175,30 @@ export class AuthService {
       return throwError('An unknown error occurred!');
     }
     let errorMessage = errorRes.error;
-    switch (errorMessage) {
-      case 'EMAIL_EXISTS':
-        errorMessage = 'This email exists already';
-        break;
-      case 'EMAIL_NOT_FOUND':
-        errorMessage = 'This email does not exist.';
-        break;
-      case 'INVALID_PASSWORD':
-        errorMessage = 'This password is not correct.';
-        break;
+    if (errorRes.status === 404) {
+      errorMessage = 'Invalid API URL/Request or API is offline';
+    } else {
+      switch (errorMessage) {
+        case 'EMAIL_EXISTS':
+          errorMessage = 'This email exists already';
+          break;
+        case 'EMAIL_NOT_FOUND':
+          errorMessage = 'This email does not exist.';
+          break;
+        case 'INVALID_PASSWORD':
+          errorMessage = 'This password is not correct.';
+          break;
+        default:
+          errorMessage = 'Error while processing authentication';
+      }
     }
     return throwError(errorMessage);
+  }
+
+  isAdmin(): boolean {
+    if (this.user.value) {
+      return this.user.value.role === 'ADMIN';
+    }
+    return false;
   }
 }

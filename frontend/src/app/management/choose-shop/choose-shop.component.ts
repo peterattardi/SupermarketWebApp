@@ -3,7 +3,7 @@ import {MarketService, Position, Supermarket} from '../../shared/market.service'
 import {Observable} from 'rxjs';
 import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Shop, ShopService} from './shop.service';
+import {Shop, ShopService} from '../../shared/shop.service';
 
 @Component({
   selector: 'app-choose-shop',
@@ -11,11 +11,11 @@ import {Shop, ShopService} from './shop.service';
 })
 export class ChooseShopComponent implements OnInit {
   shops: Shop[];
-  supermarket: Supermarket;
   // position: Position;
   shopsObs: Observable<Shop[]>;
   chosenShop: Shop = null;
   isLoading = false;
+  error: string = null;
 
   // mock
   position = new Position('12.303030', '14.302030');
@@ -29,7 +29,6 @@ export class ChooseShopComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.supermarket = this.marketService.getSupermarket();
     this.getShops();
     this.resetShop();
   }
@@ -37,10 +36,23 @@ export class ChooseShopComponent implements OnInit {
   getShops(): void {
     this.isLoading = true;
     this.shopsObs = this.shopService.getShops();
-    this.shopsObs.subscribe( shops => {
-      this.shops = shops;
-      this.isLoading = false;
-    });
+    this.shopsObs.subscribe(
+      shops => {
+        this.shops = shops;
+        this.isLoading = false;
+      },
+      errorMessage => {
+        this.isLoading = false;
+        this.error = errorMessage;
+      });
+  }
+
+  onReloadShops(): void {
+    this.getShops();
+  }
+
+  onClearError(): void {
+    this.error = null;
   }
 
   resetShop(): void {

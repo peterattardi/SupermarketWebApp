@@ -1,32 +1,42 @@
 <div class="container">
-  <button
-    type="button"
-    class="btn btn-success"
-    (click)="getMarkets()">
-    Reload
-  </button>
-  <div *ngIf="isLoading" style="text-align: center;">
-    <app-loading-spinner></app-loading-spinner>
-  </div>
-  <div *ngIf="!isLoading && (supermarkets === [])">
-    No supermarkets found
-  </div>
-  <button
-    class="btn {{supermarket === chosenMarket ? 'btn-primary' : 'btn-default'}} btn-group-justified"
-    type="button"
-    id="{{supermarket.id}}"
-    style="margin: 15px; font-size: large"
-    *ngFor="let supermarket of supermarkets"
-    (click)="onSelect(supermarket)">
-    {{supermarket.supermarketName}}
-  </button>
-  <div class="center-block">
-    <button
-      class="btn btn-success"
-      type="submit"
-      [disabled]="!chosenMarket"
-      (click)="onChooseSupermarket()">
-      Continue
-    </button>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="row">
+        <button
+          type="button"
+          class="btn btn-lg btn-info"
+          (click)="getMarkets()">
+          Reload
+        </button>
+        <button
+        class="btn btn-lg btn-success"
+        type="submit"
+        [disabled]="!chosenMarket"
+        (click)="onChooseSupermarket()">
+        Continue
+      </button>
+      </div>
+      <h3> Select a supermarket to shop in!</h3>
+    </div>
+    <div class="col-xs-8">
+      <div class="alert alert-danger" *ngIf="error">
+        <p>{{ error }}</p> <br>
+        <button (click)="onClearError()">Clear</button>
+      </div>
+      <div *ngIf="isLoading" style="text-align: center;">
+        <app-loading-spinner></app-loading-spinner>
+      </div>
+      <div *ngIf="!isLoading && (!supermarkets || supermarkets.length === 0)">
+        <marquee>No supermarkets found</marquee>
+      </div>
+      <button
+        class="btn {{supermarket === chosenMarket ? 'btn-primary' : 'btn-default'}} btn-group-justified"
+        type="button"
+        style="margin: 15px; font-size: large"
+        *ngFor="let supermarket of supermarkets"
+        (click)="onSelect(supermarket)">
+        {{supermarket.name.charAt(0).toUpperCase()}}{{supermarket.name.substr(1)}}
+      </button>
+    </div>
   </div>
 </div>

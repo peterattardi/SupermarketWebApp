@@ -11,33 +11,22 @@
         </li>
       </ul>
       <ul class="nav navbar-nav">
-        <li style="background-color: rgba(50,200,40,0.4)" routerLinkActive="active" *ngIf="isAdmin">
+        <li routerLinkActive="active" *ngIf="isAdmin">
           <a routerLink="/management">Manage Catalogue</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li *ngIf="isAuthenticated && !isGuest" routerLinkActive="active">
+          <a routerLink="/account">Account</a>
+        </li>
+        <li routerLinkActive="active">
+          <a routerLink="/auth/admin"
+             *ngIf="!isAdmin">Admin Area</a>
+        </li>
         <li *ngIf="isAuthenticated">
           <a style="cursor: pointer;" (click)="onLogout()">Logout</a>
         </li>
       </ul>
-      <ul class="nav navbar-nab navbar-right">
-        <li *ngIf="isAuthenticated">
-          <a routerLink="/account">Account</a>
-        </li>
-      </ul>
-      <li class="dropdown" appDropdown *ngIf="isAdmin">
-        <a style="cursor: pointer;" class="dropdown-toggle" role="button"
-        >Manage <span class="caret"></span
-        ></a>
-        <ul class="dropdown-menu">
-          <li>
-            <a style="cursor: pointer;" (click)="onSaveData()">Save Data</a>
-          </li>
-          <li>
-            <a style="cursor: pointer;" (click)="onFetchData()">Fetch Data</a>
-          </li>
-        </ul>
-      </li>
     </div>
   </div>
 </nav>

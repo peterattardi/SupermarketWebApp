@@ -4,21 +4,22 @@ import { CommonModule } from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {AccountComponent} from './account.component';
 import {AuthGuard} from '../auth/auth.guard';
-import { AdminComponent } from './admin/admin.component';
-import { ClientComponent } from './client/client.component';
+import { AdminInfoComponent } from './admin-info/admin-info.component';
+import { ClientInfoComponent } from './client-info/client-info.component';
+import {LoggedGuard} from './logged.guard';
 
 @NgModule({
   declarations: [
     AccountComponent,
-    AdminComponent,
-    ClientComponent
+    AdminInfoComponent,
+    ClientInfoComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild([{
       path: '',
       component: AccountComponent,
-      canActivate: [AuthGuard]
+      canActivate: [LoggedGuard]
     }]),
   ]
 })

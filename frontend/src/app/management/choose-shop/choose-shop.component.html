@@ -5,7 +5,7 @@
         <button
           type="button"
           class="btn btn-lg btn-info"
-          (click)="getShops()">
+          (click)="onReloadShops()">
           Reload
         </button>
         <button
@@ -17,14 +17,17 @@
         </button>
       </div>
       <h3> Select a shop to edit! </h3>
-      <h4> Supermarket: {{supermarket.name.charAt(0).toUpperCase() + supermarket.name.substr(1)}}</h4>
     </div>
     <div class="col-xs-8">
+      <div class="alert alert-danger" *ngIf="error">
+        <p>{{ error }}</p> <br>
+        <button (click)="onClearError()">Clear</button>
+      </div>
       <div *ngIf="isLoading" style="text-align: center;">
         <app-loading-spinner></app-loading-spinner>
       </div>
-      <div *ngIf="!isLoading && (shops === [])">
-        No shops found
+      <div *ngIf="!isLoading && (!shops || shops.length === 0)">
+        <marquee>No shops found</marquee>
       </div>
       <!-- TODO: Showing position in google maps for each shop through shop.position -->
       <button

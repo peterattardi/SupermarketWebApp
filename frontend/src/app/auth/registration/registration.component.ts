@@ -104,7 +104,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     form.reset();
   }
 
-  onHandleError(): void {
+  onClearError(): void {
     this.error = null;
   }
 

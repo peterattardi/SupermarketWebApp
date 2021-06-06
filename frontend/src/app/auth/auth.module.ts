@@ -8,13 +8,15 @@ import { ClientLoginComponent } from './client-login/client-login.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import {AuthRoutingModule} from './auth-routing.module';
+import { ChooseMarketComponent } from './choose-market/choose-market.component';
 
 @NgModule({
   declarations: [
     AuthComponent,
     ClientLoginComponent,
     AdminLoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ChooseMarketComponent
   ],
   imports: [
     CommonModule,

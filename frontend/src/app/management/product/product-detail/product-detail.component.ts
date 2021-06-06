@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { Product } from '../product.model';
-import { ManagementService} from '../management.service';
+import { AdminProductsService} from '../../admin-products.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnDestroy {
+  subProduct: Subscription;
   product: Product;
   id: number;
 
-  constructor(private managementService: ManagementService,
+  constructor(private adminProductsService: AdminProductsService,
               private route: ActivatedRoute,
               private router: Router) {
   }
@@ -22,13 +24,13 @@ export class ProductDetailComponent implements OnInit {
       .subscribe(
         (params: Params) => {
           this.id = +params['id'];
-          this.product = this.managementService.getProduct(this.id);
+          this.product = this.adminProductsService.getProduct(this.id);
         }
       );
   }
 
   // onAddToShoppingList(): void {
-  //   this.managementService.addIngredientsToShoppingList(this.product.ingredients);
+  //   this.adminProductsService.addIngredientsToShoppingList(this.product.ingredients);
   // }
 
   onEditProduct(): void {
@@ -37,8 +39,12 @@ export class ProductDetailComponent implements OnInit {
   }
 
   onDeleteProduct(): void {
-    this.managementService.deleteProduct(this.id);
+    this.adminProductsService.deleteProduct(this.id);
     this.router.navigate(['/management']);
+  }
+
+  ngOnDestroy(): void {
+    this.subProduct.unsubscribe();
   }
 
 }

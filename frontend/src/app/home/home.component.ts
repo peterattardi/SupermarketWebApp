@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService, Role} from '../auth/auth.service';
 import {Subscription} from 'rxjs';
-import {MarketService, Supermarket} from '../auth/choose-market/market.service';
+import {MarketService, Supermarket} from '../shared/market.service';
 import {Router} from '@angular/router';
 import {User} from '../auth/user.model';
 

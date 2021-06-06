@@ -53,7 +53,7 @@ public class AppAdminController {
 
     //For Riccardo: specify {"productName, productBrand"} in the body and I'll figure out supermarketId
     //by myself from the token
-    @DeleteMapping(path = "admin/catalogue/delete")
+    @PostMapping(path = "admin/catalogue/delete")
     public ResponseEntity deleteProduct(@RequestParam String token, @RequestBody ProductDeleteRequest request){
         try{
             appAdminService.findAdminByToken(token);

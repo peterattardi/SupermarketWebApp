@@ -40,7 +40,7 @@ public class CartItemController {
         }
     }
 
-    @DeleteMapping("user/cart/delete")
+    @PostMapping("user/cart/delete")
     public ResponseEntity deleteCartItem(@RequestParam String token, @RequestBody CartItemRequest cartItem){
         try {
             Login login = loginService.findByToken(token);

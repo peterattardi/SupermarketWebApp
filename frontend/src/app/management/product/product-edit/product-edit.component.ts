@@ -27,8 +27,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.id = +params['id'];
-      this.editMode = params['id'] !== undefined && params['id'] !== null ;
+      this.id = +params.id;
+      this.editMode = !!params.id ;
       this.initForm();
     });
     this.marketSub = this.marketService.supermarket.subscribe(

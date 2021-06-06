@@ -23,10 +23,15 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     this.route.params
       .subscribe(
         (params: Params) => {
-          this.id = +params['id'];
+          this.id = +params.id;
           this.product = this.adminProductsService.getProduct(this.id);
         }
       );
+    this.subProduct = this.adminProductsService.productsChanged.subscribe(
+      products => {
+        this.product = products[this.id];
+      }
+    );
   }
 
   // onAddToShoppingList(): void {
@@ -34,17 +39,19 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   // }
 
   onEditProduct(): void {
-    this.router.navigate(['edit'], {relativeTo: this.route});
+    this.router.navigate(['edit'], { relativeTo: this.route });
     // this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route});
   }
 
   onDeleteProduct(): void {
     this.adminProductsService.deleteProduct(this.id);
-    this.router.navigate(['/management']);
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   ngOnDestroy(): void {
-    this.subProduct.unsubscribe();
+    if (this.subProduct) {
+      this.subProduct.unsubscribe();
+    }
   }
 
 }

@@ -12,8 +12,7 @@ export class ManagementComponent implements OnInit {
 
   constructor(
     private adminProductsService: AdminProductsService,
-    private marketService: MarketService,
-    private shopService: ShopService) { }
+    private marketService: MarketService) { }
 
   ngOnInit(): void {
     this.supermarket = this.marketService.getSupermarket();

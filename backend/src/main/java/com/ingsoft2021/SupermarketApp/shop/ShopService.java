@@ -8,6 +8,7 @@ import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductService;
 import com.ingsoft2021.SupermarketApp.util.Checker;
 import com.ingsoft2021.SupermarketApp.util.ShopComparator;
 import com.ingsoft2021.SupermarketApp.util.ShopDistSupport;
+import com.ingsoft2021.SupermarketApp.util.request.UpdateProductRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -120,5 +121,11 @@ public class ShopService {
         Optional<Shop> shop = shopRepository.findByShopId(shopId);
         if(shop.isEmpty()) throw  new IllegalStateException("SHOP_NOT_FOUND");
         return shop.get();
+    }
+
+    public void updateInEveryShop(UpdateProductRequest product, String supermarketName) {
+        List<Shop> shopsOfThatSupermarket = shopRepository.findAllBySupermarketName(supermarketName);
+        shopProductService.updateInEveryShop(product, shopsOfThatSupermarket);
+
     }
 }

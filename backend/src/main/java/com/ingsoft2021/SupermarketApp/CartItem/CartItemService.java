@@ -63,6 +63,10 @@ public class CartItemService {
     public List<CartItem> findAllByEmail(String email){
         return cartItemRepository.findAllByEmail(email);
     }
+
+    public Object findAllByEmailAndShopId(String email, Long shopId) {
+        return cartItemRepository.findAllByEmailAndShopId(email, shopId);
+    }
 }
 
 

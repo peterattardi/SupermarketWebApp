@@ -4,6 +4,7 @@ import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import com.ingsoft2021.SupermarketApp.util.Checker;
 import com.ingsoft2021.SupermarketApp.util.request.CartItemRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,16 @@ public class CartItemController {
             return ResponseEntity.status(400).body(e.getMessage());
         }
 
+    }
+
+    @GetMapping("user/cart/{shopId}")
+    public ResponseEntity getCart(@RequestParam String token, @PathVariable(name = "shopId") Long shopId){
+        try{
+            Login logged = loginService.findByToken(token);
+            return ResponseEntity.status(200).body(cartItemService.findAllByEmailAndShopId(logged.getEmail(), shopId));
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 
 }

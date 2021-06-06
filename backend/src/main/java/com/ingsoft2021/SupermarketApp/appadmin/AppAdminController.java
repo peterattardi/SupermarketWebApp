@@ -3,6 +3,7 @@ package com.ingsoft2021.SupermarketApp.appadmin;
 import com.ingsoft2021.SupermarketApp.product.Product;
 import com.ingsoft2021.SupermarketApp.util.request.ProductDeleteRequest;
 
+import com.ingsoft2021.SupermarketApp.util.request.UpdateProductRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
@@ -34,6 +35,16 @@ public class AppAdminController {
     public ResponseEntity addProduct(@RequestBody Product product, @RequestParam String token){
         try {
             appAdminService.addProduct(product, token);
+            return ResponseEntity.status(200).body("SUCCESS");
+        }catch (IllegalStateException | NoSuchFieldException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
+
+    @PutMapping(path = "admin/catalogue/update")
+    public ResponseEntity updateProduct(@RequestBody UpdateProductRequest product, @RequestParam String token){
+        try {
+            appAdminService.updateProduct(product, token);
             return ResponseEntity.status(200).body("SUCCESS");
         }catch (IllegalStateException | NoSuchFieldException e) {
             return ResponseEntity.status(401).body(e.getMessage());

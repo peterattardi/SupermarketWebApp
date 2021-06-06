@@ -4,6 +4,7 @@ import com.ingsoft2021.SupermarketApp.product.Product;
 import com.ingsoft2021.SupermarketApp.util.request.ProductDeleteRequest;
 import com.ingsoft2021.SupermarketApp.shop.Shop;
 import com.ingsoft2021.SupermarketApp.util.Checker;
+import com.ingsoft2021.SupermarketApp.util.request.UpdateProductRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +67,21 @@ public class ShopProductService {
     public List<ShopProduct> findUnavailable(Long shopId) {
         List<ShopProduct> products = findAllByShopId(shopId);
         return products.stream().filter(product -> product.getQuantity() < 1).collect(Collectors.toList());
+    }
+
+    public void updateInEveryShop(UpdateProductRequest product, List<Shop> shopsOfThatSupermarket) {
+        for(Shop shop : shopsOfThatSupermarket){
+            Optional<ShopProduct> oldShopProduct = shopProductRepository.findByShopIdAndProductNameAndProductBrand(
+                    shop.getShopId(), product.getOldProductName(), product.getOldProductBrand()
+            );
+            if(oldShopProduct.isEmpty()) throw new IllegalStateException("PPRODUCT_NOT_FOUND");
+            shopProductRepository.delete(oldShopProduct.get());
+            ShopProduct newShopProduct = new ShopProduct(shop.getShopId(), product.getNewProductName(),
+                    product.getNewProductBrand(), oldShopProduct.get().getQuantity());
+            shopProductRepository.save(newShopProduct);
+
+
+        }
     }
 }
 

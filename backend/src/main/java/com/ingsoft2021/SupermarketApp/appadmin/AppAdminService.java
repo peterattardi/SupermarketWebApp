@@ -9,6 +9,7 @@ import com.ingsoft2021.SupermarketApp.product.ProductService;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
 import com.ingsoft2021.SupermarketApp.shop.ShopService;
+import com.ingsoft2021.SupermarketApp.util.request.UpdateProductRequest;
 import lombok.AllArgsConstructor;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -79,6 +80,11 @@ public class AppAdminService {
     }
 
 
-
+    public void updateProduct(UpdateProductRequest product, String token) throws NoSuchFieldException {
+        AppAdmin admin = findAdminByToken(token);
+        product.setSupermarketName(admin.getSupermarketName());
+        productService.updateProduct(product);
+        shopService.updateInEveryShop(product, admin.getSupermarketName());
+    }
 }
 

@@ -13,4 +13,6 @@ public interface CartItemRepository extends JpaRepository<CartItem, CartId> {
     );
 
     List<CartItem> findAllByEmail(String email);
+
+    List<CartItem> findAllByEmailAndShopId(String email, Long shopId);
 }

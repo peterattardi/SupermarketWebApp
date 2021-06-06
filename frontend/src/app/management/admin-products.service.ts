@@ -89,9 +89,7 @@ export class AdminProductsService {
     );
   }
 
-  // TODO: edit Product
   editProduct(index: number, newProduct: Product): void {
-    // TODO: send http add-product then delete-product of the old one
     const product = this.products[index];
     this.http.put(
       this.API + 'admin/catalogue/update?token=' +

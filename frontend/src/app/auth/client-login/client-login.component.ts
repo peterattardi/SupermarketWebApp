@@ -54,11 +54,18 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
 
     let authObs: Observable<AuthResponseData>;
 
-    authObs = this.authService.login(
-      email,
-      password,
-      Role.USER
-    );
+    if (this.isGuest) {
+      authObs = this.authService.loginGuestExisting(
+        email,
+        password
+      );
+    } else {
+      authObs = this.authService.login(
+        email,
+        password,
+        Role.USER
+      );
+    }
 
     authObs.subscribe(
       resData => {

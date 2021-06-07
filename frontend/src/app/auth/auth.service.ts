@@ -105,6 +105,30 @@ export class AuthService {
       );
   }
 
+  loginGuestExisting(email: string, password: string): Observable<AuthResponseData> {
+    return this.http
+      .post<AuthResponseData>(
+        this.API + 'guest/login/existing?token=' + (this.user.value ? this.user.value.token : ''),
+        // this.MOCK_API + 'login',
+        {
+          email,
+          password,
+          appUserRole: 'USER'
+        }
+      )
+      .pipe(
+        catchError(this.handleError),
+        tap(resData => {
+          this.handleAuthentication(
+            resData.email,
+            resData.idToken,
+            resData.expiresAt,
+            'USER'
+          );
+        })
+      );
+  }
+
   loginGuest(): Observable<AuthResponseData> {
     return this.http.get<AuthResponseData>(
       this.API + 'guest/login',

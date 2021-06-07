@@ -34,6 +34,17 @@ public class LoginController {
         }
     }
 
+    @GetMapping(path = "guest/login/existing")
+    public ResponseEntity loginAsGuest(@RequestParam String token, @RequestBody LoginRequest loginRequest){
+        try{
+            AuthResponse authResponse = loginService.loginAsGuest(token, loginRequest);
+            return ResponseEntity.status(200).body(authResponse);
+        }catch (Exception e){
+            return  ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
+
+
     @GetMapping(path = "user/logout")
     public ResponseEntity logout(@RequestParam String token){
         try {

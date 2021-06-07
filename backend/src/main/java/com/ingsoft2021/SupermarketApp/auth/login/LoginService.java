@@ -1,5 +1,7 @@
 package com.ingsoft2021.SupermarketApp.auth.login;
 
+import com.ingsoft2021.SupermarketApp.CartItem.CartItem;
+import com.ingsoft2021.SupermarketApp.CartItem.CartItemService;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminRepository;
 import com.ingsoft2021.SupermarketApp.appuser.AppUser;
@@ -26,6 +28,7 @@ public class LoginService {
     private final AppUserRepository appUserRepository;
     private final AppAdminRepository appAdminRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CartItemService cartItemService;
 
     public AuthResponse login(LoginRequest loginRequest) throws NoSuchFieldException {
         AuthResponse response = new AuthResponse(null, null, null);
@@ -121,5 +124,28 @@ public class LoginService {
             default:
                 return logged;
         }
+    }
+
+    public AuthResponse loginAsGuest(String token, LoginRequest request) throws NoSuchFieldException {
+        Login guest = findByToken(token);
+        Optional<AppUser> user = appUserRepository.findByEmail(request.getEmail());
+        if (user.isEmpty()) throw new IllegalStateException("USER_NOT_FOUND");
+        // replace login
+        loginRepository.delete(guest);
+        AuthResponse response = login(request);
+        //update cart
+        //now we check if the guest had products in the cart
+        List<CartItem> cartItems = cartItemService.findAllByEmail(guest.getEmail());
+        //If yes, we have to update email and expiresAt
+        if(!cartItems.isEmpty()){
+            for(CartItem c : cartItems){
+                cartItemService.deleteCartItem(c);
+                CartItem toAdd = new CartItem(
+                        response.getEmail(), c.getSupermarketName(), c.getProductName(), c.getProductBrand(),
+                        c.getQuantity(), null);
+                cartItemService.addCartItem(toAdd);
+            }
+        }
+        return response;
     }
 }

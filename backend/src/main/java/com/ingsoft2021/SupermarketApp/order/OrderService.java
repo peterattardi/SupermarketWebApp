@@ -4,6 +4,7 @@ import com.ingsoft2021.SupermarketApp.CartItem.CartItem;
 import com.ingsoft2021.SupermarketApp.CartItem.CartItemService;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
+import com.ingsoft2021.SupermarketApp.delivery.DeliveryService;
 import com.ingsoft2021.SupermarketApp.orderedProduct.OrderedProduct;
 import com.ingsoft2021.SupermarketApp.orderedProduct.OrderedProductService;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class OrderService {
     private final LoginService loginService;
     private final CartItemService cartItemService;
     private final OrderedProductService orderedProductService;
+    private final DeliveryService deliveryService;
 
     public void order(String token, String supermarketName) throws NoSuchFieldException {
         Login logged = loginService.findByToken(token);
@@ -46,5 +48,6 @@ public class OrderService {
         if(order.isEmpty()) throw new IllegalStateException("ORDER_NOT_FOUND");
         orderRepository.delete(order.get());
         orderedProductService.deleteByOrderId(orderId);
+        deliveryService.deleteByOrderId(orderId);
     }
 }

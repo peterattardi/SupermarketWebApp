@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// TODO: login as a guest
 @AllArgsConstructor
 @RestController
 @CrossOrigin(origins = "http://localhost:4200/")

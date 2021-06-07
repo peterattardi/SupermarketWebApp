@@ -8,16 +8,15 @@ import {SharedModule} from './shared/shared.module';
 import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {AuthModule} from './auth/auth.module';
-import {HomeModule} from './home/home.module';
 import {ManagementModule} from './management/management.module';
-import {AccountModule} from './account/account.module';
-import { GuestAuthComponent } from './guest-auth/guest-auth.component';
+import {AccountModule} from './account/account.module'
+import {CatalogueModule} from './catalogue/catalogue.module';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    GuestAuthComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +25,7 @@ import { GuestAuthComponent } from './guest-auth/guest-auth.component';
     FormsModule,
     SharedModule,
     AuthModule,
-    HomeModule,
+    CatalogueModule,
     ManagementModule,
     AccountModule
   ],

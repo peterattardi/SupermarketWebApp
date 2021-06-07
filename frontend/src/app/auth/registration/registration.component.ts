@@ -27,8 +27,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       if (!!user) {
         if (user.role === 'GUEST') {
           this.isGuest = true;
+        } else if (user.role === 'USER') {
+          this.router.navigate(['/catalogue']);
         } else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/management']);
         }
       }
     });
@@ -57,7 +59,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         loginResData => {
           console.log(loginResData);
           this.isLoading = false;
-          this.router.navigate(['/home']);
+          this.router.navigate(['/catalogue']);
         },
         errorMessage => {
           console.log(errorMessage);

@@ -28,13 +28,12 @@ export class AdminGuard implements CanActivate {
       take(1),
       map(user => {
         if (!user) {
-          return this.router.createUrlTree(['/auth']);
+          return this.router.createUrlTree(['/auth/login']);
         }
-        const isAdmin = user.role === 'ADMIN';
-        if (isAdmin) {
+        if (user.role === 'ADMIN') {
           return true;
         }
-        return this.router.createUrlTree(['/home']);
+        return this.router.createUrlTree(['/catalogue']);
       })
       // tap(isAuth => {
       //   if (!isAuth) {

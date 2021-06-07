@@ -32,7 +32,7 @@ export class ChooseMarketComponent implements OnInit {
       if (!localStorage.getItem('supermarket')) {
         this.authService.setAdminSupermarket();
       }
-      this.router.navigate(['/home']);
+      this.router.navigate(['/management']);
     }
     this.getMarkets();
   }

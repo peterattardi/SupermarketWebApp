@@ -7,8 +7,7 @@ import {MarketService, Supermarket} from '../../shared/market.service';
 
 @Component({
   selector: 'app-client-login',
-  templateUrl: './client-login.component.html',
-  styleUrls: ['./client-login.component.css']
+  templateUrl: './client-login.component.html'
 })
 export class ClientLoginComponent implements OnInit, OnDestroy {
   isLoading = false;
@@ -29,8 +28,10 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
       if (!!user) {
         if (user.role === 'GUEST') {
           this.isGuest = true;
+        } else if (user.role === 'USER') {
+          this.router.navigate(['/catalogue']);
         } else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/management']);
         }
       }
     });
@@ -63,7 +64,7 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
       resData => {
         console.log(resData);
         this.isLoading = false;
-        this.router.navigate(['/home']);
+        this.router.navigate(['/catalogue']);
       },
       errorMessage => {
         console.log(errorMessage);
@@ -85,7 +86,7 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
       resData => {
         console.log(resData);
         this.isLoading = false;
-        this.router.navigate(['/home']);
+        this.router.navigate(['/catalogue']);
       },
       errorMessage => {
         console.log(errorMessage);

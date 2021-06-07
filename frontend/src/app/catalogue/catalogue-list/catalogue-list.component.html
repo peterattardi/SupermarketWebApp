@@ -1,0 +1,10 @@
+<hr>
+<div class="row">
+  <div class="col-xs-12">
+    <app-catalogue-item
+      *ngFor="let productEl of products; let i = index"
+      [product]="productEl"
+      [index]="i"></app-catalogue-item>
+  </div>
+</div>
+

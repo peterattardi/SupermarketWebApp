@@ -2,7 +2,11 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: 'auth', pathMatch: 'full'},
+  {
+    path: 'catalogue',
+    loadChildren: './catalogue/catalogue.module#CatalogueModule'
+  },
   {
     path: 'management',
     loadChildren: './management/management.module#ManagementModule'
@@ -10,10 +14,6 @@ const appRoutes: Routes = [
   {
     path: 'auth',
     loadChildren: './auth/auth.module#AuthModule'
-  },
-  {
-    path: 'home',
-    loadChildren: './home/home.module#HomeModule'
   },
   {
     path: 'account',

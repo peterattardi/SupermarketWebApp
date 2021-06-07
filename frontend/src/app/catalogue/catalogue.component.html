@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="alert alert-danger" *ngIf="error">
+        <p>{{ error }}</p> <br>
+        <button (click)="onClearError()">Clear</button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="container" *ngIf="user && user.role !== 'ADMIN'">
+        <div class="row">
+          <div class="col-xs-6">
+            <h3>Hi {{user.role}}</h3>
+          </div>
+          <div class="col-xs-6">
+            <h4>
+              You have chosen: {{supermarket.name.charAt(0).toUpperCase() + supermarket.name.substr(1)}}
+            </h4>
+            <a
+              (click)="onResetSupermarket()"
+              style="cursor: pointer">{{supermarket ? 'Change' : 'Choose a supermarket!'}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

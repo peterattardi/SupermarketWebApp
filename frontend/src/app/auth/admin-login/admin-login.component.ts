@@ -46,7 +46,7 @@ export class AdminLoginComponent implements OnDestroy {
       resData => {
         console.log(resData);
         this.isLoading = false;
-        this.router.navigate(['/home']);
+        this.router.navigate(['/management']);
       },
       errorMessage => {
         console.log(errorMessage);

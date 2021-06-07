@@ -7,14 +7,15 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
 import {ManagementRoutingModule} from './management-routing.module';
 import {ProductModule} from './product/product.module';
+import {ChooseShopComponent} from './choose-shop/choose-shop.component';
 
 @NgModule({
   declarations: [
-    ManagementComponent
+    ManagementComponent,
+    ChooseShopComponent
   ],
   imports: [
     CommonModule,
-    RouterModule,
     ReactiveFormsModule,
     ManagementRoutingModule,
     SharedModule,

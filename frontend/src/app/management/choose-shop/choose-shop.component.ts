@@ -32,7 +32,7 @@ export class ChooseShopComponent implements OnInit {
 
   ngOnInit(): void {
     this.getShops();
-    this.resetShop();
+    // this.resetShop();
   }
 
   getShops(): void {

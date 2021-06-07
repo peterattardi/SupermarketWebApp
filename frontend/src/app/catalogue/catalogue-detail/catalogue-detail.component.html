@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <img
+        [src]="(product.url ? product.url : 'http://placeimg.com/640/480')"
+        alt="{{ product.productName }}"
+        class="img-responsive"
+        style="max-height: 300px;">
+    </div>
+  </div>
+  <div class="row list-group-item">
+    <div class="col-xs-12">
+      <h1>{{ product.productName }}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-5">
+      <h4 class="text-center">Brand: {{ product.productBrand }}</h4>
+    </div>
+    <div class="col-xs-7 text-center" *ngIf="product.quantity > 5">
+      <span style="font-size: 20px"> Available </span>
+    </div>
+    <div class="col-xs-7 text-center bg-warning" *ngIf="product.quantity > 0 && product.quantity <= 5">
+      <span style="font-size: 20px"> {{ product.quantity }} left!</span>
+    </div>
+    <div class="col-xs-7 text-center bg-danger" *ngIf="!(product.quantity > 0)">
+      <h4>Out of stock!</h4>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-xs-4">
+      <h4>Description</h4>
+    </div>
+    <div class="col-xs-8">
+      {{ product.productDescription }}
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-xs-4">
+      Nutrition Facts
+    </div>
+    <div class="col-xs-8">
+      {{ product.nutritionFacts}}
+    </div>
+  </div>
+  <br><br>
+</div>

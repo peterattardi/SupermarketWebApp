@@ -23,15 +23,5 @@ public class DeliveryController {
 
     }
 
-    @GetMapping(path = "user/delivery/schedule/{orderId}/now")
-    public ResponseEntity scheduleADeliveryNow(@PathVariable(name = "orderId") Long orderId){
-        try{
-            deliveryService.scheduleNow(orderId);
-            return ResponseEntity.status(200).body("SUCCESS");
-        }catch (IllegalStateException e){
-            return ResponseEntity.status(400).body(e.getMessage());
-        }
-
-    }
 
 }

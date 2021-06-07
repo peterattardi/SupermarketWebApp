@@ -9,7 +9,11 @@
     <h5 class="list-group-item-success">
       {{ product.unitCost}}€{{product.unitType !== '' ? '/' + product.unitType : ''}}
     </h5>
-    <h4 class="list-group-item-heading">{{ product.quantity > 0 ? 'In stock: ' + product.quantity : 'Out of stock!'}}</h4>
+    <h4 class="list-group-item-text" *ngIf="product.quantity > 5"> Available </h4>
+    <h4 class="list-group-item-warning" *ngIf="product.quantity > 0 && product.quantity <= 5">
+      {{ product.quantity }} left!
+    </h4>
+    <h4 class="list-group-item-danger" *ngIf="!(product.quantity > 0)">Out of stock!</h4>
   </div>
   <span class="pull-right">
         <img

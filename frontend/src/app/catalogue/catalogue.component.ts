@@ -17,7 +17,7 @@ export class CatalogueComponent implements OnInit, OnDestroy {
   supermarket: Supermarket;
   error: string = null;
   // mock
-  position = new Position('12.303030', '14.302030');
+  position = new Position('38.11526141722571', '13.349538343933283'); // all
 
   constructor(private authService: AuthService,
               private marketService: MarketService,

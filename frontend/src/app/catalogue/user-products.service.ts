@@ -43,6 +43,7 @@ export class UserProductsService {
         }
       }
     });
+    debugger;
     this.productsChanged.next(this.products.slice());
   }
 
@@ -75,6 +76,7 @@ export class UserProductsService {
   fetchQuantity(position: Position): Observable<ShopProduct[]> {
     const supermarket = this.marketService.getSupermarket();
     const supermarketName = supermarket ? supermarket.name : '';
+    debugger;
     return this.http
       .post<ShopProduct[]>(
         this.API + 'user/nearest-shop/inventory/',

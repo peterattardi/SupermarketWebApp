@@ -12,6 +12,8 @@ import {ManagementModule} from './management/management.module';
 import {AccountModule} from './account/account.module'
 import {CatalogueModule} from './catalogue/catalogue.module';
 import {CommonModule} from '@angular/common';
+import { CartComponent } from './cart/cart.component';
+import {CartModule} from './cart/cart.module';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import {CommonModule} from '@angular/common';
     AuthModule,
     CatalogueModule,
     ManagementModule,
+    CartModule,
     AccountModule
   ],
   providers: [],

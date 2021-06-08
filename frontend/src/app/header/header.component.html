@@ -16,6 +16,9 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li *ngIf="isAuthenticated && !isAdmin" routerLinkActive="active">
+          <a routerLink="/cart">Cart</a>
+        </li>
         <li *ngIf="isAuthenticated && !isGuest" routerLinkActive="active">
           <a routerLink="/account">Account</a>
         </li>

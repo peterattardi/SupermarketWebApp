@@ -8,8 +8,11 @@ import {User} from '../auth/user.model';
 import {environment} from '../../environments/environment';
 
 export class Shop {
-  shopId: string;
-  supermarketName: string;
+  constructor(
+    public shopId: string,
+    public latitude: number,
+    public longitude: number,
+    public supermarketName: string) {}
 }
 
 @Injectable({ providedIn: 'root' })
@@ -38,6 +41,17 @@ export class ShopService {
     ).pipe(
       catchError(this.handleError)
     );
+  }
+
+  // TODO: make return with an API Observable<Shop[]>
+  getAllShops(): Shop[] {
+    const allShops = [
+      new Shop('1', 38.1190607, 13.3478169, 'conad'),
+      new Shop('6', 38.1192046, 13.3489385, 'deco'),
+      new Shop('10', 38.1251806, 13.3279159, 'coop'),
+      new Shop('14', 38.1165093, 13.3423782, 'despar'),
+    ];
+    return allShops;
   }
 
   resetShop(redirect: boolean = true): void {

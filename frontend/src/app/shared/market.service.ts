@@ -3,7 +3,6 @@ import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {mark} from '@angular/compiler-cli/src/ngtsc/perf/src/clock';
 import {environment} from '../../environments/environment';
 
 export class Supermarket {
@@ -13,8 +12,8 @@ export class Supermarket {
 
 export class Position {
   constructor(
-    public latitude: string,
-    public longitude: string
+    public latitude: number,
+    public longitude: number
   ) {}
 }
 

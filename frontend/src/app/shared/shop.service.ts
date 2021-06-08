@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subscription, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {catchError, tap} from 'rxjs/operators';
-import {Router} from '@angular/router';
+import {catchError, map, tap} from 'rxjs/operators';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {AuthService} from '../auth/auth.service';
 import {User} from '../auth/user.model';
 import {environment} from '../../environments/environment';
@@ -25,7 +25,8 @@ export class ShopService {
 
   constructor(private http: HttpClient,
               private router: Router,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private route: ActivatedRoute) {
     this.userSub = this.authService.user.subscribe(
       user => {
         this.user = user;
@@ -44,14 +45,12 @@ export class ShopService {
   }
 
   // TODO: make return with an API Observable<Shop[]>
-  getAllShops(): Shop[] {
-    const allShops = [
-      new Shop('1', 38.1190607, 13.3478169, 'conad'),
-      new Shop('6', 38.1192046, 13.3489385, 'deco'),
-      new Shop('10', 38.1251806, 13.3279159, 'coop'),
-      new Shop('14', 38.1165093, 13.3423782, 'despar'),
-    ];
-    return allShops;
+  getAllShops(): Observable<Shop[]> {
+    return this.http.get<Shop[]>(
+      this.API + 'any-user/shops'
+    ).pipe(
+      catchError(this.handleError)
+    );
   }
 
   resetShop(redirect: boolean = true): void {

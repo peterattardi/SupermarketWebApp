@@ -20,6 +20,7 @@ export class Position {
 @Injectable({ providedIn: 'root' })
 export class MarketService {
   supermarket = new BehaviorSubject<Supermarket>(null);
+  position = new BehaviorSubject<Position>(null);
   MOCK_API = 'https://60b3a9594ecdc1001747fac2.mockapi.io/';
   API = environment.API;
 
@@ -50,6 +51,20 @@ export class MarketService {
     }
   }
 
+  getPosition(): Position {
+    const pos = JSON.parse(localStorage.getItem('position'));
+    let newPos: Position;
+    // if supermarket is null or is different from the one in LocalStorage (and market exists)
+    if (pos) {
+      newPos = new Position(pos.latitude, pos.longitude);
+      debugger;
+      if (!this.position.value || (newPos.toString() !== this.position.toString())) {
+        this.position.next(newPos);
+      }
+    }
+    return newPos;
+  }
+
   getSupermarket(): Supermarket {
     const market = JSON.parse(localStorage.getItem('supermarket'));
     // if supermarket is null or is different from the one in LocalStorage (and market exists)
@@ -61,7 +76,11 @@ export class MarketService {
     return market;
   }
 
-  chooseSupermarket(market: Supermarket): void {
+  chooseSupermarket(market: Supermarket, position: Position = null): void {
+    if (position) {
+      this.position.next(position);
+      localStorage.setItem('position', JSON.stringify(position));
+    }
     this.supermarket.next(market);
     localStorage.setItem('supermarket', JSON.stringify(market));
   }

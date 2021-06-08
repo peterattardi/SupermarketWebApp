@@ -4,6 +4,6 @@ button {
   margin: 5px;
 }
 
-body {
-  transition: 0.5s;
+#map {
+  height: 400px;
 }

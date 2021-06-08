@@ -16,8 +16,9 @@ export class CatalogueComponent implements OnInit, OnDestroy {
   marketSub: Subscription;
   supermarket: Supermarket;
   error: string = null;
+  position: Position;
   // mock
-  position = new Position('38.11526141722571', '13.349538343933283'); // all
+  // position = new Position(38.11526141722571, 13.349538343933283); // all
 
   constructor(private authService: AuthService,
               private marketService: MarketService,
@@ -29,7 +30,8 @@ export class CatalogueComponent implements OnInit, OnDestroy {
       this.user = user;
     });
     this.supermarket = this.marketService.getSupermarket();
-    if (this.supermarket === null) {
+    this.position = this.marketService.getPosition();
+    if (!this.supermarket || !this.position) {
       this.router.navigate(['/auth/supermarket']);
     }
     this.userProductsService.fetchProducts(this.supermarket.name).subscribe(
@@ -42,7 +44,6 @@ export class CatalogueComponent implements OnInit, OnDestroy {
     );
   }
 
-  // TODO: Collaudo - test - PositionService ?
   fetchQuantity(): void {
     this.userProductsService.fetchQuantity(this.position).subscribe(
       () => {},

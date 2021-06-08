@@ -2,41 +2,65 @@
   <div class="row">
     <div class="col-xs-4">
       <div class="row">
-        <button
-          type="button"
-          class="btn btn-lg btn-info"
-          (click)="getMarkets()">
-          Reload
-        </button>
-        <button
-        class="btn btn-lg btn-success"
-        type="submit"
-        [disabled]="!chosenMarket"
-        (click)="onChooseSupermarket()">
-        Continue
-      </button>
+        <div class="col-xs-12">
+          <div class="alert alert-danger" *ngIf="error">
+            <p>{{ error }}</p> <br>
+            <button (click)="onClearError()">Clear</button>
+          </div>
+          <h3> Select a supermarket to shop in!</h3>
+        </div>
       </div>
-      <h3> Select a supermarket to shop in!</h3>
+      <div class="row">
+        <div class="col-xs-12">
+          <div *ngIf="isLoading" style="text-align: center;">
+            <app-loading-spinner></app-loading-spinner>
+          </div>
+          <div *ngIf="!isLoading && (!supermarkets || supermarkets.length === 0)">
+            <marquee>No supermarkets found</marquee>
+          </div>
+          <button
+            class="btn {{supermarket === chosenMarket ? 'btn-primary' : 'btn-default'}} btn-group-justified"
+            type="button"
+            style="margin: 15px; font-size: large"
+            *ngFor="let supermarket of supermarkets"
+            (click)="onSelect(supermarket)">
+            {{supermarket.name.charAt(0).toUpperCase()}}{{supermarket.name.substr(1)}}
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <button
+            type="button"
+            class="btn btn-lg btn-info"
+            (click)="getMarkets()">
+            Reload
+          </button>
+          <button
+            class="btn btn-lg btn-success"
+            type="submit"
+            [disabled]="!chosenMarket"
+            (click)="onChooseSupermarket()">
+            Continue
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="col-xs-8">
-      <div class="alert alert-danger" *ngIf="error">
-        <p>{{ error }}</p> <br>
-        <button (click)="onClearError()">Clear</button>
+    <div class="col-xs-1"></div>
+    <div class="col-xs-7">
+      <label for="address">Address</label>
+      <div class="input-group" id="searchbar">
+        <input id="address" type="text" class="form-control" placeholder="Select an address..." #address />
+        <a
+          class="input-group-addon"
+          (click)="onGetPositionByAddress(address.value)"
+          style="cursor: pointer; text-decoration: none">Search</a>
       </div>
-      <div *ngIf="isLoading" style="text-align: center;">
-        <app-loading-spinner></app-loading-spinner>
+      <hr>
+      <div id="floating-panel">
+        <input (click)="getCurrentPosition()" type="button" value="Get Current Position" />
       </div>
-      <div *ngIf="!isLoading && (!supermarkets || supermarkets.length === 0)">
-        <marquee>No supermarkets found</marquee>
-      </div>
-      <button
-        class="btn {{supermarket === chosenMarket ? 'btn-primary' : 'btn-default'}} btn-group-justified"
-        type="button"
-        style="margin: 15px; font-size: large"
-        *ngFor="let supermarket of supermarkets"
-        (click)="onSelect(supermarket)">
-        {{supermarket.name.charAt(0).toUpperCase()}}{{supermarket.name.substr(1)}}
-      </button>
+      <div id="map"></div>
     </div>
   </div>
 </div>

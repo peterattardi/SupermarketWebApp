@@ -1,22 +1,13 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {Position} from './market.service';
 import {environment} from '../../environments/environment';
 
-export class IpStackResponse {
-  ip: string;
-  latitude: number;
-  longitude: number;
-
-}
 
 @Injectable({ providedIn: 'root' })
 export class PositionService {
-  API_KEY = 'ce70d689cc51735e73d6838ecd57ea05';
-  URL = 'http://api.ipstack.com/';
-  CURRENT_POS_URL = this.URL + 'check?access_key=' + this.API_KEY;
 
   constructor(private http: HttpClient) { }
 
@@ -27,15 +18,13 @@ export class PositionService {
       '&key=' + environment.GOOGLE_API_KEY
     ).pipe(
       catchError(this.handleError),
-      tap( res => {
+      map( res => {
         // @ts-ignore
-        const pos = res.results.geometry.location;
-        return new Position(pos.latitude, pos.longitude);
+        const pos = res.results[0].geometry.location;
+        return new Position(pos.lat, pos.lng);
       })
     );
   }
-
-
 
   private handleError(errorRes: HttpErrorResponse): Observable<never> {
     if (!errorRes.error && !errorRes.error.error) {

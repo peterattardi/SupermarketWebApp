@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import {DataStorageService} from '../shared/data-storage.service';
 
-// TODO: Finish "Login" as a Guest
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',

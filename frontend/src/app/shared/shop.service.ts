@@ -44,7 +44,6 @@ export class ShopService {
     );
   }
 
-  // TODO: make return with an API Observable<Shop[]>
   getAllShops(): Observable<Shop[]> {
     return this.http.get<Shop[]>(
       this.API + 'any-user/shops'

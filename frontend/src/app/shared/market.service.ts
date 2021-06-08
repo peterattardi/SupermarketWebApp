@@ -4,6 +4,7 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {environment} from '../../environments/environment';
+import {Shop} from './shop.service';
 
 export class Supermarket {
   constructor(
@@ -27,8 +28,8 @@ export class MarketService {
   constructor(private http: HttpClient,
               private router: Router) {  }
 
-  getSupermarkets(position: Position): Observable<Supermarket[]> {
-    return this.http.post<Supermarket[]>(
+  getSupermarkets(position: Position): Observable<Shop[]> {
+    return this.http.post<Shop[]>(
       this.API + 'user/nearest-supermarkets',
       // this.MOCK_API + 'supermarkets'// ,
       {
@@ -57,7 +58,6 @@ export class MarketService {
     // if supermarket is null or is different from the one in LocalStorage (and market exists)
     if (pos) {
       newPos = new Position(pos.latitude, pos.longitude);
-      debugger;
       if (!this.position.value || (newPos.toString() !== this.position.toString())) {
         this.position.next(newPos);
       }

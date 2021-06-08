@@ -1,6 +1,26 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-4">
+      <h3> Select a shop to edit! </h3>
+      <div class="alert alert-danger" *ngIf="error">
+        <p>{{ error }}</p> <br>
+        <button (click)="onClearError()">Clear</button>
+      </div>
+      <div *ngIf="isLoading" style="text-align: center;">
+        <app-loading-spinner></app-loading-spinner>
+      </div>
+      <div *ngIf="!isLoading && (!shops || shops.length === 0)">
+        <marquee>No shops found</marquee>
+      </div>
+      <button
+        class="btn {{shop === chosenShop ? 'btn-primary' : 'btn-default'}} btn-group-justified"
+        type="button"
+        id="{{shop.shopId}}"
+        style="margin: 15px; font-size: large"
+        *ngFor="let shop of shops"
+        (click)="onSelect(shop)">
+        SHOP: {{shop.shopId}}
+      </button>
       <div class="row">
         <button
           type="button"
@@ -16,29 +36,9 @@
           Continue
         </button>
       </div>
-      <h3> Select a shop to edit! </h3>
     </div>
     <div class="col-xs-8">
-      <div class="alert alert-danger" *ngIf="error">
-        <p>{{ error }}</p> <br>
-        <button (click)="onClearError()">Clear</button>
-      </div>
-      <div *ngIf="isLoading" style="text-align: center;">
-        <app-loading-spinner></app-loading-spinner>
-      </div>
-      <div *ngIf="!isLoading && (!shops || shops.length === 0)">
-        <marquee>No shops found</marquee>
-      </div>
-      <!-- TODO: Showing position in google maps for each shop through shop.position -->
-      <button
-        class="btn {{shop === chosenShop ? 'btn-primary' : 'btn-default'}} btn-group-justified"
-        type="button"
-        id="{{shop.shopId}}"
-        style="margin: 15px; font-size: large"
-        *ngFor="let shop of shops"
-        (click)="onSelect(shop)">
-        SHOP: {{shop.shopId}}
-      </button>
+      <div id="map"></div>
     </div>
   </div>
 </div>

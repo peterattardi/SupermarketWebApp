@@ -17,25 +17,26 @@ import {Shop, ShopService} from '../../shared/shop.service';
   styleUrls: ['./choose-market.component.css']
 })
 export class ChooseMarketComponent implements OnInit {
-  supermarkets: Supermarket[];
+  supermarkets: Shop[];
   position: Position = null;
-  supermarketsObs: Observable<Supermarket[]>;
+  supermarketsObs: Observable<Shop[]>;
   chosenMarket: Supermarket = null;
   isLoading = false;
   error: string = null;
+
+  // MAPS VARIABLES
   loader = new Loader({
     apiKey: environment.GOOGLE_API_KEY,
     version: 'weekly'
   });
-
-  // MAPS VARIABLES
   // @ts-ignore
   marker: google.maps.Marker;
   // @ts-ignore
   map: google.maps.Map;
   // @ts-ignore
   infoWindow: google.maps.InfoWindow;
-  shops: Shop[] = [];
+  // @ts-ignore
+  shopMarkers: google.maps.Marker[] = [];
 
   constructor(
     private authService: AuthService,
@@ -61,17 +62,34 @@ export class ChooseMarketComponent implements OnInit {
     if (prevPos) {
       this.position = new Position(prevPos.latitude, prevPos.longitude);
       this.getMarkets();
-      this.initGoogleMap();
     } else {
       this.geolocation$.pipe(take(1)).subscribe(
         position => {
           this.position = new Position(position.coords.latitude, position.coords.longitude);
           this.getMarkets();
-          this.initGoogleMap();
         }
       );
     }
   }
+
+  getMarkets(): void {
+    this.chosenMarket = null;
+    this.isLoading = true;
+    this.supermarketsObs = this.marketService.getSupermarkets(this.position);
+    this.supermarketsObs
+      .pipe(take(1))
+      .subscribe(
+      resData => {
+        this.supermarkets = resData;
+        this.initGoogleMap();
+        this.isLoading = false;
+      },
+      errorMessage => {
+        this.isLoading = false;
+        this.error = errorMessage;
+      });
+  }
+
 
   initGoogleMap(): void {
     this.loader.load().then(() => {
@@ -97,16 +115,12 @@ export class ChooseMarketComponent implements OnInit {
         this.getMarkets();
       });
 
-      this.shopService.getAllShops()
-        .pipe(take(1))
-        .subscribe(
-          shops => {
-            shops.forEach( shop => {
-              this.setShop(shop);
-              this.shops.push(shop);
-          }
-        );
-      });
+      debugger;
+      this.supermarkets.forEach (
+        shop => {
+          this.setShop(shop);
+        }
+      );
     });
   }
 
@@ -156,11 +170,12 @@ export class ChooseMarketComponent implements OnInit {
       this.infoWindow.close();
       this.infoWindow.setContent(shopMarker.getTitle());
       this.infoWindow.open(this.map, shopMarker);
-      console.log('hover');
     });
     shopMarker.addListener('mouseout', () => {
       this.infoWindow.close();
     });
+
+    this.shopMarkers.push(shopMarker);
   }
 
   getCurrentPosition(): void {
@@ -180,7 +195,6 @@ export class ChooseMarketComponent implements OnInit {
     if (!address) { return; }
     this.positionService.getPositionByAddress(address).subscribe(
       (position: Position) => {
-        debugger;
         this.position = position;
         this.updateMarker({lat: position.latitude, lng: position.longitude});
         this.getMarkets();
@@ -188,28 +202,17 @@ export class ChooseMarketComponent implements OnInit {
     );
   }
 
-  getMarkets(): void {
-    this.isLoading = true;
-    this.supermarketsObs = this.marketService.getSupermarkets(this.position);
-    this.supermarketsObs
-      .pipe(take(1))
-      .subscribe(
-      resData => {
-        this.supermarkets = resData;
-        this.isLoading = false;
-      },
-      errorMessage => {
-        this.isLoading = false;
-        this.error = errorMessage;
-      });
-  }
-
   onClearError(): void {
     this.error = null;
   }
 
-  onSelect(supermarket: Supermarket): void {
-    this.chosenMarket = supermarket;
+  onSelect(shop: Shop): void {
+    this.chosenMarket =  new Supermarket(shop.supermarketName);
+    this.shopMarkers.forEach( shopMarker => {
+      shopMarker.setMap(null);
+    });
+    this.shopMarkers = [];
+    this.setShop(shop);
   }
 
   onChooseSupermarket(): void {

@@ -19,12 +19,14 @@
             <marquee>No supermarkets found</marquee>
           </div>
           <button
-            class="btn {{supermarket === chosenMarket ? 'btn-primary' : 'btn-default'}} btn-group-justified"
+            class="btn
+                  {{chosenMarket && supermarket.supermarketName === chosenMarket.name ? 'btn-primary' : 'btn-default'}}
+                  btn-group-justified"
             type="button"
             style="margin: 15px; font-size: large"
             *ngFor="let supermarket of supermarkets"
             (click)="onSelect(supermarket)">
-            {{supermarket.name.charAt(0).toUpperCase()}}{{supermarket.name.substr(1)}}
+            {{supermarket.supermarketName.charAt(0).toUpperCase()}}{{supermarket.supermarketName.substr(1)}}
           </button>
         </div>
       </div>

@@ -6,12 +6,12 @@
       <h4 *ngIf="cartItems.length === 0">
           Wow! Such empty! Add some products from the catalogue!
       </h4>
-      <a
+      <app-cart-item
         class="list-group-item"
-        style="cursor: pointer"
-        *ngFor="let cartItem of cartItems">
-        {{ cartItem.productName }} ({{ cartItem.quantity }}) [{{cartItem.productBrand}}]
-      </a>
+        *ngFor="let cartItem of cartItems"
+        [cartItem]="cartItem"
+        [product]="findProduct(cartItem)">
+      </app-cart-item>
     </ul>
   </div>
 </div>

@@ -4,7 +4,7 @@ import {Product} from '../management/product/product.model';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {AuthService} from '../auth/auth.service';
-import {MarketService, Position} from '../shared/market.service';
+import {MarketService, Position, Supermarket} from '../shared/market.service';
 import {ShopProduct} from '../management/product/shop-product.model';
 import {catchError, tap} from 'rxjs/operators';
 
@@ -20,7 +20,7 @@ export class CartItem {
 
 @Injectable({providedIn: 'root'})
 export class CartService {
-  // cartItems = new BehaviorSubject<CartItem[]>([]);
+  cartItems = new BehaviorSubject<CartItem[]>([]);
   API = environment.API;
 
   constructor(
@@ -41,7 +41,18 @@ export class CartService {
       },
       {responseType: 'text'}
     ).pipe(
-        catchError(this.handleError)
+        catchError(this.handleError),
+        tap( () => {
+          const newCart = this.cartItems.value.slice();
+          newCart.map( item => {
+            if (item.productName === cartItem.productName
+            && item.productBrand === cartItem.productBrand) {
+              item.quantity = cartItem.quantity;
+            }
+            return item;
+          });
+          this.cartItems.next(newCart);
+        })
     );
   }
 
@@ -56,18 +67,28 @@ export class CartService {
       },
       {responseType: 'text'}
     ).pipe(
-        catchError(this.handleError)
+        catchError(this.handleError),
+        tap (() => {
+          const newCart = this.cartItems.value.slice().filter( (item, index) => {
+            return item !== cartItem;
+          });
+          this.cartItems.next(newCart);
+        })
     );
   }
 
-  getCart(supermarketName: string): Observable<CartItem[]> {
+  getCart(supermarket: Supermarket = this.marketService.getSupermarket()): Observable<CartItem[]> {
+    let supermarketName = '';
+    if (supermarket) {
+      supermarketName = supermarket.name;
+    }
     return this.http.get<CartItem[]>(
       this.API + 'user/cart/' + supermarketName + '?token=' +
       (this.authService.user.value ? this.authService.user.value.token : ''),
     ).pipe(
       catchError(this.handleError),
-      tap( res => {
-        console.log(res);
+      tap( cart => {
+        this.cartItems.next(cart);
       })
     );
   }

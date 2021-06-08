@@ -1,0 +1,38 @@
+
+<button
+  class="btn btn-danger"
+  type="button"
+  [disabled]="!cartItem.quantity || cartItem.quantity < 1"
+  style="font-size:16px; margin: 1px; width: 15%"
+  (click)="onDecrementQuantity(10)">-10</button>
+<button
+  class="btn btn-danger"
+  type="button"
+  [disabled]="!cartItem.quantity || cartItem.quantity < 1"
+  style="font-size:16px; margin: 1px; width: 15%"
+  (click)="onDecrementQuantity(1)">-1</button>
+<button
+  class="btn btn-success"
+  type="button"
+  style="font-size:16px; margin: 1px; width: 15%"
+  (click)="onIncrementQuantity(1)">+1</button>
+<button
+  class="btn btn-success"
+  type="button"
+  style="font-size:16px; margin: 1px; width: 15%"
+  (click)="onIncrementQuantity(10)">+10</button>
+<button
+  class="btn btn-danger"
+  style="font-size:16px; margin: 1px; width: 15%"
+  (click)="onDeleteCartItem()">
+  X
+</button>
+<a
+  class="list-group-item"
+  style="cursor: pointer">
+  {{ cartItem.productName }} [{{cartItem.productBrand}}]
+
+  <span class="badge badge-primary badge-pill">
+            {{ cartItem.quantity }}
+          </span>
+</a>

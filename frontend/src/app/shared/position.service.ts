@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
+import {Position} from './market.service';
+import {environment} from '../../environments/environment';
 
 export class IpStackResponse {
   ip: string;
@@ -18,16 +20,22 @@ export class PositionService {
 
   constructor(private http: HttpClient) { }
 
-  getCurrentPosition(): Observable<IpStackResponse> {
-    return this.http.get<IpStackResponse>(
-      this.CURRENT_POS_URL
+  getPositionByAddress(addr: string): Observable<Position> {
+    const parsedAddr = addr.replace(' ', '+');
+    return this.http.get<Position>(
+      'https://maps.googleapis.com/maps/api/geocode/json?address=' + parsedAddr +
+      '&key=' + environment.GOOGLE_API_KEY
     ).pipe(
       catchError(this.handleError),
       tap( res => {
-        console.log(res.ip, res.latitude, res.longitude);
+        // @ts-ignore
+        const pos = res.results.geometry.location;
+        return new Position(pos.latitude, pos.longitude);
       })
     );
   }
+
+
 
   private handleError(errorRes: HttpErrorResponse): Observable<never> {
     if (!errorRes.error && !errorRes.error.error) {

@@ -5,6 +5,8 @@ import {MarketService, Position, Supermarket} from '../shared/market.service';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {UserProductsService} from './user-products.service';
+import {CartService} from '../cart/cart.service';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-catalogue',
@@ -14,34 +16,27 @@ export class CatalogueComponent implements OnInit, OnDestroy {
   user: User = null;
   userSub: Subscription;
   marketSub: Subscription;
-  supermarket: Supermarket;
+  supermarket: Supermarket = this.marketService.getSupermarket();
   error: string = null;
-  position: Position;
+  position: Position = this.marketService.getPosition();
+
   // mock
   // position = new Position(38.11526141722571, 13.349538343933283); // all
 
   constructor(private authService: AuthService,
               private marketService: MarketService,
               private router: Router,
-              private userProductsService: UserProductsService) { }
+              private userProductsService: UserProductsService,
+              private cartService: CartService) { }
 
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe(user => {
       this.user = user;
     });
-    this.supermarket = this.marketService.getSupermarket();
-    this.position = this.marketService.getPosition();
     if (!this.supermarket || !this.position) {
       this.router.navigate(['/auth/supermarket']);
     }
-    this.userProductsService.fetchProducts(this.supermarket.name).subscribe(
-      products => {
-        this.fetchQuantity();
-      },
-      errorMessage => {
-        this.error = errorMessage;
-      }
-    );
+    this.cartService.getCart(this.supermarket).pipe(take(1)).subscribe();
   }
 
   fetchQuantity(): void {

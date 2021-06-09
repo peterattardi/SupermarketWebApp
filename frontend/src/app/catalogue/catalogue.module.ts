@@ -8,13 +8,19 @@ import {SharedModule} from '../shared/shared.module';
 import {CatalogueRoutingModule} from './catalogue-routing.module';
 import {CatalogueComponent} from './catalogue.component';
 import {FormsModule} from '@angular/forms';
+import { CartPreviewComponent } from './catalogue-list/cart-preview/cart-preview.component';
+import {CartComponent} from '../cart/cart.component';
+import {CartModule} from '../cart/cart.module';
+import {CartPreviewItemComponent} from './catalogue-list/cart-preview/cart-preview-item/cart-preview-item.component';
 
 @NgModule({
   declarations: [
     CatalogueListComponent,
     CatalogueItemComponent,
     CatalogueDetailComponent,
-    CatalogueComponent
+    CatalogueComponent,
+    CartPreviewComponent,
+    CartPreviewItemComponent
   ],
     imports: [
         CommonModule,

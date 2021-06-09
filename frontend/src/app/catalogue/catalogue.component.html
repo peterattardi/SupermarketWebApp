@@ -2,8 +2,8 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="alert alert-danger" *ngIf="error">
+        <button class="btn btn-default pull-right popup popup" (click)="onClearError()">X</button>
         <p>{{ error }}</p> <br>
-        <button (click)="onClearError()">Clear</button>
       </div>
     </div>
   </div>
@@ -28,5 +28,9 @@
   </div>
 </div>
 <div class="container">
-  <router-outlet></router-outlet>
+  <div class="row">
+    <div class="col-xs-12">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>

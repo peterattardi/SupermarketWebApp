@@ -43,7 +43,7 @@ export class UserProductsService {
         }
       }
     });
-    debugger;
+
     this.productsChanged.next(this.products.slice());
   }
 
@@ -55,7 +55,7 @@ export class UserProductsService {
     return this.products[index];
   }
 
-  fetchProducts(name: string = null): Observable<Product[]> {
+  fetchProducts(withQuantity: boolean = false, name: string = null): Observable<Product[]> {
     if (!name) {
       const supermarket = this.marketService.getSupermarket();
       name = supermarket ? supermarket.name : '';
@@ -69,11 +69,15 @@ export class UserProductsService {
         catchError(this.handleError),
         tap(products => {
           this.setProducts(products);
+          if (withQuantity) {
+            this.fetchQuantity().subscribe();
+          }
         })
       );
   }
 
-  fetchQuantity(position: Position): Observable<ShopProduct[]> {
+  fetchQuantity(position: Position = this.marketService.getPosition()): Observable<ShopProduct[]> {
+
     const supermarket = this.marketService.getSupermarket();
     const supermarketName = supermarket ? supermarket.name : '';
     return this.http

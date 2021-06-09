@@ -1,0 +1,10 @@
+<a
+  class="list-group-item"
+  style="cursor: pointer">
+  {{ cartItem.productName }} |
+  <span style="font-size: 20px">{{ cartItem.quantity }}</span>{{ product ? '* ' + product.unitCost + '€' : '' }}
+  <span class="badge badge-primary badge-pill">
+    {{ product ? product.unitCost*cartItem.quantity + '€' : 'loading...'}}
+  </span>
+</a>
+

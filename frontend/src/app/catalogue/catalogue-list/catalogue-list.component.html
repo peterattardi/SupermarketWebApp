@@ -1,10 +1,14 @@
 <hr>
 <div class="row">
-  <div class="col-xs-12 list-group">
+  <div class="col-xs-9 list-group">
     <app-catalogue-item
       *ngFor="let productEl of products; let i = index"
       [product]="productEl"
+      [cartItem]="findCart(productEl)"
       [index]="i"></app-catalogue-item>
+  </div>
+  <div class="col-xs-3">
+    <app-cart-preview routerLink="/cart"></app-cart-preview>
   </div>
 </div>
 

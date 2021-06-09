@@ -1,5 +1,23 @@
 <div
     class="list-group-item">
+  <div class="alert-warning" *ngIf="warning">
+    <button class="btn btn-default pull-right popup" (click)="onClearWarning()">
+      X
+    </button>
+    {{ warning }}
+  </div>
+  <div class="alert-danger" *ngIf="error">
+    <button class="btn btn-default pull-right popup" (click)="onClearError()">
+      X
+    </button>
+    {{ error }}
+  </div>
+  <div class="alert-info" *ngIf="info">
+    <button class="btn btn-default pull-right popup" (click)="onClearInfo()">
+      X
+    </button>
+    {{ info }}
+  </div>
   <a
       style="cursor: pointer;"
       [routerLink]="[index]"
@@ -12,11 +30,13 @@
       <p>
         {{ product.unitCost}}€{{product.unitType !== '' ? '/' + product.unitType : ''}}
       </p>
-      <small class="text-muted" *ngIf="product.quantity > 5"> Available </small>
-      <h4 class="text-warning" *ngIf="product.quantity > 0 && product.quantity <= 5">
-        {{ product.quantity }} left!
-      </h4>
-      <small class="text-danger" *ngIf="!(product.quantity > 0)"> Out of stock! </small>
+      <div *ngIf="product.quantity">
+        <small class="text-muted" *ngIf="product.quantity > 5"> Available </small>
+        <h4 class="text-warning" *ngIf="product.quantity > 0 && product.quantity <= 5">
+          {{ product.quantity }} left!
+        </h4>
+      </div>
+      <small class="text-danger" *ngIf="!product.quantity || product.quantity < 1"> Out of stock! </small>
     </div>
     <span class="pull-right">
       <img
@@ -26,10 +46,12 @@
         style="max-height: 100px;" />
     </span>
   </a>
-  <input type="text" [(ngModel)]="quantity" />
+  <h4 *ngIf="cartItem && cartItem.quantity > 0">You have {{cartItem.quantity}} of this item!</h4>
+  <input type="number" [(ngModel)]="quantity" />
   <button
-    class="btn btn-success"
+    class="btn {{!product.quantity ? 'btn-danger' : 'btn-success'}}"
     (click)="onAddToCart()"
-    [disabled]="product.quantity < quantity">
-    Add To Cart</button>
+    [disabled]="!product.quantity || product.quantity < (quantity + (cartItem ? cartItem.quantity : 0)) || quantity < 1">
+      {{!product.quantity ? 'Out of stock' : 'Add To Cart'}}
+  </button>
 </div>

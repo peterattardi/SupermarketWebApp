@@ -1,0 +1,57 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="alert-warning warning" *ngIf="warning">
+      <button class="btn btn-default pull-right popup" (click)="onClearWarning()">
+        X
+      </button>
+      <p class="text-warning">
+        {{ warning }}
+      </p>
+    </div>
+    <div class="alert-danger" *ngIf="error">
+      <button class="btn btn-default pull-right popup" (click)="onClearError()">X</button>
+      <p class="text-danger">{{ error }}</p>
+    </div>
+    <div class="alert-info" *ngIf="info">
+      <button class="btn btn-default pull-right popup" (click)="onClearInfo()">
+        X
+      </button>
+      <p class="text-info">{{ info }}</p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-8" routerLink="/orders">
+    <h1 class="text-center">
+      <span class="pull-left"><button><</button></span>
+      Order # {{orderId}}
+    </h1>
+    <hr>
+  </div>
+  <div class="col-xs-4">
+    <h2 class="text-center">Total: {{orderTotal | number: '1.0-2'}}€</h2>
+  </div>
+</div>
+<div class="list-group">
+  <div class="row">
+    <div class="col-xs-4"></div>
+    <div class="col-xs-8">
+      <div class="col-xs-4 text-center">
+        <small><b>AMOUNT</b></small>
+      </div>
+      <div class="col-xs-4 text-center">
+        <small><b>UNIT COST</b></small>
+      </div>
+      <div class="col-xs-4 text-center">
+        <small><b>SUBTOTAL</b></small>
+      </div>
+    </div>
+  </div>
+  <div class="list-group-item" *ngFor="let orderEl of order">
+    <app-order-detail-product
+      [order]="orderEl"
+      [product]="findProduct(orderEl)"></app-order-detail-product>
+  </div>
+</div>
+
+<br><br>

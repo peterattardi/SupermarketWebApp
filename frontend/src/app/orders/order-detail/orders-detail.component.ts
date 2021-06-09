@@ -6,6 +6,8 @@ import {OrderedProduct, OrderService} from '../order.service';
 import {take} from 'rxjs/operators';
 import {Product} from '../../management/product/product.model';
 import {Subscription} from 'rxjs';
+import {NgForm} from '@angular/forms';
+import {Delivery, DeliveryService} from '../delivery.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -14,9 +16,14 @@ import {Subscription} from 'rxjs';
 export class OrdersDetailComponent implements OnInit, OnDestroy {
   order: OrderedProduct[] = [];
   orderId: number;
-  productsSub: Subscription;
-  products: Product[] = this.userProductsService.getProducts();
   orderTotal = 0;
+  products: Product[] = this.userProductsService.getProducts();
+  productsSub: Subscription;
+
+  delivery: Delivery = null;
+  isLoading = false;
+  updateMode = false;
+
   error: string = null;
   warning: string = null;
   info: string = null;
@@ -24,8 +31,8 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
   constructor(private userProductsService: UserProductsService,
               private route: ActivatedRoute,
               private orderService: OrderService,
-              private authService: AuthService) {
-  }
+              private authService: AuthService,
+              private deliveryService: DeliveryService) { }
 
   ngOnInit(): void {
     this.route.params
@@ -33,6 +40,7 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
         (params: Params) => {
           this.orderId = +params.orderId;
           this.getOrder();
+          this.getDelivery();
         }
       );
     this.productsSub = this.userProductsService.productsChanged
@@ -41,7 +49,6 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
           this.products = products;
         }
       );
-    debugger;
   }
 
   getOrder(): void {
@@ -56,8 +63,8 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
           this.order = orderRes;
           this.calculateTotal();
         },
-        error => {
-          this.error = error;
+        errorMessage => {
+          this.error = errorMessage;
         }
       );
   }
@@ -86,6 +93,32 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  getDelivery(): void {
+    if (!this.orderId) {
+      this.error = 'Order Id not found. Please try again.';
+      return;
+    }
+    this.deliveryService.getDelivery(this.orderId)
+      .pipe(take(1))
+      .subscribe(
+        delivery => {
+          this.delivery = new Delivery(
+            delivery.orderId,
+            delivery.address,
+            delivery.payment,
+            delivery.date
+          );
+        },
+        errorMessage => {
+          if (errorMessage === 'Delivery not found.') {
+            this.warning = 'Please insert the delivery information and the payment method!';
+          } else {
+            this.error = errorMessage;
+          }
+        }
+      );
+  }
+
   onClearInfo(): void {
     this.info = null;
   }
@@ -96,6 +129,59 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
 
   onClearError(): void {
     this.error = null;
+  }
+
+  onConfirm(form: NgForm): void {
+    if (!form.valid) {
+      this.error = 'Form is not valid. Try again';
+      return;
+    }
+    this.isLoading = true;
+
+    const newDelivery = new Delivery(
+      this.orderId,
+      form.value.address,
+      form.value.payment,
+      form.value.date
+    );
+
+    if (this.delivery) {
+      this.deliveryService.updateDelivery(newDelivery)
+        .subscribe(
+          res => {
+            this.isLoading = false;
+            this.updateMode = false;
+            this.delivery = newDelivery;
+            this.info = res;
+          },
+          errorMessage => {
+            this.isLoading = false;
+            this.error = errorMessage;
+          }
+        );
+    } else {
+      this.deliveryService.scheduleDelivery(newDelivery)
+        .subscribe(res => {
+            this.isLoading = false;
+            this.updateMode = false;
+            this.delivery = newDelivery;
+            this.info = res;
+          },
+          errorMessage => {
+            this.isLoading = false;
+            this.error = errorMessage;
+          }
+        );
+    }
+    form.reset();
+  }
+
+  onUpdate(): void {
+    this.updateMode = true;
+  }
+
+  onCancelUpdate(): void {
+    this.updateMode = false;
   }
 
   ngOnDestroy(): void { }

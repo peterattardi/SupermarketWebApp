@@ -1,22 +1,18 @@
 <div class="row">
   <div class="col-xs-12">
-    <div class="alert-warning warning" *ngIf="warning">
-      <button class="btn btn-default pull-right popup" (click)="onClearWarning()">
-        X
-      </button>
-      <p class="text-warning">
-        {{ warning }}
-      </p>
+    <div class="alert alert-warning" *ngIf="warning">
+      <button class="btn btn-default pull-right popup" (click)="onClearWarning()">X</button>
+      <p class="text-warning text-center">{{ warning }}</p>
     </div>
-    <div class="alert-danger" *ngIf="error">
+    <div class="alert alert-danger" *ngIf="error">
       <button class="btn btn-default pull-right popup" (click)="onClearError()">X</button>
-      <p class="text-danger">{{ error }}</p>
+      <p class="text-danger text-center">{{ error }}</p>
     </div>
-    <div class="alert-info" *ngIf="info">
+    <div class="alert alert-info" *ngIf="info">
       <button class="btn btn-default pull-right popup" (click)="onClearInfo()">
         X
       </button>
-      <p class="text-info">{{ info }}</p>
+      <p class="text-info text-center">{{ info }}</p>
     </div>
   </div>
 </div>
@@ -32,9 +28,113 @@
     <h2 class="text-center">Total: {{orderTotal | number: '1.0-2'}}€</h2>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-xs-5 text-center">
+    <h3>Delivery Info</h3>
+    <hr>
+  </div>
+  <div class="col-xs-5 text-center">
+    <h3>Payment</h3>
+    <hr>
+  </div>
+</div>
+
+<div *ngIf="isLoading" style="text-align: center;">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+
+<div class="row" *ngIf="!updateMode">
+  <div class="col-xs-5 text-center" *ngIf="delivery">
+    <h4>{{delivery.address}} <br> {{delivery.date | date:'h:mm | EEEE, d MMMM, y'}}</h4>
+  </div>
+  <div class="col-xs-5 text-center" *ngIf="!delivery">
+    <h4 class="text-danger">Delivery Address & Date not set!</h4>
+  </div>
+  <div class="col-xs-5 text-center" *ngIf="delivery">
+    <h4>{{delivery.payment | uppercase}}</h4>
+  </div>
+  <div class="col-xs-5 text-center" *ngIf="!delivery">
+    <h4 class="text-danger">Payment method not set!</h4>
+  </div>
+  <div class="col-xs-2">
+    <button
+      class="btn btn-primary"
+      type="button"
+      (click)="onUpdate()">
+      Change
+    </button>
+  </div>
+</div>
+<form #deliveryForm="ngForm" (ngSubmit)="onConfirm(deliveryForm)" *ngIf="updateMode">
+  <div class="row">
+    <div class="col-xs-5">
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input
+          type="text"
+          id="address"
+          class="form-control"
+          ngModel
+          name="address"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input
+          type="datetime-local"
+          id="date"
+          class="form-control"
+          ngModel
+          name="date"
+          required
+        />
+      </div>
+    </div>
+    <div class="col-xs-5">
+      <div class="form-group">
+        <label for="payment">Payment</label>
+        <select
+          class="form-control"
+          name="payment"
+          id="payment"
+          ngModel
+          required>
+          <option value="cash">Cash</option>
+          <option value="mastercard">MasterCard</option>
+          <option value="debitcard">Debit Card</option>
+          <option value="paypal">PayPal</option>
+          <option value="bitcoin">Bitcoin</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <div class="row">
+        <button
+          class="btn btn-danger"
+          type="button"
+          (click)="onCancelUpdate()">
+          Cancel
+        </button>
+      </div>
+      <div class="row">
+        <button
+          class="btn btn-success"
+          type="submit"
+          [disabled]="!deliveryForm.valid">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+<hr>
 <div class="list-group">
   <div class="row">
-    <div class="col-xs-4"></div>
+    <div class="col-xs-4 text-center">
+      <b>ITEM</b>
+    </div>
     <div class="col-xs-8">
       <div class="col-xs-4 text-center">
         <small><b>AMOUNT</b></small>

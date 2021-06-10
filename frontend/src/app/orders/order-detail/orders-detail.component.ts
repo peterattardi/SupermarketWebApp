@@ -159,7 +159,7 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
     this.error = null;
   }
 
-  onConfirm(): void {
+  onSubmit(): void {
     if (!this.deliveryForm.valid) {
       this.error = 'Form is not valid. Try again';
       return;
@@ -212,13 +212,30 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
 
   isTheSame(): boolean {
     const delForm = this.deliveryForm.value;
-    return delForm.address === this.delivery.address &&
-      delForm.date === this.delivery.date &&
-      delForm.payment === this.delivery.payment;
+    if (this.delivery) {
+      return delForm.address === this.delivery.address &&
+        delForm.date === this.delivery.date &&
+        delForm.payment === this.delivery.payment;
+    } else {
+      return !delForm.address &&
+        !delForm.date && !delForm.payment;
+    }
   }
 
   onCancelUpdate(): void {
     this.updateMode = false;
+  }
+
+  onConfirmOrder(): void {
+    this.orderService.confirmOrder(this.orderId)
+      .pipe(take(1))
+      .subscribe( () => {
+          this.info = 'Order #' + this.orderId + ' confirmed!';
+        },
+        errorMessage => {
+          this.error = errorMessage;
+        }
+      );
   }
 
   ngOnDestroy(): void { }

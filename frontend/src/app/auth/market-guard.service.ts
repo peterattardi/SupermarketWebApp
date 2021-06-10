@@ -25,9 +25,7 @@ export class SupermarketGuard implements CanActivate {
     | UrlTree
     | Promise<boolean | UrlTree>
     | Observable<boolean | UrlTree> {
-    const supermarket = this.marketService.getSupermarket();
-    const isChosen = !!supermarket;
-    if (isChosen) {
+    if (!!this.marketService.supermarket.value) {
       return true;
     }
     return this.router.createUrlTree(['/auth/supermarket']);

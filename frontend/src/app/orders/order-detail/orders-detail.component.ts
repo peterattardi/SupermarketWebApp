@@ -2,11 +2,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserProductsService} from '../../catalogue/user-products.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../../auth/auth.service';
-import {OrderedProduct, OrderService} from '../order.service';
+import {Order, OrderedProduct, OrderService} from '../order.service';
 import {take} from 'rxjs/operators';
 import {Product} from '../../management/product/product.model';
 import {Subscription} from 'rxjs';
-import {NgForm} from '@angular/forms';
+import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {Delivery, DeliveryService} from '../delivery.service';
 
 @Component({
@@ -14,12 +14,13 @@ import {Delivery, DeliveryService} from '../delivery.service';
   templateUrl: './orders-detail.component.html'
 })
 export class OrdersDetailComponent implements OnInit, OnDestroy {
-  order: OrderedProduct[] = [];
+  orderedProducts: OrderedProduct[] = [];
   orderId: number;
+  order: Order = null;
   orderTotal = 0;
-  products: Product[] = this.userProductsService.getProducts();
-  productsSub: Subscription;
+  products: Product[] = [];
 
+  deliveryForm: FormGroup;
   delivery: Delivery = null;
   isLoading = false;
   updateMode = false;
@@ -39,28 +40,55 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
       .subscribe(
         (params: Params) => {
           this.orderId = +params.orderId;
-          this.getOrder();
+          this.order = this.orderService.getOrderById(this.orderId);
+          this.getProducts();
+          this.getOrderedProducts();
           this.getDelivery();
-        }
-      );
-    this.productsSub = this.userProductsService.productsChanged
-      .subscribe(
-        (products: Product[]) => {
-          this.products = products;
         }
       );
   }
 
-  getOrder(): void {
+  private initForm(): void {
+    let address = '';
+    let date = null;
+    let payment = '';
+
+    if (this.delivery) {
+      address = this.delivery.address;
+      date = this.delivery.date;
+      payment = this.delivery.payment;
+    }
+
+    this.deliveryForm = new FormGroup({
+      address: new FormControl(address, Validators.required),
+      date: new FormControl(date, Validators.required),
+      payment: new FormControl(payment, Validators.required),
+    });
+  }
+
+  getProducts(): void {
+    this.userProductsService.fetchProducts(false, this.order.supermarket, false)
+      .pipe(take(1))
+      .subscribe(
+        products => {
+          this.products = products;
+        },
+        errorMessage => {
+          this.error = errorMessage;
+        }
+      );
+  }
+
+  getOrderedProducts(): void {
     if (!this.orderId) {
       this.error = 'Order Id not found. Please try again.';
       return;
     }
-    this.orderService.getOrder(this.orderId)
+    this.orderService.getOrderedProducts(this.orderId)
       .pipe(take(1))
       .subscribe(
         orderRes => {
-          this.order = orderRes;
+          this.orderedProducts = orderRes;
           this.calculateTotal();
         },
         errorMessage => {
@@ -70,11 +98,11 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
   }
 
   calculateTotal(): void {
-    if (this.products.length === 0 || this.order.length === 0) {
+    if (this.products.length === 0 || this.orderedProducts.length === 0) {
       return;
     }
     this.orderTotal = 0;
-    this.order.forEach( orderedProduct => {
+    this.orderedProducts.forEach(orderedProduct => {
       const product = this.findProduct(orderedProduct);
       this.orderTotal += orderedProduct.quantity * product.unitCost;
     });
@@ -131,8 +159,8 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
     this.error = null;
   }
 
-  onConfirm(form: NgForm): void {
-    if (!form.valid) {
+  onConfirm(): void {
+    if (!this.deliveryForm.valid) {
       this.error = 'Form is not valid. Try again';
       return;
     }
@@ -140,9 +168,9 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
 
     const newDelivery = new Delivery(
       this.orderId,
-      form.value.address,
-      form.value.payment,
-      form.value.date
+      this.deliveryForm.value.address,
+      this.deliveryForm.value.payment,
+      this.deliveryForm.value.date
     );
 
     if (this.delivery) {
@@ -162,6 +190,7 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
     } else {
       this.deliveryService.scheduleDelivery(newDelivery)
         .subscribe(res => {
+            this.warning = null; // warning saying to set delivery info
             this.isLoading = false;
             this.updateMode = false;
             this.delivery = newDelivery;
@@ -173,11 +202,19 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
           }
         );
     }
-    form.reset();
+    this.deliveryForm.reset();
   }
 
   onUpdate(): void {
     this.updateMode = true;
+    this.initForm();
+  }
+
+  isTheSame(): boolean {
+    const delForm = this.deliveryForm.value;
+    return delForm.address === this.delivery.address &&
+      delForm.date === this.delivery.date &&
+      delForm.payment === this.delivery.payment;
   }
 
   onCancelUpdate(): void {

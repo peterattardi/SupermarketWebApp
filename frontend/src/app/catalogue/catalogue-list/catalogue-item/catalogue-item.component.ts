@@ -56,8 +56,11 @@ export class CatalogueItemComponent implements OnInit, OnDestroy {
           this.product.productName + ' (+' +
           this.quantity + ')';
       },
-      error => {
-        this.error = error;
+      errorMessage => {
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
+        this.error = errorMessage;
       }
     );
   }

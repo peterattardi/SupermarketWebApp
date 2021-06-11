@@ -1,0 +1,88 @@
+<app-alert *ngIf="deleteMessage"
+           (close)="onCancelDelete()"
+           (success)="onDeleteOrder()"
+           [message]="deleteMessage">
+</app-alert>
+<app-alert *ngIf="cancelMessage"
+           (close)="onCancel()"
+           (success)="onCancelOrder()"
+           [message]="cancelMessage">
+</app-alert>
+
+<div class="row">
+  <app-popup
+    [message]="error"
+    [type]="'error'"
+    (close)="onClearError()"
+    *ngIf="error">
+  </app-popup>
+  <app-popup
+    [message]="warning"
+    [type]="'warning'"
+    (close)="onClearWarning()"
+    *ngIf="warning">
+  </app-popup>
+  <div
+    class="list-group-item list-inline clearfix">
+    <div class="col-xs-4">
+      <a
+        style="cursor: pointer;"
+        class="list-group-item"
+        [routerLink]="[order.orderId]">
+
+        <span class="badge">{{order.supermarket | uppercase}}</span>
+        <h4>
+          <span class="glyphicon glyphicon-minus-sign text-warning" *ngIf="!order.confirmed"></span>
+          <span class="glyphicon glyphicon-ok-sign text-success" *ngIf="order.confirmed"></span>
+          Order #{{order.orderId}}
+        </h4>
+        <small class="text-muted">{{ order.createdAt }}</small>
+      </a>
+    </div>
+    <div class="col-xs-4">
+      <a
+          style="cursor: pointer;{{delivery ? '' : 'border: 1px solid red'}}"
+          class="list-group-item text-center"
+          [routerLink]="[order.orderId]">
+        <h4>Delivery Information</h4>
+        <small class="text-muted" *ngIf="delivery">{{ delivery.address }} |
+          {{ delivery.date | date:'dd/MM/yy HH:mm' }}</small>
+        <small class="text-danger" *ngIf="!delivery">No delivery information found!</small>
+      </a>
+    </div>
+    <div class="col-xs-3">
+      <a
+          style="cursor: pointer;{{delivery ? '' : 'border: 1px solid red'}}"
+          class="list-group-item text-center"
+          [routerLink]="[order.orderId]">
+        <h4>Payment method</h4>
+        <small class="text-muted" *ngIf="delivery">{{ delivery.payment | uppercase }}</small>
+        <small class="text-danger" *ngIf="!delivery">No payment method found!</small>
+      </a>
+    </div>
+    <div class="col-xs-1">
+      <button
+        class="btn btn-danger"
+        style="font-size:16px"
+        (click)="tryCancelOrder()"
+        *ngIf="order.confirmed">
+        Cancel
+      </button>
+      <button
+        class="btn btn-danger"
+        style="font-size:16px"
+        (click)="tryDeleteOrder()"
+        *ngIf="!order.confirmed">
+        X
+      </button>
+      <button
+        class="btn btn-success"
+        style="font-size:16px;"
+        (click)="onConfirmOrder()"
+        *ngIf="delivery && !order.confirmed">
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>
+

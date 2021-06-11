@@ -56,15 +56,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
     const login = () => {
       loginSub = loginObs.subscribe(
-        loginResData => {
-          console.log(loginResData);
+        () => {
           this.isLoading = false;
           this.router.navigate(['/catalogue']);
         },
         errorMessage => {
-          console.log(errorMessage);
-          this.error = errorMessage;
           this.isLoading = false;
+          this.error = errorMessage;
         },
         () => unsubscribe()
       );
@@ -73,18 +71,19 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     const register = () => {
       registrationSub = registrationObs.subscribe(
         resData => {
-          console.log('Registration: ' + resData);
           loginObs = this.authService.login(
             email,
             password,
             Role.USER);
+          login();
         },
         errorMessage => {
-          console.log(errorMessage);
-          this.error = errorMessage;
           this.isLoading = false;
-        },
-        () => login()
+          if (errorMessage === 'Token not found') {
+            this.authService.logout();
+          }
+          this.error = errorMessage;
+        }
       );
     };
 

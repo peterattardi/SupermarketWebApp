@@ -3,16 +3,16 @@
     <p>Your User Account</p>
   </div>
   <div class="col-xs-6">
-      <h3>General Information</h3><br>
-      <b>First Name</b>: test<br>
-      <b>Last Name</b>: test<br>
-      <b>Email</b>: test@test.it <i>(** NOT CONFIRMED **)</i><br>
-      <b>Locked</b>: false<br>
+      <h3>GENERAL INFORMATION</h3><br>
+      <b>First Name</b>: {{user.firstName}}<br>
+      <b>Last Name</b>: {{user.lastName}}<br>
+      <b>Email</b>: {{user.email}} <i *ngIf="user.enabled">(** NOT CONFIRMED **)</i><br>
+      <b>Locked</b>: {{user.locked}}<br>
   </div>
   <div class="col-xs-6">
       <h3>DELIVERY INFORMATION</h3><br>
-      <b>City</b>: test<br>
-      <b>Address</b>: test, n.00<br>
-      <b>CAP</b>: 00000
+      <b>City</b>: {{user.city}}<br>
+      <b>Address</b>: {{user.address}}<br>
+      <b>CAP</b>: {{user.cap}}
   </div>
 </div>

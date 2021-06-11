@@ -4,24 +4,29 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot
 } from '@angular/router';
-
-import {UserProductsService} from './user-products.service';
-import {Product} from '../management/product/product.model';
-import {MarketService} from '../shared/market.service';
+import {CartItem, CartService} from './cart.service';
+import {AuthService} from '../auth/auth.service';
 
 @Injectable({ providedIn: 'root' })
-export class CatalogueResolver implements Resolve<Product[]> {
+export class CartResolver implements Resolve<CartItem[]> {
   constructor(
-    private userProductsService: UserProductsService
+    private cartService: CartService,
+    private authService: AuthService
   ) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
-    const products = this.userProductsService.getProducts();
-    if (products.length === 0) {
-      return this.userProductsService.fetchProducts(true);
+    const cartItems = this.cartService.cartItems.value;
+    if (cartItems.length === 0) {
+      return this.cartService.getCart().subscribe(
+        () => {},
+        errorMessage => {
+          if (errorMessage === 'Token not found') {
+            this.authService.logout();
+          }
+        }
+      );
     } else {
-      console.log('2a');
-      return products;
+      return cartItems;
     }
   }
 }

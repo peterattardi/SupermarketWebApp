@@ -8,13 +8,10 @@ import {
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-
-import { AuthService } from './auth.service';
 import {MarketService} from '../shared/market.service';
 
 @Injectable({ providedIn: 'root' })
-export class SupermarketGuard implements CanActivate {
+export class MarketGuard implements CanActivate {
   constructor(private marketService: MarketService, private router: Router) {}
 
   canActivate(
@@ -25,14 +22,14 @@ export class SupermarketGuard implements CanActivate {
     | UrlTree
     | Promise<boolean | UrlTree>
     | Observable<boolean | UrlTree> {
-    if (!!this.marketService.supermarket.value) {
-      return true;
+
+    this.marketService.parseSupermarket();
+    this.marketService.parsePosition();
+    const supermarket = this.marketService.supermarket.value;
+    const position = this.marketService.position.value;
+    if (!supermarket || !position) {
+      return this.router.createUrlTree(['/auth/supermarket']);
     }
-    return this.router.createUrlTree(['/auth/supermarket']);
-      // tap(isAuth => {
-      //   if (!isAuth) {
-      //     this.router.navigate(['/auth']);
-      //   }
-      // })
+    return true;
   }
 }

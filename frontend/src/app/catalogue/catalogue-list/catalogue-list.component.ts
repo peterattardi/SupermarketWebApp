@@ -1,5 +1,4 @@
 import {Component, OnInit, OnDestroy, Input} from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { Product } from '../../management/product/product.model';
@@ -11,7 +10,7 @@ import {CartItem, CartService} from '../../cart/cart.service';
   templateUrl: './catalogue-list.component.html',
 })
 export class CatalogueListComponent implements OnInit, OnDestroy {
-  products: Product[] = this.userProductsService.getProducts();
+  products: Product[] = this.userProductsService.products.value;
   cartItems: CartItem[] = [];
   productSub: Subscription;
   cartSub: Subscription;
@@ -20,13 +19,14 @@ export class CatalogueListComponent implements OnInit, OnDestroy {
               private cartService: CartService) { }
 
   ngOnInit(): void {
-    this.productSub = this.userProductsService.productsChanged
+    this.productSub = this.userProductsService.products
       .subscribe(
         (products: Product[]) => {
           this.products = products;
         }
       );
     if (this.products.length === 0) {
+      console.log('It should not enter here! CHECK (resolver is not working?)');
       this.userProductsService.fetchProducts().subscribe();
     }
     this.cartSub = this.cartService.cartItems.subscribe(

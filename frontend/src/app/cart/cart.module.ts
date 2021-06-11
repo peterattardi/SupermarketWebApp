@@ -4,8 +4,10 @@ import {RouterModule} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 import {CartComponent} from './cart.component';
 import {UserGuard} from '../catalogue/user.guard';
-import {SupermarketGuard} from '../auth/supermarket-guard';
+import {MarketGuard} from '../auth/market-guard.service';
 import { CartItemComponent } from './cart-item/cart-item.component';
+import {CatalogueResolver} from '../catalogue/catalogue-resolver.service';
+import {CartResolver} from './cart-resolver.service';
 
 @NgModule({
   declarations: [
@@ -13,13 +15,15 @@ import { CartItemComponent } from './cart-item/cart-item.component';
     CartItemComponent
   ],
   imports: [
+    SharedModule,
     CommonModule,
     RouterModule.forChild([{
       path: '',
       component: CartComponent,
-      canActivate: [UserGuard, SupermarketGuard]
-    }]),
-    SharedModule
-  ]
+      canActivate: [UserGuard, MarketGuard],
+      resolve: [CatalogueResolver, CartResolver]
+    }])
+  ],
+  exports: [CartComponent]
 })
 export class CartModule {}

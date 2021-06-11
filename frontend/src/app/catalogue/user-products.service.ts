@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, Subject, Subscription, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, Subscription, throwError} from 'rxjs';
 import {Product} from '../management/product/product.model';
 import {catchError, map, tap} from 'rxjs/operators';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -10,8 +10,8 @@ import {MarketService, Position} from '../shared/market.service';
 
 @Injectable({providedIn: 'root'})
 export class UserProductsService {
-  productsChanged = new Subject<Product[]>();
-  private products: Product[] = [];
+  products = new BehaviorSubject<Product[]>([]);
+  marketSub: Subscription;
 
   API = environment.API;
 
@@ -19,45 +19,21 @@ export class UserProductsService {
     private http: HttpClient,
     private authService: AuthService,
     private marketService: MarketService
-  ) { }
-
-  setProducts(products: Product[]): void {
-    this.products = products;
-    this.productsChanged.next(this.products.slice());
-  }
-
-  setQuantity(shopProducts: ShopProduct[]): void {
-    shopProducts.forEach( (shopProduct) => {
-      if (shopProduct.quantity > 0) {
-        let i = 0;
-        let found = false;
-        while (!found && i < this.products.length) {
-          const product = this.products[i];
-          if (product.productName === shopProduct.productName &&
-            product.productBrand === shopProduct.productBrand) {
-            console.log('Updated quantity', product, shopProduct.quantity);
-            product.quantity = shopProduct.quantity;
-            found = true;
+  ) {
+      this.marketSub = this.marketService.supermarket.subscribe(
+        supermarket => {
+          if (supermarket) {
+            this.fetchProducts(true, supermarket.name);
+          } else {
+            this.products.next([]);
           }
-          i++;
         }
-      }
-    });
-
-    this.productsChanged.next(this.products.slice());
+      );
   }
 
-  getProducts(): Product[] {
-    return this.products.slice();
-  }
-
-  getProduct(index: number): Product {
-    return this.products[index];
-  }
-
-  fetchProducts(withQuantity: boolean = false, name: string = null): Observable<Product[]> {
+  fetchProducts(withQuantity = false, name: string = null, update = true): Observable<Product[]> {
     if (!name) {
-      const supermarket = this.marketService.getSupermarket();
+      const supermarket = this.marketService.supermarket.value;
       name = supermarket ? supermarket.name : '';
     }
     return this.http
@@ -68,18 +44,28 @@ export class UserProductsService {
       .pipe(
         catchError(this.handleError),
         tap(products => {
-          this.setProducts(products);
+          if (update) {
+            this.products.next(products);
+          }
           if (withQuantity) {
-            this.fetchQuantity().subscribe();
+            this.fetchQuantity().subscribe(
+              () => {},
+              error => {
+                console.log(error);
+              }
+            );
           }
         })
       );
   }
 
-  fetchQuantity(position: Position = this.marketService.getPosition()): Observable<ShopProduct[]> {
+  fetchQuantity(position: Position = this.marketService.position.value): Observable<ShopProduct[]> {
 
-    const supermarket = this.marketService.getSupermarket();
+    const supermarket = this.marketService.supermarket.value;
     const supermarketName = supermarket ? supermarket.name : '';
+    if (!position) {
+      return throwError('Invalid position.');
+    }
     return this.http
       .post<ShopProduct[]>(
         this.API + 'user/nearest-shop/inventory/',
@@ -97,14 +83,36 @@ export class UserProductsService {
       );
   }
 
+  setQuantity(shopProducts: ShopProduct[]): void {
+    const products = this.products.value;
+    // find the products that have a shopProduct to update the quantity
+    shopProducts.forEach( (shopProduct) => {
+      if (shopProduct.quantity > 0) {
+        let i = 0;
+        // scan all products in order to find the one
+        // with the same productName and productBrand of the shopProduct
+        while (i < products.length) {
+          const product = products[i];
+          if (product.productName === shopProduct.productName &&
+              product.productBrand === shopProduct.productBrand) {
+            product.quantity = shopProduct.quantity;
+            return;
+          }
+          i++;
+        }
+      }
+    });
+    this.products.next(products);
+  }
+
   // TODO: Handle errors from add/edit/delete
   private handleError(errorRes: HttpErrorResponse): Observable<never> {
     if (!errorRes.error && !errorRes.error.error) {
       return throwError('An unknown error occurred!');
     }
     let errorMessage = errorRes.error;
-    if (errorRes.status === 404) {
-      errorMessage = 'Invalid API URL/Request or API is offline';
+    if (errorRes.status === 404 || errorRes.status === 0) {
+      errorMessage = 'Invalid API URL/Request or Server is offline';
     } else {
       switch (errorMessage) {
         case 'EMAIL_EXISTS':

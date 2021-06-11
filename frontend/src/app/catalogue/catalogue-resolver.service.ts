@@ -7,7 +7,6 @@ import {
 
 import {UserProductsService} from './user-products.service';
 import {Product} from '../management/product/product.model';
-import {MarketService} from '../shared/market.service';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogueResolver implements Resolve<Product[]> {
@@ -16,7 +15,7 @@ export class CatalogueResolver implements Resolve<Product[]> {
   ) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
-    const products = this.userProductsService.getProducts();
+    const products = this.userProductsService.products.value;
     if (products.length === 0) {
       return this.userProductsService.fetchProducts(true);
     } else {

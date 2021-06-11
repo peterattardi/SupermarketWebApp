@@ -18,24 +18,24 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <div class="alert-warning warning" *ngIf="warning">
-        <button class="btn btn-default pull-right popup" (click)="onClearWarning()">
-          X
-        </button>
-        <p class="text-warning">
-          {{ warning }}
-        </p>
-      </div>
-      <div class="alert-danger" *ngIf="error">
-        <button class="btn btn-default pull-right popup" (click)="onClearError()">X</button>
-        <p class="text-danger">{{ error }}</p>
-      </div>
-      <div class="alert-info" *ngIf="info">
-        <button class="btn btn-default pull-right popup" (click)="onClearInfo()">
-          X
-        </button>
-        <p class="text-info">{{ info }}</p>
-      </div>
+      <app-popup
+        [message]="error"
+        [type]="'error'"
+        (close)="onClearError()"
+        *ngIf="error">
+      </app-popup>
+      <app-popup
+        [message]="warning"
+        [type]="'warning'"
+        (close)="onClearWarning()"
+        *ngIf="warning">
+      </app-popup>
+      <app-popup
+        [message]="info"
+        [type]="'info'"
+        (close)="onClearInfo()"
+        *ngIf="info">
+      </app-popup>
     </div>
   </div>
   <div class="row list-group-item">

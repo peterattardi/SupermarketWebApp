@@ -3,8 +3,8 @@
   style="cursor: pointer">
   {{ cartItem.productName }} |
   <span style="font-size: 20px">{{ cartItem.quantity }}</span>{{ product ? '* ' + product.unitCost + '€' : '' }}
-  <span class="badge badge-primary badge-pill">
-    {{ product ? product.unitCost*cartItem.quantity + '€' : 'loading...'}}
+  <span class="badge" *ngIf="product">
+    {{product.unitCost*cartItem.quantity | number: '1.2'}}€
   </span>
 </a>
 

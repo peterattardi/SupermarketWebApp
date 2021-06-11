@@ -1,11 +1,27 @@
-<div class="container" *ngIf="error">
-  <div class="row">
+<div class="container">
+  <div class="row" *ngIf="!accountInfo && !isLoading">
     <div class="col-xs-12">
-      An error occurred while processing data. Re-try again please.
+      <div class="alert alert-danger">
+        <h4 class="text-center">An error occurred while processing data. Re-try again please.</h4>
+      </div>
     </div>
   </div>
+  <app-popup
+    [message]="error"
+    [type]="'error'"
+    (close)="onClearError()"
+    *ngIf="error">
+  </app-popup>
+
+  <div class="row">
+    <div class="col-xs-12 text-center">
+      <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+    </div>
+  </div>
+
 </div>
-<div class="container" *ngIf="!error">
-  <app-admin-info *ngIf="isAdmin"></app-admin-info>
-  <app-client-info *ngIf="!isAdmin"></app-client-info>
+
+<div class="container" *ngIf="accountInfo && !isLoading">
+  <app-admin-info *ngIf="isAdmin" [admin]="accountInfo"></app-admin-info>
+  <app-client-info *ngIf="!isAdmin" [user]="accountInfo"></app-client-info>
 </div>

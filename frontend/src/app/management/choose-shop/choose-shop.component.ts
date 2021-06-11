@@ -5,9 +5,9 @@ import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Shop, ShopService} from '../../shared/shop.service';
 import {AdminProductsService} from '../admin-products.service';
-import {GeolocationService} from '@ng-web-apis/geolocation';
 import { Loader } from '@googlemaps/js-api-loader';
 import {environment} from '../../../environments/environment';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-choose-shop',
@@ -32,7 +32,13 @@ export class ChooseShopComponent implements OnInit {
   // @ts-ignore
   infoWindow: google.maps.InfoWindow;
   // @ts-ignore
-  shopMarkers: google.maps.Marker[] = [];
+  shopMarkers: {marker: google.maps.Marker, shop: Shop}[] = [];
+  PALERMO_BOUNDS = {
+    north: 38.24,
+    south: 38.01,
+    west: 13.20,
+    east: 13.55,
+  };
 
   constructor(
     private authService: AuthService,
@@ -45,12 +51,12 @@ export class ChooseShopComponent implements OnInit {
 
   ngOnInit(): void {
     this.getShops();
-    // this.resetShop();
   }
 
   getShops(): void {
     this.isLoading = true;
-    this.shopsObs = this.shopService.getShops();
+    this.shopsObs = this.shopService.getShops()
+      .pipe(take(1));
     this.shopsObs.subscribe(
       shops => {
         this.shops = shops;
@@ -59,6 +65,9 @@ export class ChooseShopComponent implements OnInit {
       },
       errorMessage => {
         this.isLoading = false;
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
         this.error = errorMessage;
       });
   }
@@ -69,6 +78,10 @@ export class ChooseShopComponent implements OnInit {
       this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
         center: { lat: this.shops[0].latitude, lng: this.shops[0].longitude },
         zoom: 13,
+        restriction: {
+          latLngBounds: this.PALERMO_BOUNDS,
+          strictBounds: false,
+        },
       });
       // @ts-ignore
       this.infoWindow = new google.maps.InfoWindow();
@@ -81,7 +94,7 @@ export class ChooseShopComponent implements OnInit {
     });
   }
 
-  setShop(shop: Shop): void {
+  setShop(shop: Shop, setCenter: boolean = false): void {
     let icon: string = null;
     if (shop.supermarketName === 'conad') {
       icon = 'https://www.conad.it/etc/designs/conad_main/clientlib-css/img/logo-simple.png';
@@ -96,6 +109,7 @@ export class ChooseShopComponent implements OnInit {
       icon = 'https://www.desparmessina.it/template/default/condivisi/grafica/logo_FB.png';
       icon = 'https://i.imgur.com/A1ecxc7.png';
     }
+    const location = {lat: shop.latitude, lng: shop.longitude};
     const iconImg = new Image();
     iconImg.src = icon;
     iconImg.height = 5;
@@ -103,10 +117,12 @@ export class ChooseShopComponent implements OnInit {
     const title = shop.supermarketName.charAt(0).toUpperCase() + shop.supermarketName.substr(1);
     // @ts-ignore
     const shopMarker = new google.maps.Marker({
-      position: {lat: shop.latitude, lng: shop.longitude},
+      position: location,
       title: shop.shopId + '. ' + title,
       icon,
-      map: this.map
+      map: this.map,
+      // @ts-ignore
+      animation: google.maps.Animation.BOUNCE
     });
 
     shopMarker.addListener('mouseover', () => {
@@ -118,10 +134,16 @@ export class ChooseShopComponent implements OnInit {
       this.infoWindow.close();
     });
     shopMarker.addListener('click', () => {
-      this.chosenShop = shop;
+      this.onSelect(shop);
     });
 
-    this.shopMarkers.push(shopMarker);
+    this.shopMarkers.push({marker: shopMarker, shop});
+    if (setCenter) {
+      this.map.setCenter(location);
+    }
+    setTimeout( () => {
+      shopMarker.setAnimation(null);
+    }, 500);
   }
 
   onReloadShops(): void {
@@ -132,12 +154,24 @@ export class ChooseShopComponent implements OnInit {
     this.error = null;
   }
 
-  resetShop(): void {
-    this.shopService.resetShop(false);
-  }
-
   onSelect(shop: Shop): void {
+    // @ts-ignore
+    let marker: google.maps.Marker;
+    this.shopMarkers.forEach(
+      (shopMarker) => {
+        if (shopMarker.shop.shopId === shop.shopId) {
+          marker = shopMarker.marker;
+        }
+      }
+    );
     this.chosenShop = shop;
+    this.map.setCenter({lat: shop.latitude, lng: shop.longitude});
+    this.map.setZoom(13);
+    // @ts-ignore
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout( () => {
+      marker.setAnimation(null);
+    }, 1000);
   }
 
   onChooseShop(): void {

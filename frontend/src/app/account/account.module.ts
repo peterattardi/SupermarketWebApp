@@ -7,6 +7,7 @@ import {AuthGuard} from '../auth/auth.guard';
 import { AdminInfoComponent } from './admin-info/admin-info.component';
 import { ClientInfoComponent } from './client-info/client-info.component';
 import {LoggedGuard} from './logged.guard';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {LoggedGuard} from './logged.guard';
       component: AccountComponent,
       canActivate: [LoggedGuard]
     }]),
+    SharedModule,
   ]
 })
 export class AccountModule {}

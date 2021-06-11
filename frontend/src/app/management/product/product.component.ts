@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {ShopService} from '../../shared/shop.service';
 import {AdminProductsService} from '../admin-products.service';
+import {AuthService} from '../../auth/auth.service';
 
 @Component({
   selector: 'app-product',
@@ -15,7 +16,8 @@ export class ProductComponent implements OnInit {
   constructor(
     private adminProductsService: AdminProductsService,
     private route: ActivatedRoute,
-    private shopService: ShopService
+    private shopService: ShopService,
+    private authService: AuthService
   ) { }
 
   onResetShop(): void {
@@ -27,7 +29,6 @@ export class ProductComponent implements OnInit {
       .subscribe(
         (params: Params) => {
           this.shopId = params.shopId;
-          this.adminProductsService.setShopId(this.shopId);
         }
       );
     this.adminProductsService.fetchProducts().subscribe(
@@ -35,6 +36,9 @@ export class ProductComponent implements OnInit {
         this.fetchQuantity();
       },
       errorMessage => {
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
         this.error = errorMessage;
       }
     );
@@ -46,10 +50,13 @@ export class ProductComponent implements OnInit {
       this.adminProductsService.fetchQuantity(this.shopId).subscribe(
         () => {},
         errorMessage => {
+          if (errorMessage === 'Token not found') {
+            this.authService.logout();
+          }
           this.error = errorMessage;
         });
     } else {
-      this.error = 'Error in fetching quantities in stock';
+      this.error = 'Error in fetching quantities in stock. ShopID is null.';
     }
   }
 

@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Observable, Subject, Subscription, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, Subscription, throwError} from 'rxjs';
 import {Product} from './product/product.model';
 import {catchError, map, tap} from 'rxjs/operators';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {AuthService} from '../auth/auth.service';
 import {ShopProduct} from './product/shop-product.model';
 import {environment} from '../../environments/environment';
+import {ActivatedRoute} from '@angular/router';
 
 @Injectable({providedIn: 'root'})
 export class AdminProductsService {
-  productsChanged = new Subject<Product[]>();
-  private products: Product[] = [];
+  products = new BehaviorSubject<Product[]>([]);
   private shopId: string;
 
   API = environment.API;
@@ -24,42 +24,29 @@ export class AdminProductsService {
     this.shopId = shopId;
   }
 
-  setProducts(products: Product[]): void {
-    this.products = products;
-    this.productsChanged.next(this.products.slice());
-  }
-
   setQuantity(shopProducts: ShopProduct[]): void {
+    const products = this.products.value;
     shopProducts.forEach( (shopProduct) => {
       if (shopProduct.quantity > 0) {
         let i = 0;
-        let found = false;
-        while (!found && i < this.products.length) {
-          const product = this.products[i];
+        while (i < products.length) {
+          const product = products[i];
           if (product.productName === shopProduct.productName &&
             product.productBrand === shopProduct.productBrand) {
             console.log('Updated quantity', product, shopProduct.quantity);
             product.quantity = shopProduct.quantity;
-            found = true;
+            return;
           }
           i++;
         }
       }
     });
-    this.productsChanged.next(this.products.slice());
-  }
-
-  getProducts(): Product[] {
-    return this.products.slice();
+    this.products.next(products);
   }
 
   getProduct(index: number): Product {
-    return this.products[index];
+    return this.products.value[index];
   }
-
-  // addIngredientsToShoppingList(ingredients: Ingredient[]) {
-  //   this.slService.addIngredients(ingredients);
-  // }
 
   addProduct(product: Product): void {
     this.http.post(
@@ -83,8 +70,14 @@ export class AdminProductsService {
       })
     ).subscribe( response => {
       console.log('Subscribe enter');
-      this.products.push(product);
-      this.productsChanged.next(this.products.slice());
+      const newProducts = this.products.value;
+      newProducts.push(product);
+      this.products.next(newProducts);
+      },
+      errorMessage => {
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
       }
     );
   }
@@ -114,8 +107,14 @@ export class AdminProductsService {
       })
     ).subscribe( response => {
         console.log('updating new product');
-        this.products[index] = newProduct;
-        this.productsChanged.next(this.products.slice());
+        const newProducts = this.products.value;
+        newProducts[index] = newProduct;
+        this.products.next(newProducts);
+      },
+      errorMessage => {
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
       }
     );
   }
@@ -137,30 +136,45 @@ export class AdminProductsService {
       })
     ).subscribe( response => {
         console.log('deleting old product');
-        this.products.splice(index, 1);
-        this.productsChanged.next(this.products.slice());
+        const newProducts = this.products.value;
+        newProducts.splice(index, 1);
+        this.products.next(newProducts);
+      },
+      errorMessage => {
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
       }
     );
   }
 
-  fetchProducts(): Observable<Product[]> {
+  fetchProducts(withQuantity: boolean = false): Observable<Product[]> {
     return this.http
-      .get<Product[]>( // mock api
-        // 'https://60b3a9594ecdc1001747fac2.mockapi.io/products'
-        this.API + 'admin/catalogue?token=' + (this.authService.user.value ? this.authService.user.value.token : '')
+      .get<Product[]>(
+        this.API + 'admin/catalogue?token=' +
+        (this.authService.user.value ? this.authService.user.value.token : '')
       )
       .pipe(
         catchError(this.handleError),
         tap(products => {
-          this.setProducts(products);
+          this.products.next(products);
+          if (withQuantity) {
+            this.fetchQuantity(this.shopId).subscribe(
+              () => { },
+              errorMessage => {
+                this.authService.logout();
+              }
+            );
+          }
         })
       );
   }
 
-  fetchQuantity(shopId: string): Observable<ShopProduct[]> {
+  fetchQuantity(shopId: string = this.shopId): Observable<ShopProduct[]> {
     return this.http
       .get<ShopProduct[]>(
-        this.API + 'admin/inventory/' + shopId + '?token=' + (this.authService.user.value ? this.authService.user.value.token : '')
+        this.API + 'admin/inventory/' + shopId + '?token=' +
+        (this.authService.user.value ? this.authService.user.value.token : '')
       )
       .pipe(
         catchError(this.handleError),
@@ -186,10 +200,15 @@ export class AdminProductsService {
       tap( response => {
         console.log(response);
       })
-    ).subscribe( response => {
-        console.log('updating quantity of product');
-        this.products[index].quantity = quantity;
-        this.productsChanged.next(this.products.slice());
+    ).subscribe( () => {
+        const newProducts = this.products.value;
+        newProducts[index].quantity = quantity;
+        this.products.next(newProducts);
+      },
+      errorMessage => {
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
       }
     );
   }
@@ -200,10 +219,13 @@ export class AdminProductsService {
       return throwError('An unknown error occurred!');
     }
     let errorMessage = errorRes.error;
-    if (errorRes.status === 404) {
-      errorMessage = 'Invalid API URL/Request or API is offline';
+    if (errorRes.status === 404 || errorRes.status === 0) {
+      errorMessage = 'Invalid API URL/Request or Server is offline';
     } else {
       switch (errorMessage) {
+        case 'TOKEN_NOT_FOUND':
+          errorMessage = 'Token not found';
+          break;
         case 'EMAIL_EXISTS':
           errorMessage = 'This email exists already';
           break;

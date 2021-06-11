@@ -1,0 +1,12 @@
+<div class="alert alert-danger" *ngIf="isError">
+  <button class="btn btn-default pull-right popup" (click)="onClose()">X</button>
+  <p class="text-danger text-center">{{ message }}</p>
+</div>
+<div class="alert alert-warning" *ngIf="isWarning">
+  <button class="btn btn-default pull-right popup" (click)="onClose()">X</button>
+  <p class="text-warning text-center">{{ message }}</p>
+</div>
+<div class="alert alert-info" *ngIf="isInfo">
+  <button class="btn btn-default pull-right popup" (click)="onClose()">X</button>
+  <p class="text-info text-center">{{ message }}</p>
+</div>

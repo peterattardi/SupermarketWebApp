@@ -17,6 +17,7 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
   orderedProducts: OrderedProduct[] = [];
   orderId: number;
   order: Order = null;
+  orderSubTotal = 0;
   orderTotal = 0;
   products: Product[] = [];
 
@@ -92,6 +93,9 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
           this.calculateTotal();
         },
         errorMessage => {
+          if (errorMessage === 'Token not found') {
+            this.authService.logout();
+          }
           this.error = errorMessage;
         }
       );
@@ -101,11 +105,12 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
     if (this.products.length === 0 || this.orderedProducts.length === 0) {
       return;
     }
-    this.orderTotal = 0;
+    this.orderSubTotal = 0;
     this.orderedProducts.forEach(orderedProduct => {
       const product = this.findProduct(orderedProduct);
-      this.orderTotal += orderedProduct.quantity * product.unitCost;
+      this.orderSubTotal += orderedProduct.quantity * product.unitCost;
     });
+    this.orderTotal = this.orderSubTotal + 3;
   }
 
   findProduct(order: OrderedProduct): Product {

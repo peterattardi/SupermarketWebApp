@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>My Orders</h1>
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <h3 class="text-warning">Orders Pending</h3>
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 list-group">
+    <div
+      class="help-block alert alert-info"
+      routerLink="/cart"
+      *ngIf="pendingOrders.length === 0">
+      No pending orders found. Add products to cart and then proceed to make an order.
+    </div>
+    <app-orders-item
+      *ngFor="let order of pendingOrders"
+      [order]="order"></app-orders-item>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <h3 class="text-success">Orders Confirmed</h3>
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 list-group">
+    <div
+      class="help-block alert alert-info"
+      *ngIf="confirmedOrders.length === 0">
+      No confirmed orders found.
+    </div>
+    <app-orders-item
+      *ngFor="let order of confirmedOrders"
+      [order]="order"></app-orders-item>
+  </div>
+</div>

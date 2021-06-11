@@ -1,26 +1,33 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <div class="alert alert-danger" *ngIf="error">
-        <button class="btn btn-default pull-right popup popup" (click)="onClearError()">X</button>
-        <p>{{ error }}</p> <br>
-      </div>
+      <app-popup
+        [message]="error"
+        [type]="'error'"
+        (close)="onClearError()"
+        *ngIf="error">
+      </app-popup>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12">
       <div class="container" *ngIf="user && user.role !== 'ADMIN'">
         <div class="row">
-          <div class="col-xs-6">
-            <h3>Hi {{user.role}}</h3>
+          <div class="col-xs-6" *ngIf="user.role !== 'USER'">
+            <h3>Hi Guest, you can take a look as much as you want!</h3>
+          </div>
+          <div class="col-xs-6" *ngIf="accountInfo && user.role === 'USER'">
+            <h3>Hi {{accountInfo.firstName}}, have a good shopping!</h3>
           </div>
           <div class="col-xs-6">
             <h4>
-              You have chosen: {{supermarket.name.charAt(0).toUpperCase() + supermarket.name.substr(1)}}
-            </h4>
-            <a
+              You have chosen: {{supermarket.name | titlecase}}
+              |
+              <a
               (click)="onResetSupermarket()"
               style="cursor: pointer">{{supermarket ? 'Change' : 'Choose a supermarket!'}}</a>
+            </h4>
+
           </div>
         </div>
       </div>

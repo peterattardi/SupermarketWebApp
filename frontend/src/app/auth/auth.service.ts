@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
-import {catchError, map, tap} from 'rxjs/operators';
+import {catchError, map, take, tap} from 'rxjs/operators';
 import {throwError, BehaviorSubject, Observable} from 'rxjs';
 
 import { User } from './user.model';
 import {SignupForm} from './signupform.model';
 import {MarketService, Supermarket} from '../shared/market.service';
 import {environment} from '../../environments/environment';
+import {CartService} from '../cart/cart.service';
 
 
 export interface AuthResponseData {
@@ -26,6 +27,8 @@ export enum Role {
 export class AuthService {
   user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
+  error = new BehaviorSubject<string>(null);
+
   MOCK_API = 'https://60b3a9594ecdc1001747fac2.mockapi.io/';
   API = environment.API;
 
@@ -109,7 +112,6 @@ export class AuthService {
     return this.http
       .post<AuthResponseData>(
         this.API + 'guest/login/existing?token=' + (this.user.value ? this.user.value.token : ''),
-        // this.MOCK_API + 'login',
         {
           email,
           password,
@@ -175,18 +177,35 @@ export class AuthService {
   }
 
   logout(redirect: boolean = true): void {
+    if (!this.user.value) {
+      throwError('User not found');
+    }
     const token = this.user.value.token;
+    this.http.get<{text: string}>(
+      this.API + 'user/logout?token=' + token
+    ).pipe(
+      take(1),
+      catchError(this.handleError)
+    ).subscribe(
+      () => {
+        this.error.next(null);
+        this.clearLogout(redirect);
+      },
+      error => {
+        this.error.next(error);
+        this.clearLogout(redirect);
+      }
+    );
+  }
+
+  private clearLogout(redirect: boolean): void {
     this.user.next(null);
-    if (redirect) { this.router.navigate(['/auth']); }
     localStorage.removeItem('userData');
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
     this.tokenExpirationTimer = null;
-    this.http.post<{text: string}>(
-      this.API + 'user/logout?token=' + token,
-      {}
-    );
+    if (redirect) { this.router.navigate(['/auth/login']); }
   }
 
   autoLogout(expirationDuration: number): void {
@@ -222,8 +241,8 @@ export class AuthService {
       return throwError('An unknown error occurred!');
     }
     let errorMessage = errorRes.error;
-    if (errorRes.status === 404) {
-      errorMessage = 'Invalid API URL/Request or API is offline';
+    if (errorRes.status === 404 || errorRes.status === 0) {
+      errorMessage = 'Invalid API URL/Request or Server is offline';
     } else {
       switch (errorMessage) {
         case 'EMAIL_EXISTS':
@@ -234,6 +253,9 @@ export class AuthService {
           break;
         case 'INVALID_PASSWORD':
           errorMessage = 'This password is not correct.';
+          break;
+        case 'TOKEN_NOT_FOUND':
+          errorMessage = 'Token not found';
           break;
         default:
           errorMessage = 'Error while processing authentication';

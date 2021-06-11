@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
-import {Product} from '../management/product/product.model';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {AuthService} from '../auth/auth.service';
-import {MarketService, Position, Supermarket} from '../shared/market.service';
-import {ShopProduct} from '../management/product/shop-product.model';
+import {MarketService, Supermarket} from '../shared/market.service';
 import {catchError, tap} from 'rxjs/operators';
 
 export class CartItem {
@@ -15,7 +13,6 @@ export class CartItem {
     public supermarketName: string,
     public quantity: number
   ) {  }
-
 }
 
 @Injectable({providedIn: 'root'})
@@ -44,13 +41,18 @@ export class CartService {
         catchError(this.handleError),
         tap( () => {
           const newCart = this.cartItems.value.slice();
+          let isNew = true;
           newCart.map( item => {
             if (item.productName === cartItem.productName
             && item.productBrand === cartItem.productBrand) {
               item.quantity = cartItem.quantity;
+              isNew = false;
             }
             return item;
           });
+          if (isNew) {
+            newCart.push(cartItem);
+          }
           this.cartItems.next(newCart);
         })
     );
@@ -69,7 +71,7 @@ export class CartService {
     ).pipe(
         catchError(this.handleError),
         tap (() => {
-          const newCart = this.cartItems.value.slice().filter( (item, index) => {
+          const newCart = this.cartItems.value.slice().filter( (item) => {
             return item !== cartItem;
           });
           this.cartItems.next(newCart);
@@ -77,7 +79,8 @@ export class CartService {
     );
   }
 
-  getCart(supermarket: Supermarket = this.marketService.getSupermarket()): Observable<CartItem[]> {
+  getCart(supermarket: Supermarket = this.marketService.supermarket.value): Observable<CartItem[]> {
+
     let supermarketName = '';
     if (supermarket) {
       supermarketName = supermarket.name;
@@ -99,12 +102,12 @@ export class CartService {
       return throwError('An unknown error occurred!');
     }
     let errorMessage = errorRes.error;
-    if (errorRes.status === 404) {
-      errorMessage = 'Invalid API URL/Request or API is offline';
+    if (errorRes.status === 404 || errorRes.status === 0) {
+      errorMessage = 'Invalid API URL/Request or Server is offline';
     } else {
       switch (errorMessage) {
-        case 'EMAIL_EXISTS':
-          errorMessage = 'This email exists already';
+        case 'TOKEN_NOT_FOUND':
+          errorMessage = 'Token not found';
           break;
         case 'EMAIL_NOT_FOUND':
           errorMessage = 'This email does not exist.';

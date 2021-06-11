@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-  selector: 'app-order',
-  templateUrl: './order.component.html',
-  styleUrls: ['./order.component.css']
+  selector: 'app-orders',
+  templateUrl: './orders.component.html'
 })
-export class OrderComponent { }
+export class OrdersComponent { }

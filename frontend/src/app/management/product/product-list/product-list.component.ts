@@ -10,8 +10,8 @@ import {AdminProductsService} from '../../admin-products.service';
   templateUrl: './product-list.component.html',
 })
 export class ProductListComponent implements OnInit, OnDestroy {
-  products: Product[];
-  subscription: Subscription;
+  products: Product[] = this.adminProductsService.products.value;
+  productsSub: Subscription;
   @Input() error: string = null;
 
   constructor(private adminProductsService: AdminProductsService,
@@ -20,13 +20,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.adminProductsService.productsChanged
+    this.productsSub = this.adminProductsService.products
       .subscribe(
         (products: Product[]) => {
           this.products = products;
         }
       );
-    this.products = this.adminProductsService.getProducts();
   }
 
   onNewProduct(): void {
@@ -37,6 +36,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.error = null;
   }
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.productsSub) {
+      this.productsSub.unsubscribe();
+    }
   }
 }

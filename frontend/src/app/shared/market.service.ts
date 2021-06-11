@@ -31,49 +31,40 @@ export class MarketService {
   getSupermarkets(position: Position): Observable<Shop[]> {
     return this.http.post<Shop[]>(
       this.API + 'user/nearest-supermarkets',
-      // this.MOCK_API + 'supermarkets'// ,
       {
         longitude: position.longitude,
         latitude: position.latitude
       }
     ).pipe(
-      catchError(this.handleError),
-      tap( resData => {
-        console.log(resData);
-      })
+      catchError(this.handleError)
     );
   }
 
   deleteSupermarket(redirect: boolean = true): void {
     localStorage.removeItem('supermarket');
+    localStorage.removeItem('position');
     this.supermarket.next(null);
+    this.position.next(null);
     if (redirect) {
       this.router.navigate(['/auth/supermarket']);
     }
   }
 
-  getPosition(): Position {
+  // Parse position from localstorage and update the position if it exists
+  parsePosition(): void {
     const pos = JSON.parse(localStorage.getItem('position'));
-    let newPos: Position;
-    // if supermarket is null or is different from the one in LocalStorage (and market exists)
     if (pos) {
-      newPos = new Position(pos.latitude, pos.longitude);
-      if (!this.position.value || (newPos.toString() !== this.position.toString())) {
-        this.position.next(newPos);
-      }
+      const newPos = new Position(pos.latitude, pos.longitude);
+      this.position.next(newPos);
     }
-    return newPos;
   }
 
-  getSupermarket(): Supermarket {
+  // Parse supermarket from localstorage and update the supermarket if it exists
+  parseSupermarket(): void {
     const market = JSON.parse(localStorage.getItem('supermarket'));
-    // if supermarket is null or is different from the one in LocalStorage (and market exists)
     if (market) {
-      if (!this.supermarket.value || (market.name !== this.supermarket.value.name)) {
-        this.supermarket.next(new Supermarket(market.name));
-      }
+      this.supermarket.next(new Supermarket(market.name));
     }
-    return market;
   }
 
   chooseSupermarket(market: Supermarket, position: Position = null): void {
@@ -89,23 +80,15 @@ export class MarketService {
     if (!errorRes.error && !errorRes.error.error) {
       return throwError('An unknown error occurred!');
     }
+
     let errorMessage = errorRes.error;
-    if (errorRes.status === 404) {
-      errorMessage = 'Invalid API Request or API is offline';
-    } else {
-      switch (errorMessage) {
-        case 'EMAIL_EXISTS':
-          errorMessage = 'This email exists already';
-          break;
-        case 'EMAIL_NOT_FOUND':
-          errorMessage = 'This email does not exist.';
-          break;
-        case 'INVALID_PASSWORD':
-          errorMessage = 'This password is not correct.';
-          break;
-        default:
-          errorMessage = 'Error while processing supermarkets';
-      }
+    console.log(errorRes);
+    if (errorRes.status === 404 || errorRes.status === 0) {
+      errorMessage = 'Invalid API Request or Server is offline';
+    } else if (errorRes.message === 'LATITUDE_NULL' || errorRes.message === 'LONGITUDE_NULL') {
+      errorMessage = 'There is an error with position';
+    } else if (errorRes.status === 500) {
+      errorMessage = errorRes.statusText;
     }
     return throwError(errorMessage);
   }

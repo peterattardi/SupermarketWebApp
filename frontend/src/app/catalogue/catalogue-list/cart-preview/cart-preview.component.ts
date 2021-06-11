@@ -5,7 +5,10 @@ import {MarketService} from '../../../shared/market.service';
 import {Router} from '@angular/router';
 import {Product} from '../../../management/product/product.model';
 import {UserProductsService} from '../../user-products.service';
+import {OrderService} from '../../../orders/order.service';
 import {take} from 'rxjs/operators';
+import {User} from '../../../auth/user.model';
+import {AuthService} from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-cart-preview',
@@ -13,19 +16,29 @@ import {take} from 'rxjs/operators';
 })
 export class CartPreviewComponent implements OnInit, OnDestroy {
   cartItems: CartItem[] = this.cartService.cartItems.value;
-  products: Product[] = this.userProductsService.getProducts();
+  products: Product[] = this.userProductsService.products.value;
+  user: User = this.authService.user.value;
   cartSub: Subscription;
   productSub: Subscription;
+  userSub: Subscription;
   cartTotal = 0;
+  error: string = null;
 
   constructor(
     private cartService: CartService,
     private marketService: MarketService,
     private router: Router,
-    private userProductsService: UserProductsService) { }
+    private userProductsService: UserProductsService,
+    private orderService: OrderService,
+    private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.productSub = this.userProductsService.productsChanged
+    this.userSub = this.authService.user.subscribe(
+      user => {
+        this.user = user;
+      }
+    );
+    this.productSub = this.userProductsService.products
       .subscribe(
         (products: Product[]) => {
           this.products = products;
@@ -34,7 +47,6 @@ export class CartPreviewComponent implements OnInit, OnDestroy {
     this.cartSub = this.cartService.cartItems
       .subscribe(
         cart => {
-          debugger;
           this.cartItems = cart;
           this.cartTotal = 0;
           this.cartItems.forEach( cartItem => {
@@ -58,6 +70,38 @@ export class CartPreviewComponent implements OnInit, OnDestroy {
       }
     });
     return result;
+  }
+
+  onClearError(): void {
+    this.error = null;
+  }
+
+  onToOrder(): void {
+    if (this.cartItems.length === 0) {
+      this.error = 'Cannot order 0 products. Please add some first!';
+      return;
+    }
+    if (!this.user) {
+      this.error = 'You are not authenticated. Try reload the page';
+      return;
+    }
+    if (this.user.role !== 'USER') {
+      this.error = 'Please register or login!';
+      return;
+    }
+    this.orderService.addOrder()
+      .pipe(take(1))
+      .subscribe(
+      order => {
+        this.router.navigate(['/orders/' + order.orderId]);
+      },
+      errorMessage => {
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
+        this.error = errorMessage;
+      }
+    );
   }
 
   ngOnDestroy(): void {

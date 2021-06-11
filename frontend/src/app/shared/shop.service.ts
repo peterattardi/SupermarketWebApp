@@ -10,35 +10,25 @@ import {environment} from '../../environments/environment';
 export class Shop {
   constructor(
     public shopId: string,
-    public latitude: number,
-    public longitude: number,
-    public supermarketName: string) {}
+    public latitude?: number,
+    public longitude?: number,
+    public supermarketName?: string) {}
 }
 
 @Injectable({ providedIn: 'root' })
 export class ShopService {
   shop = new BehaviorSubject<Shop>(null);
-  user: User = null;
-  userSub: Subscription;
-  MOCK_API = 'https://60b3a9594ecdc1001747fac2.mockapi.io/';
   API = environment.API;
 
   constructor(private http: HttpClient,
               private router: Router,
               private authService: AuthService,
-              private route: ActivatedRoute) {
-    this.userSub = this.authService.user.subscribe(
-      user => {
-        this.user = user;
-      }
-    );
-    this.user = this.authService.user.value;
-  }
+              private route: ActivatedRoute) {  }
 
   getShops(): Observable<Shop[]> {
     return this.http.get<Shop[]>(
-      // this.MOCK_API + 'get-shops'
-      this.API + 'admin/shops?token=' + (this.user ? this.user.token : '')
+      this.API + 'admin/shops?token=' +
+      (this.authService.user.value ? this.authService.user.value.token : '')
     ).pipe(
       catchError(this.handleError)
     );
@@ -68,12 +58,12 @@ export class ShopService {
       return throwError('An unknown error occurred!');
     }
     let errorMessage = errorRes.error;
-    if (errorRes.status === 404) {
-      errorMessage = 'Invalid API URL/Request or API is offline';
+    if (errorRes.status === 404 || errorRes.status === 0) {
+      errorMessage = 'Invalid API URL/Request or Server is offline';
     } else {
       switch (errorMessage) {
-        case 'EMAIL_EXISTS':
-          errorMessage = 'This email exists already';
+        case 'TOKEN_NOT_FOUND':
+          errorMessage = 'Token not found';
           break;
         case 'EMAIL_NOT_FOUND':
           errorMessage = 'This email does not exist.';

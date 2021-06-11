@@ -6,6 +6,8 @@ import {Router} from '@angular/router';
 import {Product} from '../management/product/product.model';
 import {UserProductsService} from '../catalogue/user-products.service';
 import {take} from 'rxjs/operators';
+import {AuthService} from '../auth/auth.service';
+import {OrderService} from '../orders/order.service';
 
 @Component({
   selector: 'app-cart',
@@ -14,31 +16,40 @@ import {take} from 'rxjs/operators';
 })
 export class CartComponent implements OnInit, OnDestroy {
   cartItems: CartItem[] = [];
-  products: Product[] = [];
+  products: Product[] = this.userProductsService.products.value;
   cartSub: Subscription;
   productSub: Subscription;
+  cartTotal = 0;
+  error: string = null;
 
   constructor(
     private cartService: CartService,
     private marketService: MarketService,
     private router: Router,
-    private userProductsService: UserProductsService) { }
+    private userProductsService: UserProductsService,
+    private authService: AuthService,
+    private orderService: OrderService) { }
 
   ngOnInit(): void {
-    this.productSub = this.userProductsService.productsChanged
+    this.productSub = this.userProductsService.products
       .subscribe(
         (products: Product[]) => {
           this.products = products;
         }
       );
-    this.products = this.userProductsService.getProducts();
     this.cartSub = this.cartService.cartItems
       .subscribe(
         cart => {
           this.cartItems = cart;
+          this.cartTotal = 0;
+          this.cartItems.forEach( cartItem => {
+            const product = this.findProduct(cartItem);
+            if (product) {
+              this.cartTotal += cartItem.quantity * product.unitCost;
+            }
+          });
         }
       );
-    this.cartService.getCart().pipe(take(1)).subscribe();
   }
 
   findProduct(cartItem: CartItem): Product {
@@ -47,9 +58,34 @@ export class CartComponent implements OnInit, OnDestroy {
       if (product.productName === cartItem.productName
         && product.productBrand === cartItem.productBrand) {
           result = product;
+          return;
       }
     });
     return result;
+  }
+
+  onClearError(): void {
+    this.error = null;
+  }
+
+  onToOrder(): void {
+    if (this.cartItems.length === 0) {
+      this.error = 'Cannot order 0 products. Please add some first!';
+      return;
+    }
+    this.orderService.addOrder()
+      .pipe(take(1))
+      .subscribe(
+        order => {
+          this.router.navigate(['/orders/' + order.orderId]);
+        },
+        errorMessage => {
+          if (errorMessage === 'Token not found') {
+            this.authService.logout();
+          }
+          this.error = errorMessage;
+        }
+      );
   }
 
   ngOnDestroy(): void {

@@ -6,13 +6,14 @@ import {CatalogueResolver} from './catalogue-resolver.service';
 import {CatalogueComponent} from './catalogue.component';
 import {CatalogueListComponent} from './catalogue-list/catalogue-list.component';
 import {UserGuard} from './user.guard';
-import {SupermarketGuard} from '../auth/supermarket-guard';
+import {MarketGuard} from '../auth/market-guard.service';
 import {CartResolver} from '../cart/cart-resolver.service';
+import {MarketResolver} from '../auth/market-resolver.service';
 const routes: Routes = [
   {
     path: '',
     component: CatalogueComponent,
-    canActivate: [SupermarketGuard, UserGuard],
+    canActivate: [MarketGuard, UserGuard],
     resolve: [CatalogueResolver, CartResolver],
     children: [
       {

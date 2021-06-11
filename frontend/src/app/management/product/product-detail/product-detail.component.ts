@@ -4,6 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Product } from '../product.model';
 import { AdminProductsService} from '../../admin-products.service';
 import {Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,22 +22,21 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.params
+      .pipe(take(1))
       .subscribe(
         (params: Params) => {
           this.id = +params.id;
           this.product = this.adminProductsService.getProduct(this.id);
         }
       );
-    this.subProduct = this.adminProductsService.productsChanged.subscribe(
+    this.subProduct = this.adminProductsService.products.subscribe(
       products => {
-        this.product = products[this.id];
+        if (this.id) {
+          this.product = products[this.id];
+        }
       }
     );
   }
-
-  // onAddToShoppingList(): void {
-  //   this.adminProductsService.addIngredientsToShoppingList(this.product.ingredients);
-  // }
 
   onEditProduct(): void {
     this.router.navigate(['edit'], { relativeTo: this.route });

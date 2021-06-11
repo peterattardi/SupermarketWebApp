@@ -96,7 +96,7 @@
     Supermarket Name
   </div>
   <div class="col-xs-8">
-    {{ product.supermarketName.charAt(0).toUpperCase() + product.supermarketName.substr(1)}}
+    {{ product.supermarketName | titlecase}}
   </div>
 </div>
 <br><br>

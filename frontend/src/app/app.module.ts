@@ -9,11 +9,10 @@ import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {AuthModule} from './auth/auth.module';
 import {ManagementModule} from './management/management.module';
-import {AccountModule} from './account/account.module'
+import {AccountModule} from './account/account.module';
 import {CatalogueModule} from './catalogue/catalogue.module';
-import {CommonModule} from '@angular/common';
-import { CartComponent } from './cart/cart.component';
 import {CartModule} from './cart/cart.module';
+import {OrdersModule} from './orders/orders.module';
 
 @NgModule({
   declarations: [
@@ -30,9 +29,14 @@ import {CartModule} from './cart/cart.module';
     CatalogueModule,
     ManagementModule,
     CartModule,
+    OrdersModule,
     AccountModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
+// TODO: Services optimization
+// TODO: Code review

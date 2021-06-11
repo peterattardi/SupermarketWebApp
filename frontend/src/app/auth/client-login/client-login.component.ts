@@ -11,10 +11,9 @@ import {MarketService, Supermarket} from '../../shared/market.service';
 })
 export class ClientLoginComponent implements OnInit, OnDestroy {
   isLoading = false;
-  error: string = null;
-  supermarket: Supermarket = null;
+  error: string = this.authService.error.value;
+  supermarket: Supermarket = this.marketService.supermarket.value;
   userSub: Subscription;
-  marketSub: Subscription;
   isGuest = false;
 
   constructor(
@@ -35,7 +34,6 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
         }
       }
     });
-    this.supermarket = this.marketService.getSupermarket();
   }
 
   onResetSupermarket(): void {
@@ -74,9 +72,11 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
         this.router.navigate(['/catalogue']);
       },
       errorMessage => {
-        console.log(errorMessage);
-        this.error = errorMessage;
         this.isLoading = false;
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
+        this.error = errorMessage;
       }
     );
 
@@ -110,9 +110,6 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.userSub) {
       this.userSub.unsubscribe();
-    }
-    if (this.marketSub) {
-      this.marketSub.unsubscribe();
     }
   }
 }

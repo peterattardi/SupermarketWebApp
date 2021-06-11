@@ -8,11 +8,13 @@ import {SharedModule} from '../shared/shared.module';
 import {ManagementRoutingModule} from './management-routing.module';
 import {ProductModule} from './product/product.module';
 import {ChooseShopComponent} from './choose-shop/choose-shop.component';
+import {NotificationsComponent} from './notifications/notifications.component';
 
 @NgModule({
   declarations: [
     ManagementComponent,
-    ChooseShopComponent
+    ChooseShopComponent,
+    NotificationsComponent
   ],
   imports: [
     CommonModule,

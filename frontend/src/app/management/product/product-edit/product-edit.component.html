@@ -47,13 +47,14 @@
               id="url"
               formControlName="url"
               class="form-control"
+              #imagePath
             />
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-12">
-          <img [src]="" class="img-responsive" alt="image url"/>
+          <img [src]="imagePath" class="img-responsive" alt="image url"/>
         </div>
       </div>
       <div class="row">

@@ -20,6 +20,10 @@ const appRoutes: Routes = [
     loadChildren: './cart/cart.module#CartModule'
   },
   {
+    path: 'orders',
+    loadChildren: './orders/orders.module#OrdersModule'
+  },
+  {
     path: 'account',
     loadChildren: './account/account.module#AccountModule'
   }

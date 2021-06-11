@@ -1,27 +1,26 @@
 <div
     class="list-group-item">
-  <div class="alert-warning" *ngIf="warning">
-    <button class="btn btn-default pull-right popup" (click)="onClearWarning()">
-      X
-    </button>
-    {{ warning }}
-  </div>
-  <div class="alert-danger" *ngIf="error">
-    <button class="btn btn-default pull-right popup" (click)="onClearError()">
-      X
-    </button>
-    {{ error }}
-  </div>
-  <div class="alert-info" *ngIf="info">
-    <button class="btn btn-default pull-right popup" (click)="onClearInfo()">
-      X
-    </button>
-    {{ info }}
-  </div>
+  <app-popup
+    [message]="error"
+    [type]="'error'"
+    (close)="onClearError()"
+    *ngIf="error">
+  </app-popup>
+  <app-popup
+    [message]="warning"
+    [type]="'warning'"
+    (close)="onClearWarning()"
+    *ngIf="warning">
+  </app-popup>
+  <app-popup
+    [message]="info"
+    [type]="'info'"
+    (close)="onClearInfo()"
+    *ngIf="info">
+  </app-popup>
   <a
       style="cursor: pointer;"
       [routerLink]="[index]"
-      routerLinkActive="active"
       class="list-group-item list-inline clearfix">
 
     <div class="pull-left">

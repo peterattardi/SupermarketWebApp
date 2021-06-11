@@ -34,10 +34,10 @@ export class CatalogueDetailComponent implements OnInit, OnDestroy {
       .subscribe(
         (params: Params) => {
           this.id = +params.id;
-          this.product = this.userProductsService.getProduct(this.id);
+          this.product = this.userProductsService.products.value[this.id];
         }
       );
-    this.subProduct = this.userProductsService.productsChanged.subscribe(
+    this.subProduct = this.userProductsService.products.subscribe(
       products => {
         this.product = products[this.id];
       }
@@ -59,7 +59,8 @@ export class CatalogueDetailComponent implements OnInit, OnDestroy {
       this.warning = 'Cannot add negative or 0 items';
       return;
     }
-    if (this.product.quantity - this.cartItem.quantity - this.quantity < 0) {
+    if (this.product.quantity <
+      (this.cartItem ? this.cartItem.quantity : 0) + this.quantity) {
       this.error = 'Sorry, this is product in unavailable right now';
       return;
     }
@@ -77,13 +78,16 @@ export class CatalogueDetailComponent implements OnInit, OnDestroy {
       newQuantity
     );
     this.cartService.updateCart(this.cartItem).subscribe(
-      res => {
+      () => {
         this.info = 'Added to cart: ' +
           this.product.productName + ' (+' +
           this.quantity + ')';
       },
-      error => {
-        this.error = error;
+      errorMessage => {
+        if (errorMessage === 'Token not found') {
+          this.authService.logout();
+        }
+        this.error = errorMessage;
       }
     );
   }

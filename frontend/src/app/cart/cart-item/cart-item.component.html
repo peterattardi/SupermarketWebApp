@@ -1,4 +1,21 @@
+<app-alert *ngIf="deleteMessage"
+           (close)="cancelDelete()"
+           (success)="onDeleteCartItem()"
+           [message]="deleteMessage">
+</app-alert>
 
+<app-popup
+  [message]="error"
+  [type]="'error'"
+  (close)="onClearError()"
+  *ngIf="error">
+</app-popup>
+<app-popup
+  [message]="warning"
+  [type]="'warning'"
+  (close)="onClearWarning()"
+  *ngIf="warning">
+</app-popup>
 <button
   class="btn btn-danger"
   type="button"
@@ -24,15 +41,17 @@
 <button
   class="btn btn-danger"
   style="font-size:16px; margin: 1px; width: 15%"
-  (click)="onDeleteCartItem()">
+  (click)="tryDeleteCartItem()">
   X
 </button>
 <a
   class="list-group-item"
   style="cursor: pointer">
   {{ cartItem.productName }} [{{cartItem.productBrand}}]
-
-  <span class="badge badge-primary badge-pill">
-            {{ cartItem.quantity }}
-          </span>
+  |
+  <span style="font-size: 20px">{{ cartItem.quantity }}</span>{{ product ? '* ' + product.unitCost + '€' : '' }}
+  <span class="badge" *ngIf="product">
+    {{product.unitCost*cartItem.quantity | number: '1.2'}}€
+  </span>
 </a>
+

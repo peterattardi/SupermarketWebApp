@@ -22,8 +22,8 @@ public class OrderController {
     @GetMapping(path = "user/order/add/{supermarketName}")
     public ResponseEntity order(@RequestParam String token, @PathVariable(name = "supermarketName") String supermarketName){
         try{
-            orderService.order(token, supermarketName);
-            return ResponseEntity.status(200).body("SUCCESS");
+            Order order = orderService.order(token, supermarketName);
+            return ResponseEntity.status(200).body(order);
         }catch (IllegalStateException | NoSuchFieldException e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
@@ -33,6 +33,26 @@ public class OrderController {
     public ResponseEntity getOrders(@RequestParam String token, @PathVariable(name = "orderId") Long orderId){
         try{
             orderService.delete(token, orderId);
+            return ResponseEntity.status(200).body("SUCCESS");
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @PutMapping(path = "user/order/confirm/{orderId}")
+    public ResponseEntity confirm(@PathVariable(name = "orderId") Long orderId){
+        try{
+            orderService.confirm(orderId);
+            return ResponseEntity.status(200).body("SUCCESS");
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @PutMapping(path = "user/order/disconfirm/{orderId}")
+    public ResponseEntity disconfirm(@PathVariable(name = "orderId") Long orderId){
+        try{
+            orderService.disconfirm(orderId);
             return ResponseEntity.status(200).body("SUCCESS");
         }catch (IllegalStateException e){
             return ResponseEntity.status(400).body(e.getMessage());

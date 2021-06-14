@@ -126,4 +126,10 @@ public class ShopService {
         shopProductService.updateInEveryShop(product, shopsOfThatSupermarket);
 
     }
+
+    public List<Shop> findAllShops() {
+        return shopRepository.findAll();
+    }
 }
+
+//TODO: api nearest supermarket with position of shops

@@ -1,5 +1,4 @@
 package com.ingsoft2021.SupermarketApp.security;
-
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdmin;
 import com.ingsoft2021.SupermarketApp.appadmin.AppAdminService;
 import com.ingsoft2021.SupermarketApp.product.Product;
@@ -10,16 +9,16 @@ import com.ingsoft2021.SupermarketApp.shopProduct.ShopProduct;
 import com.ingsoft2021.SupermarketApp.shopProduct.ShopProductRepository;
 import com.ingsoft2021.SupermarketApp.supermarkets.Supermarket;
 import com.ingsoft2021.SupermarketApp.supermarkets.SupermarketService;
-import com.opencsv.CSVIterator;
-import com.opencsv.CSVReader;
+
 import lombok.AllArgsConstructor;
+
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import java.io.FileReader;
 import java.util.List;
 import java.util.Random;
+
 
 @EnableWebSecurity
 @AllArgsConstructor
@@ -34,6 +33,7 @@ public class Config extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors().disable()
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
@@ -49,6 +49,7 @@ public class Config extends WebSecurityConfigurerAdapter {
         supermarketService.addNewSupermarket( new Supermarket("deco"));
         supermarketService.addNewSupermarket( new Supermarket("coop"));
         supermarketService.addNewSupermarket( new Supermarket("despar"));
+
 
 
         shopRepository.save(new Shop(
@@ -136,26 +137,24 @@ public class Config extends WebSecurityConfigurerAdapter {
         fillShops();
 
 
-
-
     }
 
     private void fillDespar() {
         productRepository.save(new Product(
                 "Apple", "Melinda", "Delocious apple",
                 "200 kcal", 1L, 0.80, "piece",
-                "despar", null));
+                "despar", "https://melinda.it/wp-content/uploads/2019/01/GOLDEN-DOP-bollino1.png"));
     }
 
     private void fillDeco() {
         productRepository.save(new Product(
                 "Apple", "Melinda", "Delocious apple",
                 "200 kcal", 1L, 0.80, "piece",
-                "deco", null));
+                "deco", "https://melinda.it/wp-content/uploads/2019/01/GOLDEN-DOP-bollino1.png"));
         productRepository.save(new Product(
-                "Mayo", "Hellmanns", "Light Mayp",
+                "Mayo", "Hellmanns", "Mayo Hellman's REAL 400g",
                 "500 kcal", 1L, 1.50, "jar",
-                "deco", null));
+                "deco", "https://cdn.shopify.com/s/files/1/0357/1407/2713/products/hellmanns-mayonnaise-400g_800x.png?v=1585900136"));
 
     }
 
@@ -163,15 +162,15 @@ public class Config extends WebSecurityConfigurerAdapter {
         productRepository.save(new Product(
                 "Apple", "Melinda", "Delocious apple",
                 "200 kcal", 1L, 0.80, "piece",
-                "coop", null));
+                "coop", "https://melinda.it/wp-content/uploads/2019/01/GOLDEN-DOP-bollino1.png"));
         productRepository.save(new Product(
                 "Outdoor plant", "Garden Life", "Very green plant",
                 "0 kcal", 5L, 10, "piece",
-                "coop", null));
+                "coop", "https://www.evergreendirect.co.uk/media/wysiwyg/plants/plants-outdoor.png"));
         productRepository.save(new Product(
-                "Fish fingers", "Findus", "Fresh fish",
+                "Fish fingers", "Findus", "Findus Fish fingers 12 fingers 300g",
                 "200 kcal", 2L, 4, "piece",
-                "coop", null));
+                "coop", "https://www.spesaonlinepescara.it/wp-content/uploads/2018/11/Bastoncini-Capitan-Findus-12x.png"));
 
     }
 
@@ -179,23 +178,23 @@ public class Config extends WebSecurityConfigurerAdapter {
         productRepository.save(new Product(
                 "Apple", "Melinda", "Delicious apple",
                 "200 kcal", 1L, 0.80, "piece",
-                "conad", null));
+                "conad", "https://melinda.it/wp-content/uploads/2019/01/GOLDEN-DOP-bollino1.png"));
         productRepository.save(new Product(
                 "Pear", "Melina", "Delicious pear",
                 "220 kcal", 1L, 0.40, "piece",
-                "conad", null));
+                "conad", "https://lh3.googleusercontent.com/proxy/6j6yOB0johbLC2OzUfu4rI3ARCHhH293Es4DeVACbTUfdjH1j-40E6peuKvK-lP84Dk6xNGx14F0EBAuj0Xgi1uxi8HYTlJH1QpjrL9G9Ssbb_YnDA"));
         productRepository.save(new Product(
-                "Chicken Breast", "AIA", "Delocious chicken",
+                "Chicken Breast", "AIA", "AIA Chicken Breast",
                 "300 kcal", 2L, 9, "100g",
-                "conad", null));
+                "conad", "https://www.aiafood.com/sites/default/files/styles/scale_1200/public/a4052.png?itok=iELOAE-M"));
         productRepository.save(new Product(
-                "Toilet paper", "WC express", "Useful toilet paper",
+                "Toilet paper", "Better Way", "Useful toilet paper",
                 "0 kcal", 3L, 2, "package",
-                "conad", null));
+                "conad", "https://cdn.shopify.com/s/files/1/0257/5145/3781/t/8/assets/hero-home.png?v=9824410811785611091"));
         productRepository.save(new Product(
                 "AAA battery", "Duracell", "Durable batteries",
                 "o kcal", 3L, 4, "package",
-                "conad", null));
+                "conad", "https://www.duracell.it/upload/sites/4/2019/12/1013361_rechargeable_rpp-cells_AAA-900mAh_4_primary.png.png"));
 
 
     }
@@ -215,5 +214,5 @@ public class Config extends WebSecurityConfigurerAdapter {
         }
     }
 
-
 }
+

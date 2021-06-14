@@ -28,7 +28,7 @@ public class CartItemService {
         if(maybe_present.isEmpty())
             cartItemRepository.save(request);
         else{
-            cartItemRepository.save(new CartItem(request, request.getQuantity() + maybe_present.get().getQuantity()));
+            cartItemRepository.save(new CartItem(request, request.getQuantity()));
         }
     }
 

@@ -19,6 +19,7 @@ public class Delivery {
     private Long orderId;
     private LocalDateTime date;
     private String address;
+    private String payment;
     @Nullable
     private Long shopId;
 }

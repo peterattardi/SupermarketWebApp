@@ -23,5 +23,24 @@ public class DeliveryController {
 
     }
 
+    @GetMapping(path = "user/delivery/{orderId}")
+    public ResponseEntity scheduleADelivery(@PathVariable(name = "orderId") Long orderId){
+        try{
+            Delivery delivery = deliveryService.getDelivery(orderId);
+            return ResponseEntity.status(200).body(delivery);
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 
+
+    @PutMapping(path = "user/delivery/update/{orderId}")
+    public ResponseEntity updateDelivery(@PathVariable(name = "orderId") Long orderId, @RequestBody Delivery delivery){
+        try{
+            deliveryService.update(orderId, delivery);
+            return ResponseEntity.status(200).body("SUCCESS");
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 }

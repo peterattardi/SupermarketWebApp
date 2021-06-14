@@ -4,6 +4,7 @@ import com.ingsoft2021.SupermarketApp.CartItem.CartItem;
 import com.ingsoft2021.SupermarketApp.CartItem.CartItemService;
 import com.ingsoft2021.SupermarketApp.auth.login.Login;
 import com.ingsoft2021.SupermarketApp.auth.login.LoginService;
+import com.ingsoft2021.SupermarketApp.delivery.Delivery;
 import com.ingsoft2021.SupermarketApp.delivery.DeliveryService;
 import com.ingsoft2021.SupermarketApp.orderedProduct.OrderedProduct;
 import com.ingsoft2021.SupermarketApp.orderedProduct.OrderedProductService;
@@ -22,7 +23,7 @@ public class OrderService {
     private final OrderedProductService orderedProductService;
     private final DeliveryService deliveryService;
 
-    public void order(String token, String supermarketName) throws NoSuchFieldException {
+    public Order order(String token, String supermarketName) throws NoSuchFieldException {
         Login logged = loginService.findByToken(token);
         if(logged.getAppUserRole().name().equals("GUEST")) throw new IllegalStateException("GUEST_NEEDS_TO_REGISTER");
         List<CartItem> cart = cartItemService.findAllByEmailAndSupermarketName(logged.getEmail(), supermarketName);
@@ -34,7 +35,7 @@ public class OrderService {
             orderedProductService.addProduct(orderedProduct);
             cartItemService.deleteCartItem(cartItem);
         }
-
+        return newOrder;
     }
 
     public List<Order> getOrders(String token) {
@@ -43,11 +44,25 @@ public class OrderService {
     }
 
     public void delete(String token, Long orderId) {
-        loginService.deleteByToken(token);
+        loginService.findByToken(token);
         Optional<Order> order = orderRepository.findByOrderId(orderId);
         if(order.isEmpty()) throw new IllegalStateException("ORDER_NOT_FOUND");
         orderRepository.delete(order.get());
         orderedProductService.deleteByOrderId(orderId);
         deliveryService.deleteByOrderId(orderId);
+    }
+
+    public void confirm(Long orderId) {
+        Optional<Order> order = orderRepository.findByOrderId(orderId);
+        Delivery delivery = deliveryService.getDelivery(orderId);
+        if(order.isEmpty()) throw new IllegalStateException("ORDER_NOT_FOUND");
+        orderRepository.confirmById(orderId);
+    }
+
+    public void disconfirm(Long orderId) {
+        Optional<Order> order = orderRepository.findByOrderId(orderId);
+        Delivery delivery = deliveryService.getDelivery(orderId);
+        if(order.isEmpty()) throw new IllegalStateException("ORDER_NOT_FOUND");
+        orderRepository.disconfirm(orderId);
     }
 }

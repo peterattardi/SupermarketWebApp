@@ -33,7 +33,7 @@ public class LoginController {
         }
     }
 
-    @GetMapping(path = "guest/login/existing")
+    @PostMapping(path = "guest/login/existing")
     public ResponseEntity loginAsGuest(@RequestParam String token, @RequestBody LoginRequest loginRequest){
         try{
             AuthResponse authResponse = loginService.loginAsGuest(token, loginRequest);

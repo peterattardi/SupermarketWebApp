@@ -1,0 +1,57 @@
+<div class="row" routerLink="/cart">
+  <div class="col-xs-12">
+    <h3> Your Shopping Cart </h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <app-popup
+      [message]="error"
+      [type]="'error'"
+      (close)="onClearError()"
+      *ngIf="error">
+    </app-popup>
+  </div>
+</div>
+<hr>
+<div class="row" routerLink="/cart">
+  <div class="col-xs-12">
+    <h3>Total: {{cartTotal | number: '1.2'}}€</h3>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="list-group">
+      <h4 *ngIf="cartItems.length === 0">
+          Wow! Such empty! Add some products from the catalogue!
+      </h4>
+      <app-cart-preview-item
+        class="list-group-item"
+        *ngFor="let cartItem of cartItems"
+        [cartItem]="cartItem"
+        [product]="findProduct(cartItem)">
+      </app-cart-preview-item>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <button
+      type="button"
+      class="btn btn-success"
+      [disabled]="cartItems.length === 0"
+      *ngIf="user && user.role === 'USER'"
+      (click)="onToOrder()">Order</button>
+    <button
+      type="button"
+      class="btn btn-success"
+      *ngIf="user && user.role !== 'USER'"
+      routerLink="/auth/register">Register</button>
+    <button
+      type="button"
+      class="btn btn-success"
+      *ngIf="user && user.role !== 'USER'"
+      routerLink="/auth/login">Login</button>
+  </div>
+</div>

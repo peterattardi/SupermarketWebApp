@@ -98,6 +98,7 @@ export class CartPreviewComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe(
       order => {
+        this.cartService.cartItems.next([]);
         this.router.navigate(['/orders/' + order.orderId]);
       },
       errorMessage => {

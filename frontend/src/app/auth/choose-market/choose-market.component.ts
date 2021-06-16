@@ -261,8 +261,6 @@ export class ChooseMarketComponent implements OnInit {
     }
   }
 
-  // TODO: When you type something wrong you see the previous supermarkets, if you then type a
-  // correct address then you still see the wrong message => make a snackbar instead of the panel
   onGetPositionByAddress(address: string): void {
     if (!address) { return; }
     this.positionService.getPositionByAddress(address + ' palermo').subscribe(

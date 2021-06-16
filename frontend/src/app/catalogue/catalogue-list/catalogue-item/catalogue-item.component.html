@@ -1,10 +1,10 @@
-<mat-card class="product-card-header">
-  <mat-card-header [routerLink]="[index]" matBadge="{{cartItem ? cartItem.quantity : ''}}" matBadgeSize="large">
+<mat-card class="product-card-header" [routerLink]="[index]">
+  <mat-card-header matBadge="{{cartItem ? cartItem.quantity : ''}}" matBadgeSize="large">
     <mat-card-title>{{product.productName}}</mat-card-title>
     <mat-card-subtitle>{{product.productBrand}}</mat-card-subtitle>
   </mat-card-header>
 
-  <mat-card-content [routerLink]="[index]">
+  <mat-card-content>
     <span style="font-size: 32px">{{ product.unitCost}}€</span>
     <span style="font-size: 18px">{{product.unitType !== '' ? '/' + product.unitType : ''}}</span>
 
@@ -18,7 +18,7 @@
     </div>
   </mat-card-content>
 </mat-card>
-<mat-card class="product-card-image">
+<mat-card class="product-card-image" [routerLink]="[index]">
   <mat-card-content>
     <img mat-card-image [src]="(product.url ? product.url : 'http://placeimg.com/640/480')"
          alt="{{ product.productName }}" class="img-responsive" style="margin: auto">

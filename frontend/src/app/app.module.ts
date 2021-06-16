@@ -56,10 +56,3 @@ import {MatBadgeModule} from '@angular/material/badge';
 })
 export class AppModule { }
 
-
-// TODO: Services optimization
-// TODO: Code review
-// TODO: Fix columns in order-detail.html
-// TODO: You can visit notifications even though you didn't choose a supermarket (you can change it and then visit)
-// TODO: Admin login different from client login -> maybe change theme palette
-// TODO: Cart doesn't empty after make an order

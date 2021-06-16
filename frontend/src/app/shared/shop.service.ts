@@ -53,7 +53,7 @@ export class ShopService {
   chooseShop(shop: Shop): void {
     this.shop.next(shop);
   }
-  // TODO: handle shopService Errors
+
   private handleError(errorRes: HttpErrorResponse): Observable<never> {
     if (!errorRes.error && !errorRes.error.error) {
       return throwError('An unknown error occurred!');

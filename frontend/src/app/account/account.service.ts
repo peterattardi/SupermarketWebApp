@@ -23,7 +23,6 @@ export class AccountService {
     );
   }
 
-  // TODO: Handle errors from add/edit/delete
   private handleError(errorRes: HttpErrorResponse): Observable<never> {
     if (!errorRes.error && !errorRes.error.error) {
       return throwError('An unknown error occurred!');

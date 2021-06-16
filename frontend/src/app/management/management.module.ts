@@ -9,6 +9,10 @@ import {ManagementRoutingModule} from './management-routing.module';
 import {ProductModule} from './product/product.module';
 import {ChooseShopComponent} from './choose-shop/choose-shop.component';
 import {NotificationsComponent} from './notifications/notifications.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCardModule} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,11 @@ import {NotificationsComponent} from './notifications/notifications.component';
     ReactiveFormsModule,
     ManagementRoutingModule,
     SharedModule,
-    ProductModule
+    ProductModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule
   ]
 })
 export class ManagementModule {}

@@ -1,112 +1,137 @@
 <div class="row">
   <div class="col-xs-12 col-md-6 col-md-offset-3">
-    <h3>{{isGuest ? 'You are logged as a guest! ' : '' }} Register in the blink of an eye!</h3>
-    <app-popup
-      [message]="error"
-      [type]="'error'"
-      (close)="onClearError()"
-      *ngIf="error">
-    </app-popup>
+    <h3 class="text-center">{{isGuest ? 'You are logged as a guest! ' : '' }}</h3>
+      <h3 class="text-center">Register in a blink of an eye!</h3>
     <div *ngIf="isLoading" style="text-align: center;">
-      <app-loading-spinner></app-loading-spinner>
+      <mat-spinner></mat-spinner>
     </div>
     <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
-      <div class="form-group">
-        <label for="email">E-Mail</label>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>E-Mail</mat-label>
+        <mat-icon matPrefix>alternate_email</mat-icon>
         <input
+          matInput
           type="email"
-          id="email"
-          class="form-control"
+          placeholder="email@example.com"
           ngModel
           name="email"
           required
-          email
         />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
+        <mat-hint>*Required</mat-hint>
+        <mat-error>Email is invalid</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Password</mat-label>
+        <mat-icon matPrefix>lock</mat-icon>
         <input
-          type="password"
-          id="password"
-          class="form-control"
+          matInput
+          [type]="hide ? 'password' : 'text'"
           ngModel
           name="password"
           required
           minlength="6"
         />
+        <mat-hint>*Required</mat-hint>
+        <mat-error>Password min. 6 characters</mat-error>
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+          <mat-icon>
+            {{hide ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+        </button>
+      </mat-form-field>
+      <div class="row">
+        <div class="col-xs-6">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>First Name</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="John"
+              ngModel
+              name="firstName"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>First name is <strong>required</strong></mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-6">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Last Name</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Doe"
+              ngModel
+              name="lastName"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>Last name is <strong>required</strong></mat-error>
+          </mat-form-field>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input
-          type="text"
-          id="firstName"
-          class="form-control"
-          ngModel
-          required
-          name="firstName"
-        />
+      <div class="row">
+        <div class="col-xs-3">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>City</mat-label>
+            <input
+              matInput
+              type="text"
+              ngModel
+              name="city"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>City is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-6">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              type="text"
+              ngModel
+              name="address"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>Address is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-3">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>CAP</mat-label>
+            <input
+              matInput
+              type="text"
+              ngModel
+              name="cap"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>CAP is required</mat-error>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input
-          type="text"
-          id="lastName"
-          class="form-control"
-          ngModel
-          name="lastName"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="city">City</label>
-        <input
-          type="text"
-          id="city"
-          class="form-control"
-          ngModel
-          name="city"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="address">Address</label>
-        <input
-          type="text"
-          id="address"
-          class="form-control"
-          ngModel
-          name="address"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="cap">CAP</label>
-        <input
-          type="text"
-          id="cap"
-          class="form-control"
-          ngModel
-          name="cap"
-          required
-        />
-      </div>
-      <div>
+      <br>
+      <div class="text-center">
         <button
-          class="btn btn-primary"
+          mat-raised-button
+          color="primary"
           type="submit"
           [disabled]="!authForm.valid"
         >
-          Sign Up {{isGuest ? 'Guest' : ''}}
+          {{authForm.touched ? 'Sign up' : 'Fill the form!'}}
         </button>
       </div>
-      <div>
-        <h5>
+      <hr>
+      <div class="text-center">
+        <h4>
           Are you already registered?
           <a routerLink="/auth/login">Log in here</a>
-        </h5>
+        </h4>
       </div>
     </form>
   </div>

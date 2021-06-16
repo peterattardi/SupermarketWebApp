@@ -1,0 +1,10 @@
+<div class="text-center">
+  <h1 mat-dialog-title>{{data.header}}</h1>
+  <div mat-dialog-content>
+    <p>{{data.message}}</p>
+  </div>
+  <div mat-dialog-actions class="button-flex-container">
+    <button mat-raised-button color="warn" [mat-dialog-close]="false">Cancel</button>
+    <button mat-raised-button class="btn-success" [mat-dialog-close]="true" cdkFocusInitial>Confirm</button>
+  </div>
+</div>

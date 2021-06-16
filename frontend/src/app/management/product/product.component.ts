@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ShopService} from '../../shared/shop.service';
 import {AdminProductsService} from '../admin-products.service';
 import {AuthService} from '../../auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-product',
@@ -11,13 +12,15 @@ import {AuthService} from '../../auth/auth.service';
 })
 export class ProductComponent implements OnInit {
   shopId: string;
-  error: string = null;
+  isChangeShop = false;
 
   constructor(
     private adminProductsService: AdminProductsService,
     private route: ActivatedRoute,
     private shopService: ShopService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   onResetShop(): void {
@@ -36,28 +39,40 @@ export class ProductComponent implements OnInit {
         this.fetchQuantity();
       },
       errorMessage => {
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, 'Ok');
       }
     );
   }
 
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
+  }
 
   fetchQuantity(): void {
     if (this.shopId) {
       this.adminProductsService.fetchQuantity(this.shopId).subscribe(
         () => {},
         errorMessage => {
-          if (errorMessage === 'Token not found') {
+          if (errorMessage === 'Session expired') {
             this.authService.logout();
           }
-          this.error = errorMessage;
+          this.openSnackBar(errorMessage, 'Ok');
         });
     } else {
-      this.error = 'Error in fetching quantities in stock. ShopID is null.';
+      const message = 'Error in fetching quantities in stock. ShopID is null.';
+      this.openSnackBar(message, 'Ok');
     }
+  }
+
+  onChangeShop(value: boolean): void {
+    this.isChangeShop = value;
+  }
+
+  onNewProduct(): void {
+    this.router.navigate(['new'], {relativeTo: this.route});
   }
 
 }

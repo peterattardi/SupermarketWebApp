@@ -26,6 +26,7 @@ export class PositionService {
       map( res => {
         if (res.results.length === 0) {
           throwError(res.status);
+          return null;
         }
         // @ts-ignore
         const pos = res.results[0].geometry.location;

@@ -14,7 +14,7 @@ export class ManagementResolver implements Resolve<Product[]> {
     private adminProductsService: AdminProductsService) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
-    this.adminProductsService.setShopId(route.params.shopId);
+    this.adminProductsService.setShop(route.params.shopId);
     const products = this.adminProductsService.products.value;
     if (products.length === 0) {
       return this.adminProductsService.fetchProducts(true);

@@ -1,14 +1,39 @@
-<hr>
 <div class="row">
-  <div class="col-xs-9 list-group">
-    <app-catalogue-item
-      *ngFor="let productEl of products; let i = index"
-      [product]="productEl"
-      [cartItem]="findCart(productEl)"
-      [index]="i"></app-catalogue-item>
-  </div>
-  <div class="col-xs-3">
-    <app-cart-preview></app-cart-preview>
+  <div class="col-xs-12">
+    <div class="container-fluid" *ngIf="user && user.role !== 'ADMIN'">
+      <div class="row">
+        <div class="col-xs-8" *ngIf="user.role !== 'USER'">
+          <h3>Hi Guest, you can take a look as much as you want!</h3>
+        </div>
+        <div class="col-xs-8 text-center" *ngIf="accountInfo && user.role === 'USER'">
+          <h3>Hi {{accountInfo.firstName}}, have a good shopping!</h3>
+        </div>
+        <div class="col-xs-3 text-center">
+          <br>
+          <button mat-raised-button
+                  (mouseenter)="onChangeSupermarket(true)"
+                  *ngIf="supermarket && !isChangeSupermarket"
+                  style="width: 100%">
+            You are in {{supermarket.name | uppercase}}
+          </button>
+          <button mat-raised-button color="warn"
+                  (click)="onResetSupermarket()"
+                  (mouseleave)="onChangeSupermarket(false)"
+                  *ngIf="isChangeSupermarket"
+                  style="width: 100%">
+            Change
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+<hr>
+<mat-card class="product-bg-card product-card" *ngFor="let productEl of products; let i = index">
+  <app-catalogue-item
+    [product]="productEl"
+    [cartItem]="findCart(productEl)"
+    [index]="i"></app-catalogue-item>
+</mat-card>
+
 

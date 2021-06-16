@@ -9,6 +9,11 @@ import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import {AuthRoutingModule} from './auth-routing.module';
 import { ChooseMarketComponent } from './choose-market/choose-market.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -22,7 +27,12 @@ import { ChooseMarketComponent } from './choose-market/choose-market.component';
     CommonModule,
     FormsModule,
     AuthRoutingModule,
-    SharedModule
+    SharedModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    MatProgressSpinnerModule
   ]
 })
 export class AuthModule {}

@@ -8,6 +8,11 @@ import { AdminInfoComponent } from './admin-info/admin-info.component';
 import { ClientInfoComponent } from './client-info/client-info.component';
 import {LoggedGuard} from './logged.guard';
 import {SharedModule} from '../shared/shared.module';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -23,6 +28,11 @@ import {SharedModule} from '../shared/shared.module';
       canActivate: [LoggedGuard]
     }]),
     SharedModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule
   ]
 })
 export class AccountModule {}

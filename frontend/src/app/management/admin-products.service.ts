@@ -6,22 +6,23 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {AuthService} from '../auth/auth.service';
 import {ShopProduct} from './product/shop-product.model';
 import {environment} from '../../environments/environment';
-import {ActivatedRoute} from '@angular/router';
+import {Shop, ShopService} from '../shared/shop.service';
 
 @Injectable({providedIn: 'root'})
 export class AdminProductsService {
   products = new BehaviorSubject<Product[]>([]);
-  private shopId: string;
+  private shop: Shop = this.shopService.shop.value;
 
   API = environment.API;
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private shopService: ShopService
   ) { }
 
-  setShopId(shopId: string): void {
-    this.shopId = shopId;
+  setShop(shopId: string, latitude?: number, longitude?: number, supermarketName?: string): void {
+    this.shop = new Shop(shopId, latitude, longitude, supermarketName);
   }
 
   setQuantity(shopProducts: ShopProduct[]): void {
@@ -33,7 +34,6 @@ export class AdminProductsService {
           const product = products[i];
           if (product.productName === shopProduct.productName &&
             product.productBrand === shopProduct.productBrand) {
-            console.log('Updated quantity', product, shopProduct.quantity);
             product.quantity = shopProduct.quantity;
             return;
           }
@@ -46,6 +46,16 @@ export class AdminProductsService {
 
   getProduct(index: number): Product {
     return this.products.value[index];
+  }
+
+  getUnavailable(): Observable<ShopProduct[]> {
+    console.log(this.shop ? 'Ok' : 'Shop is null');
+    return this.http.get<ShopProduct[]>(
+      this.API + 'admin/unavailables/' + this.shop.shopId + '?token=' +
+      (this.authService.user ? this.authService.user.value.token : '')
+    ).pipe(
+      catchError(this.handleError)
+    );
   }
 
   addProduct(product: Product): void {
@@ -75,7 +85,7 @@ export class AdminProductsService {
       this.products.next(newProducts);
       },
       errorMessage => {
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
       }
@@ -83,7 +93,7 @@ export class AdminProductsService {
   }
 
   editProduct(index: number, newProduct: Product): void {
-    const product = this.products[index];
+    const product = this.products.value[index];
     this.http.put(
       this.API + 'admin/catalogue/update?token=' +
       (this.authService.user.value ? this.authService.user.value.token : ''),
@@ -107,12 +117,13 @@ export class AdminProductsService {
       })
     ).subscribe( response => {
         console.log('updating new product');
+        newProduct.quantity = product.quantity;
         const newProducts = this.products.value;
         newProducts[index] = newProduct;
         this.products.next(newProducts);
       },
       errorMessage => {
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
       }
@@ -120,7 +131,7 @@ export class AdminProductsService {
   }
 
   deleteProduct(index: number): void {
-    const deleteProd = this.products[index];
+    const deleteProd = this.products.value[index];
     this.http.post(
       this.API + 'admin/catalogue/delete?token=' +
       (this.authService.user.value ? this.authService.user.value.token : ''),
@@ -141,7 +152,7 @@ export class AdminProductsService {
         this.products.next(newProducts);
       },
       errorMessage => {
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
       }
@@ -158,8 +169,8 @@ export class AdminProductsService {
         catchError(this.handleError),
         tap(products => {
           this.products.next(products);
-          if (withQuantity) {
-            this.fetchQuantity(this.shopId).subscribe(
+          if (withQuantity && this.shop) {
+            this.fetchQuantity(this.shop.shopId).subscribe(
               () => { },
               errorMessage => {
                 this.authService.logout();
@@ -170,7 +181,7 @@ export class AdminProductsService {
       );
   }
 
-  fetchQuantity(shopId: string = this.shopId): Observable<ShopProduct[]> {
+  fetchQuantity(shopId: string = this.shop.shopId): Observable<ShopProduct[]> {
     return this.http
       .get<ShopProduct[]>(
         this.API + 'admin/inventory/' + shopId + '?token=' +
@@ -189,7 +200,7 @@ export class AdminProductsService {
       this.API + 'admin/inventory/update?token=' +
       (this.authService.user.value ? this.authService.user.value.token : ''),
       {
-        shopId: this.shopId,
+        shopId: this.shop.shopId,
         productName: product.productName,
         productBrand: product.productBrand,
         quantity
@@ -206,7 +217,7 @@ export class AdminProductsService {
         this.products.next(newProducts);
       },
       errorMessage => {
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
       }
@@ -224,7 +235,7 @@ export class AdminProductsService {
     } else {
       switch (errorMessage) {
         case 'TOKEN_NOT_FOUND':
-          errorMessage = 'Token not found';
+          errorMessage = 'Session expired';
           break;
         case 'EMAIL_EXISTS':
           errorMessage = 'This email exists already';

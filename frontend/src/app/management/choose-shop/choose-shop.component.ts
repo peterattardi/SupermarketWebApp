@@ -8,6 +8,7 @@ import {AdminProductsService} from '../admin-products.service';
 import { Loader } from '@googlemaps/js-api-loader';
 import {environment} from '../../../environments/environment';
 import {take} from 'rxjs/operators';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-choose-shop',
@@ -18,7 +19,6 @@ export class ChooseShopComponent implements OnInit {
   shopsObs: Observable<Shop[]>;
   chosenShop: Shop = null;
   isLoading = false;
-  error: string = null;
 
   // MAPS VARIABLES
   loader = new Loader({
@@ -46,11 +46,16 @@ export class ChooseShopComponent implements OnInit {
     private shopService: ShopService,
     private adminProductsService: AdminProductsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
     this.getShops();
+  }
+
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
   }
 
   getShops(): void {
@@ -65,10 +70,10 @@ export class ChooseShopComponent implements OnInit {
       },
       errorMessage => {
         this.isLoading = false;
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, 'Ok');
       });
   }
 
@@ -150,10 +155,6 @@ export class ChooseShopComponent implements OnInit {
     this.getShops();
   }
 
-  onClearError(): void {
-    this.error = null;
-  }
-
   onSelect(shop: Shop): void {
     // @ts-ignore
     let marker: google.maps.Marker;
@@ -176,6 +177,11 @@ export class ChooseShopComponent implements OnInit {
 
   onChooseShop(): void {
     this.shopService.chooseShop(this.chosenShop);
+    this.adminProductsService.setShop(
+      this.chosenShop.shopId,
+      this.chosenShop.latitude,
+      this.chosenShop.longitude,
+      this.chosenShop.supermarketName);
     this.router.navigate([this.chosenShop.shopId], {relativeTo: this.route});
   }
 }

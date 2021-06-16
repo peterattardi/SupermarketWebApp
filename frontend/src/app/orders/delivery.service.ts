@@ -71,7 +71,7 @@ export class DeliveryService {
     } else {
       switch (errorMessage) {
         case 'TOKEN_NOT_FOUND':
-          errorMessage = 'Token not found. Session expired';
+          errorMessage = 'Session expired';
           break;
         case 'DELIVERY_NOT_FOUND':
           errorMessage = 'Delivery not found.';

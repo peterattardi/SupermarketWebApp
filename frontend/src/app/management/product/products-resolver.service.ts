@@ -21,9 +21,9 @@ export class ProductsResolverService implements Resolve<Product[]> {
     if (products.length === 0) {
       return this.adminProductsService.fetchProducts()
         .subscribe(
-          () => {},
+          () => { },
           errorMessage => {
-            if (errorMessage === 'Token not found') {
+            if (errorMessage === 'Session expired') {
               this.authService.logout();
             }
           });

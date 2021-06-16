@@ -9,6 +9,7 @@ import {OrderService} from '../../orders/order.service';
 import {take} from 'rxjs/operators';
 import {User} from '../../auth/user.model';
 import {AuthService} from '../../auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cart-preview',
@@ -22,7 +23,6 @@ export class CartPreviewComponent implements OnInit, OnDestroy {
   productSub: Subscription;
   userSub: Subscription;
   cartTotal = 0;
-  error: string = null;
 
   constructor(
     private cartService: CartService,
@@ -30,10 +30,12 @@ export class CartPreviewComponent implements OnInit, OnDestroy {
     private router: Router,
     private userProductsService: UserProductsService,
     private orderService: OrderService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.userSub = this.authService.user.subscribe(
+    this.userSub = this.authService.user
+      .subscribe(
       user => {
         this.user = user;
       }
@@ -59,6 +61,10 @@ export class CartPreviewComponent implements OnInit, OnDestroy {
       );
   }
 
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
+  }
+
   findProduct(cartItem: CartItem): Product {
     let result: Product = null;
     this.products.forEach( product => {
@@ -72,21 +78,20 @@ export class CartPreviewComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  onClearError(): void {
-    this.error = null;
-  }
-
   onToOrder(): void {
     if (this.cartItems.length === 0) {
-      this.error = 'Cannot order 0 products. Please add some first!';
+      const message = 'Cannot order 0 products. Please add some first!';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     if (!this.user) {
-      this.error = 'You are not authenticated. Try reload the page';
+      const message = 'You are not authenticated. Try reload the page';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     if (this.user.role !== 'USER') {
-      this.error = 'Please register or login!';
+      const message = 'Please register or login!';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     this.orderService.addOrder()
@@ -96,10 +101,10 @@ export class CartPreviewComponent implements OnInit, OnDestroy {
         this.router.navigate(['/orders/' + order.orderId]);
       },
       errorMessage => {
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, 'Ok');
       }
     );
   }

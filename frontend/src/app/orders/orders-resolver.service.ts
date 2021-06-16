@@ -23,7 +23,7 @@ export class OrdersResolver implements Resolve<Product[]> {
         .subscribe(
         () => {},
         error => {
-          if (error === 'Token not found') {
+          if (error === 'Session expired') {
             this.authService.logout();
           }
           console.log(error);

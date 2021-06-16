@@ -3,6 +3,7 @@ import {Observable, Subscription} from 'rxjs';
 import {AuthResponseData, AuthService, Role} from '../auth.service';
 import {Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-admin-login',
@@ -12,14 +13,19 @@ import {NgForm} from '@angular/forms';
 export class AdminLoginComponent implements OnDestroy {
 
   isLoading = false;
-  error: string = null;
   userSub: Subscription;
+  hide = true;
 
 
   constructor(
     private authService: AuthService,
     private router: Router,
+    private snackBar: MatSnackBar
   ) {}
+
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
+  }
 
   onSubmit(form: NgForm): void {
     if (this.authService.user.value) {
@@ -49,17 +55,12 @@ export class AdminLoginComponent implements OnDestroy {
         this.router.navigate(['/management']);
       },
       errorMessage => {
-        console.log(errorMessage);
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, 'Ok');
         this.isLoading = false;
       }
     );
 
     form.reset();
-  }
-
-  onClearError(): void {
-    this.error = null;
   }
 
   ngOnDestroy(): void {

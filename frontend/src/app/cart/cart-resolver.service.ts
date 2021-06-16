@@ -20,7 +20,7 @@ export class CartResolver implements Resolve<CartItem[]> {
       return this.cartService.getCart().subscribe(
         () => {},
         errorMessage => {
-          if (errorMessage === 'Token not found') {
+          if (errorMessage === 'Session expired') {
             this.authService.logout();
           }
         }

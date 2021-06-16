@@ -8,6 +8,7 @@ import {Product} from '../../management/product/product.model';
 import {Subscription} from 'rxjs';
 import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {Delivery, DeliveryService} from '../delivery.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-order-detail',
@@ -26,15 +27,13 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
   isLoading = false;
   updateMode = false;
 
-  error: string = null;
-  warning: string = null;
-  info: string = null;
 
   constructor(private userProductsService: UserProductsService,
               private route: ActivatedRoute,
               private orderService: OrderService,
               private authService: AuthService,
-              private deliveryService: DeliveryService) { }
+              private deliveryService: DeliveryService,
+              private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.route.params
@@ -47,6 +46,10 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
           this.getDelivery();
         }
       );
+  }
+
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
   }
 
   private initForm(): void {
@@ -75,14 +78,15 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
           this.products = products;
         },
         errorMessage => {
-          this.error = errorMessage;
+          this.openSnackBar(errorMessage, 'Ok');
         }
       );
   }
 
   getOrderedProducts(): void {
     if (!this.orderId) {
-      this.error = 'Order Id not found. Please try again.';
+      const message = 'Order Id not found. Please try again.';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     this.orderService.getOrderedProducts(this.orderId)
@@ -93,10 +97,10 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
           this.calculateTotal();
         },
         errorMessage => {
-          if (errorMessage === 'Token not found') {
+          if (errorMessage === 'Session expired') {
             this.authService.logout();
           }
-          this.error = errorMessage;
+          this.openSnackBar(errorMessage, 'Ok');
         }
       );
   }
@@ -128,7 +132,8 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
 
   getDelivery(): void {
     if (!this.orderId) {
-      this.error = 'Order Id not found. Please try again.';
+      const message = 'Order Id not found. Please try again.';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     this.deliveryService.getDelivery(this.orderId)
@@ -144,29 +149,19 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
         },
         errorMessage => {
           if (errorMessage === 'Delivery not found.') {
-            this.warning = 'Please insert the delivery information and the payment method!';
+            const message = 'Please insert the delivery information and the payment method!';
+            this.openSnackBar(message, 'Dismiss');
           } else {
-            this.error = errorMessage;
+            this.openSnackBar(errorMessage, 'Ok');
           }
         }
       );
   }
 
-  onClearInfo(): void {
-    this.info = null;
-  }
-
-  onClearWarning(): void {
-    this.warning = null;
-  }
-
-  onClearError(): void {
-    this.error = null;
-  }
-
   onSubmit(): void {
     if (!this.deliveryForm.valid) {
-      this.error = 'Form is not valid. Try again';
+      const message = 'Form is not valid. Try again';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     this.isLoading = true;
@@ -185,25 +180,24 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             this.updateMode = false;
             this.delivery = newDelivery;
-            this.info = res;
+            this.openSnackBar(res, 'Dismiss');
           },
           errorMessage => {
             this.isLoading = false;
-            this.error = errorMessage;
+            this.openSnackBar(errorMessage, 'Ok');
           }
         );
     } else {
       this.deliveryService.scheduleDelivery(newDelivery)
-        .subscribe(res => {
-            this.warning = null; // warning saying to set delivery info
+        .subscribe(res => { // warning saying to set delivery info
             this.isLoading = false;
             this.updateMode = false;
             this.delivery = newDelivery;
-            this.info = res;
+            this.openSnackBar(res, 'Dismiss');
           },
           errorMessage => {
             this.isLoading = false;
-            this.error = errorMessage;
+            this.openSnackBar(errorMessage, 'Ok');
           }
         );
     }
@@ -235,10 +229,11 @@ export class OrdersDetailComponent implements OnInit, OnDestroy {
     this.orderService.confirmOrder(this.orderId)
       .pipe(take(1))
       .subscribe( () => {
-          this.info = 'Order #' + this.orderId + ' confirmed!';
+          const message = 'Order #' + this.orderId + ' confirmed!';
+          this.openSnackBar(message, 'Ok');
         },
         errorMessage => {
-          this.error = errorMessage;
+          this.openSnackBar(errorMessage, 'Ok');
         }
       );
   }

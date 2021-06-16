@@ -1,72 +1,81 @@
-<div class="container">
+<div class="container-fluid" style="height: 90vh">
   <div class="row">
-    <div class="col-xs-2">
-      <a
-        class="btn btn-primary"
-        routerLink="/catalogue"
-        type="button">
-        <
-      </a>
+    <button
+      mat-fab
+      color="primary"
+      routerLink="/catalogue"
+      style="margin: 1vh 1vw; position: fixed; top: 11vh; z-index: 1;">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="col-xs-6">
+      <mat-card style="height: 55vh; margin-top: 5vh;">
+        <mat-card-header
+          matBadge="{{cartItem ? cartItem.quantity : ''}}"
+          matBadgeSize="large"
+          matBadgeColor="primary">
+          <h1>
+            {{ product.productName }}
+            <small class="text-muted">{{ product.productBrand }}</small>
+          </h1>
+        </mat-card-header>
+        <mat-card-content style="margin-top: 5%">
+          <mat-form-field style="width: 40%; margin: 0; padding: 3vh 0" appearance="legacy">
+            <mat-label>Quantity</mat-label>
+            <input matInput type="number"  [(ngModel)]="quantity"/>
+          </mat-form-field>
+          <button
+            mat-raised-button
+            style="width: 50%; margin-left: 10%; padding: 3vh 0"
+            color="{{!product.quantity ? 'warn' : 'primary'}}"
+            (click)="onAddToCart()"
+            [disabled]="!product.quantity || !quantity ||
+             product.quantity < (quantity + (cartItem ? cartItem.quantity : 0)) ||
+              quantity < 1">
+            {{!product.quantity ? 'Out of stock' : 'Add To Cart'}}
+          </button>
+        </mat-card-content>
+        <mat-card-actions>
+          <p class="text-center">
+            <span style="font-size: 64px">{{ product.unitCost}}€</span>
+            <span style="font-size: 36px">{{product.unitType !== '' ? '/' + product.unitType : ''}}</span>
+          </p>
+        </mat-card-actions>
+      </mat-card>
     </div>
-    <div class="col-xs-10">
-      <img
-        [src]="(product.url ? product.url : 'http://placeimg.com/640/480')"
-        alt="{{ product.productName }}"
-        class="img-responsive"
-        style="max-height: 300px;">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <app-popup
-        [message]="error"
-        [type]="'error'"
-        (close)="onClearError()"
-        *ngIf="error">
-      </app-popup>
-      <app-popup
-        [message]="warning"
-        [type]="'warning'"
-        (close)="onClearWarning()"
-        *ngIf="warning">
-      </app-popup>
-      <app-popup
-        [message]="info"
-        [type]="'info'"
-        (close)="onClearInfo()"
-        *ngIf="info">
-      </app-popup>
-    </div>
-  </div>
-  <div class="row list-group-item">
-    <div class="col-xs-8">
-      <h1>{{ product.productName }}</h1>
-    </div>
-    <div class="col-xs-4">
-      <h4 *ngIf="cartItem && cartItem.quantity > 0">You have {{cartItem.quantity}} of this item!</h4>
-      <input type="number" [(ngModel)]="quantity" />
-      <button
-        class="btn {{!product.quantity ? 'btn-danger' : 'btn-success'}}"
-        (click)="onAddToCart()"
-        [disabled]="!product.quantity || product.quantity < (quantity + (cartItem ? cartItem.quantity : 0)) || quantity < 1">
-        {{!product.quantity ? 'Out of stock' : 'Add To Cart'}}
-      </button>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-5">
-      <h4 class="text-center">Brand: {{ product.productBrand }}</h4>
-    </div>
-    <div *ngIf="product.quantity">
-      <div class="col-xs-7 text-center" *ngIf="product.quantity > 5">
-        <span style="font-size: 20px"> Available </span>
+    <div class="col-xs-6">
+      <div class="row">
+        <img
+          [src]="(product.url ? product.url : 'http://placeimg.com/640/480')"
+          alt="{{ product.productName }}"
+          class="img-responsive"
+          style="height: 53vh; margin: 0 auto 0 auto">
       </div>
-      <div class="col-xs-7 text-center bg-warning" *ngIf="product.quantity > 0 && product.quantity <= 5">
-        <span style="font-size: 20px"> {{ product.quantity }} left!</span>
+      <div class="row" style="font-size: 32px">
+        <div *ngIf="product.quantity">
+          <div
+            class="col-xs-12 text-center"
+            *ngIf="product.quantity > 5"
+            style="height: 7vh">
+             Available
+          </div>
+          <div
+            class="col-xs-12 text-center bg-warning"
+            *ngIf="product.quantity > 0 && product.quantity <= 5"
+            style="height: 7vh; width: 50%; margin: 0 25%"
+            matBadge="{{product.quantity}}"
+            matBadgeSize="large"
+            matBadgeColor="warn"
+            matBadgePosition="before">
+             left!
+          </div>
+        </div>
+        <div
+          class="col-xs-12 text-center bg-danger"
+          *ngIf="!product.quantity || product.quantity < 1"
+          style="height: 7vh">
+          Out of stock!
+        </div>
       </div>
-    </div>
-    <div class="col-xs-7 text-center bg-danger" *ngIf="!product.quantity || product.quantity < 1">
-      <h4>Out of stock!</h4>
     </div>
   </div>
   <hr>
@@ -87,5 +96,4 @@
       {{ product.nutritionFacts}}
     </div>
   </div>
-  <br><br>
 </div>

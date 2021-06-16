@@ -1,203 +1,214 @@
-<div class="row">
-  <div class="col-xs-12">
-    <app-popup
-      [message]="error"
-      [type]="'error'"
-      (close)="onClearError()"
-      *ngIf="error">
-    </app-popup>
-    <app-popup
-      [message]="warning"
-      [type]="'warning'"
-      (close)="onClearWarning()"
-      *ngIf="warning">
-    </app-popup>
-    <app-popup
-      [message]="info"
-      [type]="'info'"
-      (close)="onClearInfo()"
-      *ngIf="info">
-    </app-popup>
-  </div>
-</div>
-<div class="row" *ngIf="order">
-  <div class="col-xs-8" routerLink="/orders">
-    <h1 class="text-center">
-      <span class="badge">{{order.supermarket | uppercase}}</span>
-      <span class="pull-left"><button><</button></span>
-      Order # {{orderId}}
-    </h1>
-    <hr>
-  </div>
-  <div class="col-xs-4 text-center">
-    <h3>
-      <span class="glyphicon glyphicon-minus-sign text-warning" *ngIf="!order.confirmed"></span>
-      <span [class.text-success]="order.confirmed"
-            [class.text-warning]="!order.confirmed">
+<div class="container-fluid" style="padding: 0">
+  <div class="row" *ngIf="order">
+    <!-- fix colxs and row to card and set width -->
+    <div class="col-xs-8" routerLink="/orders" style="padding: 0">
+      <mat-card class="text-center" style="height: 10vh; margin: 2vh 1vw">
+        <span class="badge pull-right">{{order.supermarket | uppercase}}</span>
+        <span class="pull-left">
+        <button
+          mat-fab
+          type="button"
+          style="margin: 1vh 1vw; position: fixed; top: 11vh; z-index: 1;">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </span>
+        <span class="mat-display-1">Order # {{orderId}}</span>
+      </mat-card>
+    </div>
+    <div class="col-xs-4 text-center container-fluid" style="padding: 0">
+      <mat-card class="mat-title" style="height: 10vh; margin: 2vh 1vw">
+        <mat-icon class="text-warning" *ngIf="!order.confirmed">pending</mat-icon>
+        <span [class.text-success]="order.confirmed"
+              [class.text-warning]="!order.confirmed"
+              class="mat-display-1">
         {{order.confirmed ? 'Confirmed' : 'Pending' }}
       </span>
-      <span class="glyphicon glyphicon-ok-sign text-success" *ngIf="order.confirmed"></span>
-    </h3>
-  </div>
-</div>
-
-<div *ngIf="isLoading" style="text-align: center;">
-  <app-loading-spinner></app-loading-spinner>
-</div>
-
-<div class="row">
-  <div class="col-xs-9">
-    <div class="row">
-      <div class="col-xs-5 text-center">
-        <h3>Delivery Info</h3>
-        <hr>
-      </div>
-      <div class="col-xs-5 text-center">
-        <h3>Payment</h3>
-        <hr>
-      </div>
-      <div class="col-xs-2"></div>
+        <mat-icon class="text-success" *ngIf="order.confirmed">check_circle</mat-icon>
+      </mat-card>
     </div>
-
-
-    <div class="row" *ngIf="!updateMode">
-      <div class="col-xs-5 text-center" *ngIf="delivery">
-        <h4>{{delivery.address}} <br> {{delivery.date | date:'HH:mm | EEEE, d MMMM, y'}}</h4>
-      </div>
-      <div class="col-xs-5 text-center" *ngIf="!delivery">
-        <h4 class="text-danger">Delivery Address & Date not set!</h4>
-      </div>
-      <div class="col-xs-5 text-center" *ngIf="delivery">
-        <h4>{{delivery.payment | uppercase}}</h4>
-      </div>
-      <div class="col-xs-5 text-center" *ngIf="!delivery">
-        <h4 class="text-danger">Payment method not set!</h4>
-      </div>
-      <div class="col-xs-2">
-        <div class="row">
-          <button
-            class="btn btn-primary"
-            type="button"
-            (click)="onUpdate()"
-            *ngIf="!order.confirmed">
-            Change
-          </button>
-        </div>
-        <div class="row">
-          <button
-            class="btn btn-success"
-            type="button"
-            (click)="onConfirmOrder()"
-            *ngIf="!order.confirmed && delivery">
-            Confirm
-          </button>
-        </div>
-      </div>
-    </div>
-    <form [formGroup]="deliveryForm" (ngSubmit)="onSubmit()" *ngIf="updateMode && deliveryForm">
-      <div class="row">
-        <div class="col-xs-5">
-          <div class="form-group">
-            <label for="address">Address</label>
-            <input
-              type="text"
-              id="address"
-              class="form-control"
-              formControlName="address"
-            />
-          </div>
-          <div class="form-group">
-            <label for="date">Date</label>
-            <input
-              type="datetime-local"
-              id="date"
-              class="form-control"
-              formControlName="date"
-            />
-          </div>
-        </div>
-        <div class="col-xs-5">
-          <div class="form-group">
-            <label for="payment">Payment</label>
-            <select
-              class="form-control"
-              id="payment"
-              formControlName="payment">
-              <option value="cash">Cash</option>
-              <option value="mastercard">MasterCard</option>
-              <option value="debitcard">Debit Card</option>
-              <option value="paypal">PayPal</option>
-              <option value="bitcoin">Bitcoin</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-xs-2">
-          <div class="row">
-            <button
-              class="btn btn-danger"
-              type="button"
-              (click)="onCancelUpdate()">
-              Cancel
-            </button>
-          </div>
-          <div class="row">
-            <button
-              class="btn btn-success"
-              type="submit"
-              [disabled]="!deliveryForm.valid || isTheSame()">
-              Done
-            </button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <div class="col-xs-3">
-    <table class="table table-responsive">
-      <tr style="font-size: 24px;">
-        <td>Subtotal</td>
-        <td>{{orderSubTotal | number: '1.2'}}€</td>
-      </tr>
-      <tr style="font-size: 24px;">
-        <td>Delivery</td>
-        <td>{{3 | number: '1.2'}}€</td>
-      </tr>
-      <tr style="font-size: 36px; border-top: 1px solid rgb(50,50,50)">
-        <td>Total</td>
-        <td>{{orderTotal | number: '1.2'}}€</td>
-      </tr>
-    </table>
   </div>
 </div>
 
-<hr>
-<div class="list-group">
+<div class="container-fluid" style="padding: 0">
   <div class="row">
-    <div class="col-xs-4 text-center">
-      <div class="row">
-        <div class="col-xs-12">
-          <b>ITEM</b>
+    <div class="col-xs-8" style="padding: 0">
+      <mat-card style="padding: 0 1vw; height: 32vh" class="cart-card-bg" *ngIf="!updateMode">
+        <mat-card style="height: 13vh; margin: 1vh 0.5vw">
+          <div class="col-xs-3 text-center" style="margin: 1vh auto; border-right: 1px solid grey">
+            <span class="mat-title">Delivery Info</span>
+          </div>
+          <div class="col-xs-9 text-center" style="margin: 1vh 0" *ngIf="delivery">
+          <span style="height: 12.5vh" class="mat-title">
+            {{delivery.address}},<br>
+            {{delivery.date | date:'HH:mm - EEEE, d MMMM, y'}}
+          </span>
+          </div>
+          <div class="col-xs-9 text-center" style="margin: 1vh 0" *ngIf="!delivery">
+            <span class="text-danger mat-title" style="height: 12.5vh" >Delivery Address & Date not set!</span>
+          </div>
+        </mat-card>
+        <div class="col-xs-8" style="margin: auto; padding: 0">
+          <mat-card style="height: 13vh; margin: 1vh 0.5vw">
+            <div class="col-xs-4 text-center" style="margin: 1vh auto; border-right: 1px solid grey">
+              <span class="mat-title">Payment</span>
+            </div>
+            <div class="col-xs-8 text-center" style="margin: 1vh auto"  *ngIf="delivery">
+              <span class="mat-title" style="height: 12.5vh;">{{delivery.payment | uppercase}}</span>
+            </div>
+            <div class="col-xs-8 text-center" style="margin: 1vh auto"  *ngIf="!delivery">
+              <span class="text-danger mat-title">Payment method not set!</span>
+            </div>
+          </mat-card>
         </div>
-      </div>
+        <div class="col-xs-4" style="margin: auto; padding: 0" >
+          <div class="button-flex-container" style="height: 15vh; padding: 1vh">
+            <button
+              mat-raised-button
+              color="accent"
+              type="button"
+              (click)="onUpdate()"
+              style="width: 45%; margin: 1vh 1%; padding: 2vh 0"
+              *ngIf="!order.confirmed">
+              Change
+            </button>
+            <button
+              mat-raised-button
+              class="btn-success"
+              type="button"
+              style="width: 45%; margin: 1vh 1%; padding: 2vh 0"
+              (click)="onConfirmOrder()"
+              *ngIf="!order.confirmed && delivery">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </mat-card>
+      <mat-card style="padding: 0.5vh 0.5vw !important; height: 32vh" class="cart-card-bg" *ngIf="updateMode">
+        <form [formGroup]="deliveryForm" (ngSubmit)="onSubmit()" *ngIf="deliveryForm">
+          <mat-card style="height: 15vh; margin: 0.5vh auto; padding: 0">
+            <div class="col-xs-2 text-center mat-title" style="margin: 2vh auto; border-right: 1px solid grey; height: 11vh">
+              Delivery Info
+            </div>
+            <div class="col-xs-10 text-center" style="margin: 0.5vh auto">
+              <div class="button-flex-container">
+                <mat-form-field appearance="outline" style="width: 50%; margin-top: 1vh">
+                  <mat-label>Address</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="address"
+                  />
+                  <mat-error>Please choose an address</mat-error>
+                  <mat-hint>Required</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 45%; margin-top: 1vh">
+                  <mat-label>Date</mat-label>
+                  <input
+                    matInput
+                    type="datetime-local"
+                    formControlName="date"
+                  />
+                  <mat-error>Please choose a date</mat-error>
+                  <mat-hint>Required</mat-hint>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card>
+          <div class="col-xs-8" style="margin: auto; padding: 0">
+            <mat-card style="height: 15vh; margin: auto; padding: 0">
+              <div class="col-xs-3 text-center mat-title" style="padding: 3vh 0; margin: 2vh auto; border-right: 1px solid grey; height: 11vh">
+                Payment
+              </div>
+              <div class="col-xs-8 text-center mat-subheading-1" style="margin: auto">
+                <mat-form-field appearance="outline" style="width: 80%; margin-top: 1vh">
+                  <mat-label>Payment</mat-label>
+                  <mat-select
+                    formControlName="payment">
+                    <mat-option value="cash">Cash</mat-option>
+                    <mat-option value="mastercard">MasterCard</mat-option>
+                    <mat-option value="debitcard">Debit Card</mat-option>
+                    <mat-option value="paypal">PayPal</mat-option>
+                    <mat-option value="bitcoin">Bitcoin</mat-option>
+                  </mat-select>
+                  <mat-error>Please choose a payment method</mat-error>
+                  <mat-hint>Required</mat-hint>
+                </mat-form-field>
+              </div>
+            </mat-card>
+          </div>
+          <div class="col-xs-4 container-fluid" style="padding: 0" >
+            <div class="button-flex-container" style="height: 15vh; padding: 1vh">
+              <button
+                mat-raised-button
+                color="warn"
+                type="button"
+                (click)="onCancelUpdate()"
+                style="width: 45%; margin: 1vh 1%; padding: 2vh 0">
+                Cancel
+              </button>
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!deliveryForm.valid || isTheSame()"
+                style="width: 45%; margin: 1vh 1%; padding: 2vh 0">
+                Done
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card>
     </div>
-    <div class="col-xs-8">
-      <div class="col-xs-4 text-center">
-        <small><b>AMOUNT</b></small>
-      </div>
-      <div class="col-xs-4 text-center">
-        <small><b>UNIT COST</b></small>
-      </div>
-      <div class="col-xs-4 text-center">
-        <small><b>SUBTOTAL</b></small>
-      </div>
+
+    <div class="col-xs-4" style="padding: 0">
+      <mat-card style="height: 32vh; margin: auto">
+        <table class="table table-responsive mat-subheading-1">
+          <tr>
+            <td>Subtotal</td>
+            <td class="text-right mat-title">{{orderSubTotal | number: '1.2'}}€</td>
+          </tr>
+          <tr>
+            <td>Delivery</td>
+            <td class="text-right mat-title">{{3 | number: '1.2'}}€</td>
+          </tr>
+          <tr style="border-top: 1px solid rgb(50,50,50)">
+            <td>Total</td>
+            <td class="text-right mat-display-3">{{orderTotal | number: '1.2'}}€</td>
+          </tr>
+        </table>
+      </mat-card>
     </div>
-  </div>
-  <div class="list-group-item" *ngFor="let orderEl of orderedProducts">
-    <app-order-detail-product
-      [order]="orderEl"
-      [product]="findProduct(orderEl)"></app-order-detail-product>
   </div>
 </div>
 
-<br><br>
+<div class="container-fluid" style="padding: 0">
+  <mat-card class="cart-card-bg" style="margin: 2vh auto">
+    <div class="row">
+      <div class="col-xs-4 text-center">
+        <div class="row">
+          <div class="col-xs-12">
+            <b>ITEM</b>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-8">
+        <div class="col-xs-3 text-center">
+          <small><b>AMOUNT</b></small>
+        </div>
+        <div class="col-xs-5 text-center">
+          <small><b>UNIT COST / TYPE</b></small>
+        </div>
+        <div class="col-xs-4 text-center">
+          <small><b>SUBTOTAL</b></small>
+        </div>
+      </div>
+    </div>
+    <mat-card *ngFor="let orderEl of orderedProducts" style="margin: 1vh auto">
+      <app-order-detail-product
+        [order]="orderEl"
+        [product]="findProduct(orderEl)"></app-order-detail-product>
+    </mat-card>
+  </mat-card>
+</div>
+
+

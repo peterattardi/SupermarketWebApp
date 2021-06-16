@@ -1,24 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { DropdownDirective } from './dropdown.directive';
 import {AlertComponent} from './alert/alert.component';
 import { PopupComponent } from './popup/popup.component';
+import {DialogComponent} from './dialog/dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
-    LoadingSpinnerComponent,
     DropdownDirective,
     AlertComponent,
     PopupComponent,
+    DialogComponent
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule],
   exports: [
-    LoadingSpinnerComponent,
     DropdownDirective,
     AlertComponent,
     PopupComponent,
+    DialogComponent,
     CommonModule
   ],
   entryComponents: [],

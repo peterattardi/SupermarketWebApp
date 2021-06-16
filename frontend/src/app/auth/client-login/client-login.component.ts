@@ -4,6 +4,8 @@ import {AuthResponseData, AuthService, Role} from '../auth.service';
 import {Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
 import {MarketService, Supermarket} from '../../shared/market.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-client-login',
@@ -11,6 +13,8 @@ import {MarketService, Supermarket} from '../../shared/market.service';
 })
 export class ClientLoginComponent implements OnInit, OnDestroy {
   isLoading = false;
+  hide = true;
+  isChange = false;
   error: string = this.authService.error.value;
   supermarket: Supermarket = this.marketService.supermarket.value;
   userSub: Subscription;
@@ -20,6 +24,7 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private marketService: MarketService,
     private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +39,18 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
         }
       }
     });
+    if (this.error) {
+      this.openSnackBar(this.error, 'Ok');
+    }
+  }
+
+  openSnackBar(message: string, action: string): void {
+    const snackBarRef = this.snackBar.open(message, action);
+    snackBarRef.afterDismissed()
+      .pipe(take(1))
+      .subscribe(
+        res => { this.error = null; }
+      );
   }
 
   onResetSupermarket(): void {
@@ -73,10 +90,10 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
       },
       errorMessage => {
         this.isLoading = false;
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, 'Ok');
       }
     );
 
@@ -96,15 +113,14 @@ export class ClientLoginComponent implements OnInit, OnDestroy {
         this.router.navigate(['/catalogue']);
       },
       errorMessage => {
-        console.log(errorMessage);
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, 'Ok');
         this.isLoading = false;
       }
     );
   }
 
-  onClearError(): void {
-    this.error = null;
+  onChange(value: boolean): void {
+    this.isChange = value;
   }
 
   ngOnDestroy(): void {

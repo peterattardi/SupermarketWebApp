@@ -4,6 +4,7 @@ import { Product } from '../../../management/product/product.model';
 import {CartItem, CartService} from '../../../cart/cart.service';
 import {AuthService} from '../../../auth/auth.service';
 import {Subscription} from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-catalogue-item',
@@ -13,28 +14,32 @@ export class CatalogueItemComponent implements OnInit, OnDestroy {
   @Input() product: Product;
   @Input() index: number;
   @Input() cartItem: CartItem;
-  quantity = 0;
-  error: string = null;
-  warning: string = null;
-  info: string = null;
+  quantity = null;
 
   constructor(
     private cartService: CartService,
-    private authService: AuthService) {}
+    private authService: AuthService,
+    private snackBar: MatSnackBar) {}
 
 
   ngOnInit(): void {
   }
 
 
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
+  }
+
   onAddToCart(): void {
     if (this.quantity < 1) {
-      this.warning = 'Cannot add negative or 0 items';
+      const message = 'Cannot add negative or 0 items';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     if (this.product.quantity <
       (this.cartItem ? this.cartItem.quantity : 0) + this.quantity) {
-      this.error = 'Sorry, this is product in unavailable right now';
+      const message = 'Sorry, this is product in unavailable right now';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     let currentQuantity = 0;
@@ -52,29 +57,22 @@ export class CatalogueItemComponent implements OnInit, OnDestroy {
     );
     this.cartService.updateCart(this.cartItem).subscribe(
       () => {
-        this.info = 'Added to cart: ' +
+        const message = 'Added to cart: ' +
           this.product.productName + ' (+' +
           this.quantity + ')';
+        this.openSnackBar(message, 'Dismiss');
       },
       errorMessage => {
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
-        this.error = errorMessage;
+
+        this.openSnackBar(errorMessage, 'Ok');
+      },
+      () => {
+        this.quantity = null;
       }
     );
-  }
-
-  onClearInfo(): void {
-    this.info = null;
-  }
-
-  onClearWarning(): void {
-    this.warning = null;
-  }
-
-  onClearError(): void {
-    this.error = null;
   }
 
   ngOnDestroy(): void {

@@ -10,6 +10,7 @@ import {PositionService} from '../../shared/position.service';
 import {GeolocationService} from '@ng-web-apis/geolocation';
 import {take} from 'rxjs/operators';
 import {Shop, ShopService} from '../../shared/shop.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-choose-market',
@@ -24,8 +25,6 @@ export class ChooseMarketComponent implements OnInit {
 
   isLoading = false;
   isGeolocation = true;
-  error: string = null;
-  warning: string = null;
 
   // MAPS VARIABLES
   loader = new Loader({
@@ -55,7 +54,8 @@ export class ChooseMarketComponent implements OnInit {
     private router: Router,
     private readonly geolocation$: GeolocationService,
     private shopService: ShopService,
-    private positionService: PositionService) { }
+    private positionService: PositionService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     if (this.authService.isAdmin()) {
@@ -65,16 +65,10 @@ export class ChooseMarketComponent implements OnInit {
       this.router.navigate(['/management']);
     }
     this.checkPosition();
-    const input = document.getElementById('address');
-    input.addEventListener('keyup', (event) => {
-      // Number 13 is the "Enter" key on the keyboard
-      if (event.keyCode === 13) {
-        // Cancel the default action, if needed
-        event.preventDefault();
-        // Trigger the button element with a click
-        document.getElementById('search-button').click();
-      }
-    });
+  }
+
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
   }
 
   checkPosition(): void {
@@ -102,7 +96,7 @@ export class ChooseMarketComponent implements OnInit {
       errorMessage => {
         this.isLoading = false;
         this.initGoogleMap(false);
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, 'Dismiss');
       });
   }
 
@@ -113,7 +107,7 @@ export class ChooseMarketComponent implements OnInit {
         // @ts-ignore
         this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
           center: { lat: this.position.latitude, lng: this.position.longitude },
-          zoom: 11,
+          zoom: 13,
           restriction: {
             latLngBounds: this.PALERMO_BOUNDS,
             strictBounds: false,
@@ -251,48 +245,47 @@ export class ChooseMarketComponent implements OnInit {
           this.position = new Position(lat, lng);
           this.getMarkets();
         },
-        error => {
+        errorMessage => {
           this.position = new Position(38.13323771447384, 13.34796483716204);
           this.getMarkets();
           this.isGeolocation = false;
-          this.error = 'Error in Geolocation: ' + error;
+          this.openSnackBar(errorMessage.message, 'Dismiss');
         }
       );
     } else {
       this.isGeolocation = false;
-      this.warning = 'Geolocation is not activated';
+      const message = 'Geolocation is not activated';
+      this.openSnackBar(message, 'Dismiss');
       this.position = new Position(38.13323771447384, 13.34796483716204);
       this.getMarkets();
     }
   }
 
+  // TODO: When you type something wrong you see the previous supermarkets, if you then type a
+  // correct address then you still see the wrong message => make a snackbar instead of the panel
   onGetPositionByAddress(address: string): void {
     if (!address) { return; }
-    this.positionService.getPositionByAddress(address).subscribe(
+    this.positionService.getPositionByAddress(address + ' palermo').subscribe(
       (position: Position) => {
-        this.position = position;
-        this.updateMarker({lat: position.latitude, lng: position.longitude});
-        this.getMarkets();
+        if (position) {
+          this.position = position;
+          this.updateMarker({lat: position.latitude, lng: position.longitude});
+          this.getMarkets();
+        } else {
+          this.openSnackBar('Did not find any place. Please be more precise.', 'Ok');
+        }
       },
       errorMessage => {
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, 'Dismiss');
       }
     );
-  }
-
-  onClearError(): void {
-    this.error = null;
-  }
-
-  onClearWarning(): void {
-    this.warning = null;
   }
 
   onSelect(shop: Shop): void {
     this.chosenMarket = new Supermarket(shop.supermarketName);
     this.clearMarkers();
     this.setShop(shop, true);
-    this.map.setZoom(15);
+    this.map.setZoom(14);
   }
 
   onChooseSupermarket(): void {

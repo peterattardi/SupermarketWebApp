@@ -1,13 +1,30 @@
-<div class="row">
-  <div class="col-xs-12">
-    ShopID: {{shopId}} |
-    <a
-      (click)="onResetShop()"
-      style="cursor: pointer">Change</a>
-  </div>
-  <hr>
+<div class="row" style="margin-top: 2vh">
   <div class="col-md-5">
-    <app-product-list [error]="error"></app-product-list>
+    <div class="button-flex-container">
+      <button mat-raised-button
+              color="accent"
+              (mouseenter)="onChangeShop(true)"
+              *ngIf="shopId && !isChangeShop"
+              style="width: 50%">
+        You are in Shop #{{shopId}}
+      </button>
+      <button mat-raised-button color="warn"
+              (click)="onResetShop()"
+              (mouseleave)="onChangeShop(false)"
+              *ngIf="isChangeShop"
+              style="width: 50%">
+        Change
+      </button>
+      <button
+          mat-raised-button
+          class="btn-success"
+          type="button"
+          (click)="onNewProduct()"
+          style="width: 45%">
+        Add Product
+      </button>
+    </div>
+    <app-product-list></app-product-list>
   </div>
   <div class="col-md-7">
     <router-outlet></router-outlet>

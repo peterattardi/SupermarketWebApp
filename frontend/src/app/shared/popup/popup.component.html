@@ -1,12 +1,12 @@
-<div class="alert alert-danger" *ngIf="isError">
+<div class="alert alert-danger" style="width: 100%" *ngIf="isError">
   <button class="btn btn-default pull-right popup" (click)="onClose()">X</button>
   <p class="text-danger text-center">{{ message }}</p>
 </div>
-<div class="alert alert-warning" *ngIf="isWarning">
+<div class="alert alert-warning" style="width: 100%" *ngIf="isWarning">
   <button class="btn btn-default pull-right popup" (click)="onClose()">X</button>
   <p class="text-warning text-center">{{ message }}</p>
 </div>
-<div class="alert alert-info" *ngIf="isInfo">
+<div class="alert alert-info" style="width: 100%" *ngIf="isInfo">
   <button class="btn btn-default pull-right popup" (click)="onClose()">X</button>
   <p class="text-info text-center">{{ message }}</p>
 </div>

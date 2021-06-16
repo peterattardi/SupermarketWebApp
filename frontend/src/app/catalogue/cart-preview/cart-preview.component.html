@@ -1,57 +1,43 @@
-<div class="row" routerLink="/cart">
-  <div class="col-xs-12">
-    <h3> Your Shopping Cart </h3>
-  </div>
+<!-- TODO: Make a mother card and then small cards for each section -->
+<div class="container-fluid">
+
 </div>
-<div class="row">
-  <div class="col-xs-12">
-    <app-popup
-      [message]="error"
-      [type]="'error'"
-      (close)="onClearError()"
-      *ngIf="error">
-    </app-popup>
-  </div>
-</div>
-<hr>
-<div class="row" routerLink="/cart">
-  <div class="col-xs-12">
-    <h3>Total: {{cartTotal | number: '1.2'}}€</h3>
-  </div>
-</div>
-<hr>
-<div class="row">
-  <div class="col-xs-12">
-    <ul class="list-group">
-      <h4 *ngIf="cartItems.length === 0">
-          Wow! Such empty! Add some products from the catalogue!
+<mat-card style="padding: 0; box-shadow: none;">
+  <mat-card-header routerLink="/cart">
+    <h3 class="text-center">Total: <strong style="font-size: 36px">{{cartTotal | number: '1.2'}}€</strong></h3>
+  </mat-card-header>
+  <mat-card-content routerLink="/cart">
+    <mat-card class="product-bg-card" style="padding: 1vh">
+      <h4 class="text-center" *ngIf="cartItems.length === 0">
+        Such empty!<br> Add some products from the catalogue!
       </h4>
       <app-cart-preview-item
-        class="list-group-item"
         *ngFor="let cartItem of cartItems"
         [cartItem]="cartItem"
         [product]="findProduct(cartItem)">
       </app-cart-preview-item>
-    </ul>
-  </div>
-</div>
-<div class="row">
-  <div class="col-xs-12">
+    </mat-card>
     <button
       type="button"
-      class="btn btn-success"
+      mat-raised-button
+      color="primary"
+      style="width: 17vw; margin: 1vw; padding: 1vh 0"
       [disabled]="cartItems.length === 0"
       *ngIf="user && user.role === 'USER'"
       (click)="onToOrder()">Order</button>
     <button
       type="button"
-      class="btn btn-success"
+      mat-raised-button
+      color="accent"
+      style="width: 8vw; margin: 1vw; padding: 1vh 0"
       *ngIf="user && user.role !== 'USER'"
       routerLink="/auth/register">Register</button>
     <button
       type="button"
-      class="btn btn-success"
+      mat-raised-button
+      color="primary"
+      style="width: 7vw; margin: 1vw; padding: 1vh 0"
       *ngIf="user && user.role !== 'USER'"
       routerLink="/auth/login">Login</button>
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>

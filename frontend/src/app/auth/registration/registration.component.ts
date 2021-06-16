@@ -4,6 +4,7 @@ import {AuthResponseData, AuthService, Role} from '../auth.service';
 import {Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
 import {SignupForm} from '../signupform.model';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-registration',
@@ -11,15 +12,15 @@ import {SignupForm} from '../signupform.model';
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
-
+  hide = true;
   isLoading = false;
-  error: string = null;
   userSub: Subscription;
   isGuest = false;
 
   constructor(
     private authService: AuthService,
     private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +35,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
   }
 
   onSubmit(form: NgForm): void {
@@ -62,7 +67,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         },
         errorMessage => {
           this.isLoading = false;
-          this.error = errorMessage;
+          this.openSnackBar(errorMessage, 'Ok');
         },
         () => unsubscribe()
       );
@@ -79,10 +84,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         },
         errorMessage => {
           this.isLoading = false;
-          if (errorMessage === 'Token not found') {
+          if (errorMessage === 'Session expired') {
             this.authService.logout();
           }
-          this.error = errorMessage;
+          this.openSnackBar(errorMessage, 'Ok');
         }
       );
     };
@@ -112,10 +117,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
     register();
     form.reset();
-  }
-
-  onClearError(): void {
-    this.error = null;
   }
 
   ngOnDestroy(): void {

@@ -181,8 +181,9 @@ export class AuthService {
       throwError('User not found');
     }
     const token = this.user.value.token;
-    this.http.get<{text: string}>(
-      this.API + 'user/logout?token=' + token
+    this.http.get(
+      this.API + 'user/logout?token=' + token,
+      {responseType: 'text'}
     ).pipe(
       take(1),
       catchError(this.handleError)
@@ -255,7 +256,7 @@ export class AuthService {
           errorMessage = 'This password is not correct.';
           break;
         case 'TOKEN_NOT_FOUND':
-          errorMessage = 'Token not found';
+          errorMessage = 'Session expired';
           break;
         default:
           errorMessage = 'Error while processing authentication';

@@ -5,6 +5,9 @@ import {ShopService} from '../../shared/shop.service';
 import {AuthService} from '../../auth/auth.service';
 import {Product} from '../product/product.model';
 import {Subscription} from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {take} from 'rxjs/operators';
+import {NotificationsService} from './notifications.service';
 
 @Component({
   selector: 'app-notifications',
@@ -13,13 +16,15 @@ import {Subscription} from 'rxjs';
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
   products: Product[] = [];
+  notificationProducts: Product[] = [];
   productsSub: Subscription;
   shopId: string;
-  error: string = null;
+  isLoading = true;
 
   constructor(
     private adminProductsService: AdminProductsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private notificationsService: NotificationsService
   ) { }
 
   ngOnInit(): void {
@@ -32,6 +37,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.productsSub = this.adminProductsService.products.subscribe(
       products => {
         this.products = products;
+        products.forEach( product => {
+          if (product.quantity) {
+            this.isLoading = false;
+          }
+        });
       }
     );
   }

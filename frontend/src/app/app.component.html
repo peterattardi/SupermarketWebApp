@@ -1,8 +1,95 @@
-<app-header></app-header>
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div>
+<mat-sidenav-container class="container-fluid"  style="padding: 0" autosize>
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+               [mode]="(isHandset$ | async) ? 'push' : 'side'"
+               [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <mat-list-item routerLink="/auth/supermarket" (click)="onResetSupermarket()" *ngIf="!isAdmin && isAuthenticated">
+        <span class="material-icons">store</span>
+        <span *ngIf="showDrawer">Supermarkets</span>
+      </mat-list-item>
+      <mat-list-item routerLinkActive="active" routerLink="/management" *ngIf="isAdmin">
+        <span class="material-icons">storefront</span>
+        <span *ngIf="showDrawer">Shop{{shop ? ' #' + shop.shopId : 's'}}</span>
+      </mat-list-item>
+      <mat-list-item routerLinkActive="active" routerLink="/catalogue" *ngIf="!isAdmin && isAuthenticated">
+        <span class="material-icons">shopping_bag</span>
+        <span *ngIf="showDrawer">Catalogue</span>
+      </mat-list-item>
+      <mat-list-item routerLinkActive="active" routerLink="/management/{{shop ? shop.shopId : ''}}" *ngIf="isAdmin">
+        <span class="material-icons">edit</span>
+        <span *ngIf="showDrawer">Catalogue </span>
+      </mat-list-item>
+      <mat-list-item routerLinkActive="active" routerLink="/cart" *ngIf="isAuthenticated && !isAdmin">
+        <span class="material-icons">shopping_cart</span>
+        <span *ngIf="showDrawer">Cart</span>
+      </mat-list-item>
+      <mat-list-item
+          routerLinkActive="active"
+          routerLink="{{'/management/' + shop.shopId + '/notifications'}}"
+          *ngIf="isAdmin && shop">
+        <span class="material-icons">circle_notifications</span>
+        <span *ngIf="showDrawer">Notifications</span>
+      </mat-list-item>
+      <mat-list-item routerLinkActive="active" routerLink="/account" *ngIf="isAuthenticated && !isGuest">
+        <span class="material-icons">account_circle</span>
+        <span *ngIf="showDrawer">Account Info</span>
+      </mat-list-item>
+      <mat-list-item routerLinkActive="active" routerLink="/orders" *ngIf="isAuthenticated && isUser">
+        <span class="material-icons">receipt</span>
+        <span *ngIf="showDrawer">My Orders</span>
+      </mat-list-item>
+      <mat-list-item routerLink="/auth/register" *ngIf="isGuest || !isAuthenticated">
+        <span class="material-icons">account_box</span>
+        <span *ngIf="showDrawer">Register</span>
+      </mat-list-item>
+      <mat-list-item routerLink="/auth/login" *ngIf="isGuest || !isAuthenticated">
+        <span class="material-icons">login</span>
+        <span *ngIf="showDrawer">Login</span>
+      </mat-list-item>
+      <mat-list-item (click)="onLogout()" *ngIf="isAuthenticated && !isGuest">
+        <span class="material-icons">logout</span>
+        <span *ngIf="showDrawer">Logout</span>
+      </mat-list-item>
+      <mat-list-item routerLinkActive="active" routerLink="/auth/admin" *ngIf="!isAdmin">
+        <span class="material-icons">lock</span>
+        <span *ngIf="showDrawer">Admin Area</span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>SupermarketApp</span>
+<!--      <nav mat-tab-nav-bar backgroundColor="primary">-->
+<!--        <a mat-tab-link *ngFor="let link of links"-->
+<!--           (click)="activeLink = link"-->
+<!--           [active]="activeLink == link"> {{link}} </a>-->
+<!--      </nav>-->
+      <span class="spacer"></span>
+      <button
+        mat-icon-button
+        type="button"
+        routerLink="{{'/management/' + shop.shopId + '/notifications'}}"
+        *ngIf="isAdmin && shop">
+          <mat-icon matBadge="{{notifications > 0 ? notifications : ''}}" matBadgeColor="warn">
+            circle_notifications
+          </mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="onLogout()" *ngIf="isAuthenticated">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <router-outlet style="height: 90vh"></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

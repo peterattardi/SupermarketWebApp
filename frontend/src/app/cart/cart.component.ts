@@ -8,6 +8,8 @@ import {UserProductsService} from '../catalogue/user-products.service';
 import {take} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
 import {OrderService} from '../orders/order.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {User} from '../auth/user.model';
 
 @Component({
   selector: 'app-cart',
@@ -17,10 +19,13 @@ import {OrderService} from '../orders/order.service';
 export class CartComponent implements OnInit, OnDestroy {
   cartItems: CartItem[] = [];
   products: Product[] = this.userProductsService.products.value;
+  items: {cartItem: CartItem, product: Product}[] = [];
   cartSub: Subscription;
   productSub: Subscription;
+
+  user: User = this.authService.user.value;
+  userSub: Subscription;
   cartTotal = 0;
-  error: string = null;
 
   constructor(
     private cartService: CartService,
@@ -28,9 +33,15 @@ export class CartComponent implements OnInit, OnDestroy {
     private router: Router,
     private userProductsService: UserProductsService,
     private authService: AuthService,
-    private orderService: OrderService) { }
+    private orderService: OrderService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.userSub = this.authService.user.subscribe(
+      user => {
+        this.user = user;
+      }
+    );
     this.productSub = this.userProductsService.products
       .subscribe(
         (products: Product[]) => {
@@ -41,15 +52,21 @@ export class CartComponent implements OnInit, OnDestroy {
       .subscribe(
         cart => {
           this.cartItems = cart;
+          this.items = [];
           this.cartTotal = 0;
           this.cartItems.forEach( cartItem => {
             const product = this.findProduct(cartItem);
             if (product) {
+              this.items.push({cartItem, product});
               this.cartTotal += cartItem.quantity * product.unitCost;
             }
           });
         }
       );
+  }
+
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
   }
 
   findProduct(cartItem: CartItem): Product {
@@ -64,13 +81,10 @@ export class CartComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  onClearError(): void {
-    this.error = null;
-  }
-
   onToOrder(): void {
     if (this.cartItems.length === 0) {
-      this.error = 'Cannot order 0 products. Please add some first!';
+      const message = 'Cannot order 0 products. Please add some first!';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     this.orderService.addOrder()
@@ -80,10 +94,10 @@ export class CartComponent implements OnInit, OnDestroy {
           this.router.navigate(['/orders/' + order.orderId]);
         },
         errorMessage => {
-          if (errorMessage === 'Token not found') {
+          if (errorMessage === 'Session expired') {
             this.authService.logout();
           }
-          this.error = errorMessage;
+          this.openSnackBar(errorMessage, 'Ok');
         }
       );
   }
@@ -91,6 +105,12 @@ export class CartComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.cartSub) {
       this.cartSub.unsubscribe();
+    }
+    if (this.productSub) {
+      this.productSub.unsubscribe();
+    }
+    if (this.userSub) {
+      this.userSub.unsubscribe();
     }
   }
 

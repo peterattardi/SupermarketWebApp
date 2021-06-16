@@ -28,7 +28,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    debugger;
     this.shopService.shop.subscribe(
       shop => {
         this.shop = shop;

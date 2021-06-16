@@ -6,6 +6,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {AuthService} from '../auth/auth.service';
 import {User} from '../auth/user.model';
 import {environment} from '../../environments/environment';
+import {AdminProductsService} from '../management/admin-products.service';
 
 export class Shop {
   constructor(
@@ -63,7 +64,7 @@ export class ShopService {
     } else {
       switch (errorMessage) {
         case 'TOKEN_NOT_FOUND':
-          errorMessage = 'Token not found';
+          errorMessage = 'Session expired';
           break;
         case 'EMAIL_NOT_FOUND':
           errorMessage = 'This email does not exist.';

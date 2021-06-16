@@ -1,38 +1,29 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
-import {Position} from './market.service';
-import {environment} from '../../environments/environment';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {catchError, map, take, tap} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
+import {AdminProductsService} from '../admin-products.service';
 
-
-export class GoogleMapPosition {
-  public results: string[];
-  public status: string;
-}
 
 @Injectable({ providedIn: 'root' })
-export class PositionService {
+export class NotificationsService {
+  notifications = new BehaviorSubject<number>(0);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private adminProductsService: AdminProductsService) { }
 
-  getPositionByAddress(addr: string): Observable<Position> {
-    const parsedAddr = addr.replace(' ', '+');
-    return this.http.get<GoogleMapPosition>(
-      'https://maps.googleapis.com/maps/api/geocode/json?address=' + parsedAddr +
-      '&key=' + environment.GOOGLE_API_KEY
-    ).pipe(
-      catchError(this.handleError),
-      map( res => {
-        if (res.results.length === 0) {
-          throwError(res.status);
-          return null;
+  getNotifications(): void {
+    this.adminProductsService.getUnavailable()
+      .pipe(take(1))
+      .subscribe(
+        products => {
+          this.notifications.next(products.length);
+        },
+        errorMessage => {
+          console.log(errorMessage);
         }
-        // @ts-ignore
-        const pos = res.results[0].geometry.location;
-        return new Position(pos.lat, pos.lng);
-      })
-    );
+      );
   }
 
   private handleError(errorRes: HttpErrorResponse): Observable<never> {

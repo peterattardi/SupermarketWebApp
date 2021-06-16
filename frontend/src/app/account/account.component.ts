@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Subscription} from 'rxjs';
 import {AccountService} from './account.service';
 import {AuthService} from '../auth/auth.service';
 import {take} from 'rxjs/operators';
 import {AccountInfo} from './user-info.model';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-account',
@@ -14,10 +14,9 @@ export class AccountComponent implements OnInit {
   accountInfo: AccountInfo = null;
   isLoading = true;
 
-  error: string = null;
-
   constructor(private accountService: AccountService,
-              private authService: AuthService) {  }
+              private authService: AuthService,
+              private snackBar: MatSnackBar) {  }
 
   ngOnInit(): void {
     this.accountService.getInfo()
@@ -48,17 +47,17 @@ export class AccountComponent implements OnInit {
           this.isLoading = false;
         },
         errorMessage => {
-          if (errorMessage === 'Token not found') {
+          if (errorMessage === 'Session expired') {
             this.authService.logout();
           } else {
-            this.error = errorMessage;
+            this.openSnackBar(errorMessage, 'Ok');
           }
         }
       );
   }
 
-  onClearError(): void {
-    this.error = null;
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
   }
 
 }

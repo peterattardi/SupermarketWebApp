@@ -1,18 +1,56 @@
-<div class="row">
-  <div class="col-xs-12">
-    <p>Your User Account</p>
-  </div>
-  <div class="col-xs-6">
-      <h3>GENERAL INFORMATION</h3><br>
-      <b>First Name</b>: {{user.firstName}}<br>
-      <b>Last Name</b>: {{user.lastName}}<br>
-      <b>Email</b>: {{user.email}} <i *ngIf="user.enabled">(** NOT CONFIRMED **)</i><br>
-      <b>Locked</b>: {{user.locked}}<br>
-  </div>
-  <div class="col-xs-6">
-      <h3>DELIVERY INFORMATION</h3><br>
-      <b>City</b>: {{user.city}}<br>
-      <b>Address</b>: {{user.address}}<br>
-      <b>CAP</b>: {{user.cap}}
-  </div>
-</div>
+<mat-card class="order-card-bg" style="height: 50vh">
+  <mat-card>
+    <span class="mat-display-1">Your User Account</span>
+  </mat-card>
+  <mat-card class="account-card">
+    <mat-card-title class="text-center">GENERAL INFORMATION</mat-card-title>
+    <mat-card-content>
+      <table class="table table-responsive mat-subheading-1">
+        <tr>
+          <td><strong>First Name</strong></td>
+          <td>{{user.firstName}}</td>
+        </tr>
+        <tr>
+          <td><strong>Last Name</strong></td>
+          <td>{{user.lastName}}</td>
+        </tr>
+        <tr>
+          <td><strong>Email</strong></td>
+          <td>
+            {{user.email}}
+            <button mat-icon-button *ngIf="user.enabled" matTooltip="User verified">
+              <mat-icon class="text-success">verified</mat-icon>
+            </button>
+            <button mat-icon-button *ngIf="!user.enabled" matTooltip="Email has not been confirmed yet">
+              <mat-icon class="text-warning">pending</mat-icon>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Locked</strong></td>
+          <td>{{user.locked}}</td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="account-card">
+    <mat-card-title class="text-center">DELIVERY INFORMATION</mat-card-title><br>
+    <mat-card-content>
+      <table class="table table-responsive mat-subheading-1">
+        <tr>
+          <td><strong>City</strong></td>
+          <td>{{user.city}}</td>
+        </tr>
+        <tr>
+          <td><strong>Address</strong></td>
+          <td>{{user.address}}</td>
+        </tr>
+        <tr>
+          <td><strong>CAP</strong></td>
+          <td>{{user.cap}}</td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</mat-card>

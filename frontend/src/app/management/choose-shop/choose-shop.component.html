@@ -1,46 +1,49 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-4">
-      <h3> Select a shop to edit! </h3>
-      <app-popup
-        [message]="error"
-        [type]="'error'"
-        (close)="onClearError()"
-        *ngIf="error">
-      </app-popup>
-      <div *ngIf="isLoading" style="text-align: center;">
-        <app-loading-spinner></app-loading-spinner>
-      </div>
+
+<mat-card class="order-card-bg" style="height: 80vh">
+  <mat-card class="shop-card" style="width: 26vw;">
+    <mat-card-title class="mat-display-1">
+      {{shops ? shops[0].supermarketName.toUpperCase() : ''}}
+    </mat-card-title>
+    <mat-card-subtitle> Select a shop to edit! </mat-card-subtitle>
+    <div *ngIf="isLoading" class="text-center">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div class="button-flex-container" *ngIf="!isLoading">
       <div *ngIf="!isLoading && (!shops || shops.length === 0)">
         <marquee>No shops found</marquee>
       </div>
       <button
-        class="btn {{shop === chosenShop ? 'btn-primary' : 'btn-default'}} btn-group-justified"
+        mat-raised-button
+        color="{{shop === chosenShop ? 'accent' : ''}}"
         type="button"
         id="{{shop.shopId}}"
-        style="margin: 15px; font-size: large"
+        style="font-size: large; margin: 1vh 0.25vw; width: 10vw"
         *ngFor="let shop of shops"
         (click)="onSelect(shop)">
         SHOP: {{shop.shopId}}
       </button>
-      <div class="row">
-        <button
-          type="button"
-          class="btn btn-lg btn-info"
-          (click)="onReloadShops()">
-          Reload
-        </button>
-        <button
-          class="btn btn-lg btn-success"
-          type="submit"
-          [disabled]="!chosenShop"
-          (click)="onChooseShop()">
-          Continue
-        </button>
-      </div>
     </div>
-    <div class="col-xs-8">
-      <div id="map"></div>
+
+    <div class="button-flex-container" style="margin-top: 3vh">
+      <button
+        mat-raised-button
+        mat-icon-button
+        type="button"
+        (click)="onReloadShops()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!chosenShop"
+        (click)="onChooseShop()"
+        style="width: 10vw">
+        Continue
+      </button>
     </div>
-  </div>
-</div>
+  </mat-card>
+  <mat-card class="shop-card" style="width: 50vw">
+    <div id="map"></div>
+  </mat-card>
+</mat-card>

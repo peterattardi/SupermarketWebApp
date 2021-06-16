@@ -1,27 +1,15 @@
-<div class="container">
-  <div class="row" *ngIf="!accountInfo && !isLoading">
-    <div class="col-xs-12">
-      <div class="alert alert-danger">
-        <h4 class="text-center">An error occurred while processing data. Re-try again please.</h4>
-      </div>
-    </div>
-  </div>
-  <app-popup
-    [message]="error"
-    [type]="'error'"
-    (close)="onClearError()"
-    *ngIf="error">
-  </app-popup>
+<div class="container-fluid">
+  <mat-card *ngIf="!accountInfo && !isLoading" style="margin-top: 5vh">
+    <mat-card-content class="alert alert-danger text-center">
+      <span class="mat-display-1">An error occurred while processing data. Re-try again please.</span>
+    </mat-card-content>
+  </mat-card>
 
-  <div class="row">
-    <div class="col-xs-12 text-center">
-      <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-    </div>
-  </div>
+  <mat-spinner class="text-center" *ngIf="isLoading"></mat-spinner>
 
 </div>
 
-<div class="container" *ngIf="accountInfo && !isLoading">
+<div class="container-fluid" *ngIf="accountInfo && !isLoading">
   <app-admin-info *ngIf="isAdmin" [admin]="accountInfo"></app-admin-info>
   <app-client-info *ngIf="!isAdmin" [user]="accountInfo"></app-client-info>
 </div>

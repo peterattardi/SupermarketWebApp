@@ -2,6 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {CartItem, CartService} from '../cart.service';
 import {Product} from '../../management/product/product.model';
 import {AuthService} from '../../auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogComponent, DialogData} from '../../shared/dialog/dialog.component';
 
 @Component({
   selector: 'app-cart-item',
@@ -11,16 +14,34 @@ import {AuthService} from '../../auth/auth.service';
 export class CartItemComponent implements OnInit {
   @Input() product: Product;
   @Input() cartItem: CartItem;
-  deleteMessage: string = null;
-  warning: string = null;
-  error: string = null;
+  quantity = 1;
 
   constructor(
     private cartService: CartService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
+  }
+
+  openDialog(message: string, header: string): void {
+    const data = new DialogData(header, message);
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '500px',
+      data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.onDeleteCartItem();
+      }
+    });
+  }
+
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action);
   }
 
   onDecrementQuantity(dec: number): void {
@@ -32,10 +53,10 @@ export class CartItemComponent implements OnInit {
       this.cartService.updateCart(this.cartItem).subscribe(
         () => {},
         errorMessage => {
-          if (errorMessage === 'Token not found') {
+          if (errorMessage === 'Session expired') {
             this.authService.logout();
           }
-          this.error = errorMessage;
+          this.openSnackBar(errorMessage, 'Ok');
         }
       );
     }
@@ -43,55 +64,46 @@ export class CartItemComponent implements OnInit {
 
   onIncrementQuantity(inc: number): void {
     if (this.cartItem.quantity === this.product.quantity) {
-      this.warning = 'Sorry, we have no more than ' + this.product.quantity + ' of this item right now';
+      const message = 'Sorry, we have no more than ' + this.product.quantity + ' of this item right now';
+      this.openSnackBar(message, 'Ok');
       return;
     }
     if (this.product && this.cartItem) {
       if (inc + this.cartItem.quantity > this.product.quantity) {
         this.cartItem.quantity = this.product.quantity;
-        this.warning = 'Sorry, we have no more than ' + this.product.quantity + ' of this item right now';
+        const message = 'Sorry, we have no more than ' + this.product.quantity + ' of this item right now';
+        this.openSnackBar(message, 'Ok');
       } else {
         this.cartItem.quantity = inc + this.cartItem.quantity;
       }
       this.cartService.updateCart(this.cartItem).subscribe(
         () => {},
         errorMessage => {
-          if (errorMessage === 'Token not found') {
+          if (errorMessage === 'Session expired') {
             this.authService.logout();
           }
-          this.error = errorMessage;
+          this.openSnackBar(errorMessage, 'Ok');
         }
       );
     }
   }
 
-  cancelDelete(): void {
-    this.deleteMessage = null;
-  }
-
   tryDeleteCartItem(): void {
-    this.deleteMessage = 'Do you really want to delete "' +
-    this.cartItem.productName + '" from the cart?';
+    const message = 'Do you really want to delete "' +
+       this.cartItem.productName + '" from the cart?';
+    this.openDialog(message, 'Confirm Delete');
   }
 
   onDeleteCartItem(): void {
     this.cartService.deleteCart(this.cartItem).subscribe(
       () => {},
       errorMessage => {
-        if (errorMessage === 'Token not found') {
+        if (errorMessage === 'Session expired') {
           this.authService.logout();
         }
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, 'Ok');
       }
     );
-  }
-
-  onClearError(): void {
-    this.error = null;
-  }
-
-  onClearWarning(): void {
-    this.warning = null;
   }
 
 }

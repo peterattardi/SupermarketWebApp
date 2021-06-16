@@ -1,10 +1,9 @@
 #floating-panel {
   position: absolute;
-  top: 90px;
+  top: 105px;
   left: 40%;
   z-index: 5;
-  background-color: #fff;
-  border: 1px solid #999;
+  background-color: transparent;
   text-align: center;
   font-family: "Roboto", "sans-serif";
   line-height: 20px;
@@ -13,4 +12,5 @@
 
 #searchbar {
   width: 100%;
+  margin: 10px 0 0 0;
 }

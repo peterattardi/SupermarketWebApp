@@ -182,7 +182,7 @@ export class OrderService {
     } else {
       switch (errorMessage) {
         case 'TOKEN_NOT_FOUND':
-          errorMessage = 'Token not found';
+          errorMessage = 'Session expired';
           break;
         case 'EMAIL_NOT_FOUND':
           errorMessage = 'This email does not exist.';

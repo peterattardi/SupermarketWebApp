@@ -8,24 +8,26 @@ import {MarketResolver} from '../auth/market-resolver.service';
 import {NotificationsComponent} from './notifications/notifications.component';
 import {ManagementResolver} from './management-resolver.service';
 import {ShopResolver} from '../shared/shop-resolver.service';
+import {NotificationsResolver} from './notifications/notifications-resolver.service';
 
 const routes: Routes = [
   {
     path: '',
     component: ManagementComponent,
     canActivate: [AdminGuard],
-    resolve: [MarketResolver, ShopResolver],
+    resolve: [MarketResolver],
     children: [
       { path: '', component: ChooseShopComponent },
       { path: ':shopId', redirectTo: ':shopId/products', pathMatch: 'full'},
       {
         path: ':shopId/products',
+        resolve: [ShopResolver, NotificationsResolver],
         loadChildren: './product/product.module#ProductModule',
       },
       {
         path: ':shopId/notifications',
         component: NotificationsComponent,
-        resolve: [ManagementResolver]
+        resolve: [ManagementResolver, ShopResolver, NotificationsResolver]
       }
     ]
   }

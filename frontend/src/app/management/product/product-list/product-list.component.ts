@@ -12,11 +12,8 @@ import {AdminProductsService} from '../../admin-products.service';
 export class ProductListComponent implements OnInit, OnDestroy {
   products: Product[] = this.adminProductsService.products.value;
   productsSub: Subscription;
-  @Input() error: string = null;
 
-  constructor(private adminProductsService: AdminProductsService,
-              private router: Router,
-              private route: ActivatedRoute) {
+  constructor(private adminProductsService: AdminProductsService) {
   }
 
   ngOnInit(): void {
@@ -28,13 +25,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
       );
   }
 
-  onNewProduct(): void {
-    this.router.navigate(['new'], {relativeTo: this.route});
-  }
-
-  onClearError(): void {
-    this.error = null;
-  }
   ngOnDestroy(): void {
     if (this.productsSub) {
       this.productsSub.unsubscribe();

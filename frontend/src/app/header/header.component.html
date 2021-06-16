@@ -17,7 +17,7 @@
         <li *ngIf="isAuthenticated && !isAdmin" routerLinkActive="active">
           <a routerLink="/cart">Cart</a>
         </li>
-        <li *ngIf="isAdmin && shop" routerLinkActive="active">
+        <li routerLinkActive="active" *ngIf="isAdmin && shop">
           <a routerLink="{{'/management/' + shop.shopId + '/notifications'}}">Notifications</a>
         </li>
         <li class="dropdown" appDropdown *ngIf="isAuthenticated">

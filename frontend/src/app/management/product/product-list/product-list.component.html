@@ -1,21 +1,8 @@
-<div class="row">
-  <div class="col-xs-12">
-    <button class="btn btn-success" (click)="onNewProduct()">Add Product</button>
-  </div>
-</div>
 <hr>
-<div class="row">
-  <div class="col-xs-12">
-    <app-popup
-      [message]="error"
-      [type]="'error'"
-      (close)="onClearError()"
-      *ngIf="error">
-    </app-popup>
+<mat-card class="order-card-bg">
     <app-product-item
       *ngFor="let productEl of products; let i = index"
       [product]="productEl"
       [index]="i"></app-product-item>
-  </div>
-</div>
+</mat-card>
 

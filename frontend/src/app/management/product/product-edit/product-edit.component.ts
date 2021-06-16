@@ -8,8 +8,7 @@ import {Product} from '../product.model';
 
 @Component({
   selector: 'app-product-edit',
-  templateUrl: './product-edit.component.html',
-  styleUrls: ['./product-edit.component.css']
+  templateUrl: './product-edit.component.html'
 })
 export class ProductEditComponent implements OnInit, OnDestroy {
   id: number;
@@ -40,6 +39,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const newProduct = this.createProduct(this.productForm.value);
+    debugger;
     if (this.editMode) {
       this.adminProductsService.editProduct(this.id, newProduct);
     } else {
@@ -94,8 +94,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       url: new FormControl(productImagePath),
       productDescription: new FormControl(productDescription),
       nutritionFacts: new FormControl(nutritionFacts),
-      supplierId: new FormControl(supplierId),
-      unitCost: new FormControl(unitCost),
+      supplierId: new FormControl(supplierId, Validators.required),
+      unitCost: new FormControl(unitCost, Validators.required),
       unitType: new FormControl(unitType)
     });
   }

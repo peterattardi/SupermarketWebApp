@@ -13,25 +13,44 @@ import {AccountModule} from './account/account.module';
 import {CatalogueModule} from './catalogue/catalogue.module';
 import {CartModule} from './cart/cart.module';
 import {OrdersModule} from './orders/orders.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    SharedModule,
-    AuthModule,
-    CatalogueModule,
-    ManagementModule,
-    CartModule,
-    OrdersModule,
-    AccountModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        SharedModule,
+        AuthModule,
+        CatalogueModule,
+        ManagementModule,
+        CartModule,
+        OrdersModule,
+        AccountModule,
+        BrowserAnimationsModule,
+        LayoutModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatListModule,
+        MatTabsModule,
+        MatBadgeModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
@@ -40,3 +59,7 @@ export class AppModule { }
 
 // TODO: Services optimization
 // TODO: Code review
+// TODO: Fix columns in order-detail.html
+// TODO: You can visit notifications even though you didn't choose a supermarket (you can change it and then visit)
+// TODO: Admin login different from client login -> maybe change theme palette
+// TODO: Cart doesn't empty after make an order

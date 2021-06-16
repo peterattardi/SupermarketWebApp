@@ -30,7 +30,7 @@ export class OrderResolver implements Resolve<Product[]> {
         return (found ? true : this.router.navigate(['/orders']));
       },
       error => {
-        if (error === 'Token not found') {
+        if (error === 'Session expired') {
           this.authService.logout();
         }
         console.log(error);

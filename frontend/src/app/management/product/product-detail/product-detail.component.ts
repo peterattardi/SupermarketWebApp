@@ -14,6 +14,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   subProduct: Subscription;
   product: Product;
   id: number;
+  quantity = 1;
 
   constructor(private adminProductsService: AdminProductsService,
               private route: ActivatedRoute,
@@ -22,7 +23,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.params
-      .pipe(take(1))
       .subscribe(
         (params: Params) => {
           this.id = +params.id;
@@ -31,7 +31,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       );
     this.subProduct = this.adminProductsService.products.subscribe(
       products => {
-        if (this.id) {
+        if (this.id > -1) {
           this.product = products[this.id];
         }
       }

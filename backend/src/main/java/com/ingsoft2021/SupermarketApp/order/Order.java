@@ -20,6 +20,7 @@ public class Order {
     private Long orderId;
     private String email;
     private String supermarket;
+    private boolean confirmed = false;
     private LocalDateTime createdAt;
 
     public Order(String email, String supermarket) {

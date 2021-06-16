@@ -82,4 +82,16 @@ public class ShopController {
         }
     }
 
+    @GetMapping(path = "any-user/shops")
+    public ResponseEntity getAllShops(){
+        try{
+            List<Shop> shops = shopService.findAllShops();
+            return ResponseEntity.status(200).body(shops);
+
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
+
+
 }

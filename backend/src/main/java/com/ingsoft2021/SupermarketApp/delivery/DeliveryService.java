@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +26,22 @@ public class DeliveryService {
     @Transactional
     public void deleteByOrderId(Long orderId) {
         deliveryRepository.deleteAllByOrderId(orderId);
+    }
+
+    public Delivery getDelivery(Long orderId) {
+        Optional<Delivery> delivery = deliveryRepository.findById(orderId);
+        if(delivery.isEmpty()) throw new IllegalStateException("DELIVERY_NOT_FOUND");
+        return delivery.get();
+    }
+    
+    public void update(Long orderId, Delivery delivery) {
+        Optional<Delivery> delivered = deliveryRepository.findById(orderId);
+        if(delivered.isEmpty()) throw new IllegalStateException("DELIVERY_NOT_FOUND");
+        Delivery newDelivery = new Delivery(delivered.get().getOrderId(), delivery.getDate(), delivery.getAddress(),
+                delivery.getPayment(), delivered.get().getShopId());
+        deliveryRepository.delete(delivered.get());
+        deliveryRepository.save(newDelivery);
+
     }
     //TODO: orderNow
 }

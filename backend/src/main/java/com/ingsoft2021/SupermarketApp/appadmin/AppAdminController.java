@@ -14,7 +14,9 @@ import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 @RestController
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin( origins = {"https://supermarketapp-ingsoft2021.web.app/", "http://localhost:4200/"})
+
+
 public class AppAdminController {
 
     private final AppAdminService appAdminService;

@@ -43,5 +43,4 @@ public class DeliveryService {
         deliveryRepository.save(newDelivery);
 
     }
-    //TODO: orderNow
 }

@@ -142,8 +142,30 @@ public class Config extends WebSecurityConfigurerAdapter {
     private void fillDespar() {
         productRepository.save(new Product(
                 "Apple", "Melinda", "Delocious apple",
-                "200 kcal", 1L, 0.80, "piece",
+                "200 kcal", 1L, 0.99, "piece",
                 "despar", "https://melinda.it/wp-content/uploads/2019/01/GOLDEN-DOP-bollino1.png"));
+
+        productRepository.save(new Product(
+                "Trash bag 60L", "Munniz", "Plastic bag for trash 60L",
+                "This product is not consumable", 12L, 2.99, "piece",
+                "despar", "https://www.tingstad.com/fixed/images/Main/1519322645/S60S.png"));
+
+        productRepository.save(new Product(
+                "Salmon", "Alaska Ships", "Salmon fillet 250g",
+                "300kcal / 100g", 21L, 18.00, "1kg",
+                "despar", "https://cdn.pixabay.com/photo/2017/08/11/14/36/fish-2631412_960_720.png"));
+
+        productRepository.save(new Product(
+                "Fagiolini Finissimi", "Despar", "Fagiolini fini in latta 1kg",
+                "300kcal / 100g", 33L, 1, "1kg",
+                "despar", "https://www.lavalledegliorti.it/wp-content/uploads/2020/07/fagiolini-finissimi-ecobag.png"));
+
+        productRepository.save(new Product(
+                "Cornetto", "Algida", "Cornetti x6 ",
+                "340kcal / 100g", 121L, 1.79, "piece",
+                "despar", "https://r.restore.shopping/resizer/go?s=https%3A%2F%2Frsbackend.blob.core.windows.net%2Fbrandbank-are%2F8711327304116_0_637527024553106955.png&w=300&h=280"));
+
+
     }
 
     private void fillDeco() {
@@ -155,6 +177,21 @@ public class Config extends WebSecurityConfigurerAdapter {
                 "Mayo", "Hellmanns", "Mayo Hellman's REAL 400g",
                 "500 kcal", 1L, 1.50, "jar",
                 "deco", "https://cdn.shopify.com/s/files/1/0357/1407/2713/products/hellmanns-mayonnaise-400g_800x.png?v=1585900136"));
+        productRepository.save(new Product(
+                "Smoked Salmon", "Alaska Ship", "Smoked Salmon 100g",
+                "250kcal / 100g", 43L, 15.00, "1kg",
+                "deco", "https://cdn.shopify.com/s/files/1/1538/6871/files/Slider-Original-Product_2x_8b50a7f2-4d20-4f6f-93aa-8ae10f96af33_800x.png?v=1567103082"));
+        productRepository.save(new Product(
+                "Paccherotti", "Rummo", "Paccherotti Pasta 500g",
+                "300kcal / 100g", 1L, 1.19, "piece",
+                "deco", "https://rsresizer.blob.core.windows.net/core/88e0e701055351b5ec49998f8343d573"));
+
+        productRepository.save(new Product(
+                "Passata di Pomodoro", "Mutti", "Passata Mutti 400g",
+                "300kcal / 100g", 1L, 1.19, "piece",
+                "deco", "https://mutti-parma.com/app/uploads/sites/7/2019/09/passata-700-1.png"));
+
+
 
     }
 
@@ -171,6 +208,10 @@ public class Config extends WebSecurityConfigurerAdapter {
                 "Fish fingers", "Findus", "Findus Fish fingers 12 fingers 300g",
                 "200 kcal", 2L, 4, "piece",
                 "coop", "https://www.spesaonlinepescara.it/wp-content/uploads/2018/11/Bastoncini-Capitan-Findus-12x.png"));
+        productRepository.save(new Product(
+                "Tofu", "BioNtech", "Tofu with basil 100g",
+                "100 kcal/ 100g", 2L, 0.60, "piece",
+                "coop", "https://www.taifun-tofu.de/sites/default/files/styles/panopoly_image_full/public/beitragfoto/4012359114204_tofubasilico_gb_0119.png?itok=Wc8rzTFy"));
 
     }
 
@@ -182,7 +223,7 @@ public class Config extends WebSecurityConfigurerAdapter {
         productRepository.save(new Product(
                 "Pear", "Melina", "Delicious pear",
                 "220 kcal", 1L, 0.40, "piece",
-                "conad", "https://lh3.googleusercontent.com/proxy/6j6yOB0johbLC2OzUfu4rI3ARCHhH293Es4DeVACbTUfdjH1j-40E6peuKvK-lP84Dk6xNGx14F0EBAuj0Xgi1uxi8HYTlJH1QpjrL9G9Ssbb_YnDA"));
+                "conad", "https://i0.wp.com/www.meloarancio.it/wp-content/uploads/2017/01/pera-conference-2-e1611589991545.jpg"));
         productRepository.save(new Product(
                 "Chicken Breast", "AIA", "AIA Chicken Breast",
                 "300 kcal", 2L, 9, "100g",

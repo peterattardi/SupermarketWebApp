@@ -1,0 +1,8 @@
+<hr>
+<mat-card class="order-card-bg">
+    <app-product-item
+      *ngFor="let productEl of products; let i = index"
+      [product]="productEl"
+      [index]="i"></app-product-item>
+</mat-card>
+

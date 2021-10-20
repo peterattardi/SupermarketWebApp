@@ -1,0 +1,63 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-5">
+      <div class="row">
+        <div class="col-xs-12">
+          <h3 class="text-center"> Select a supermarket to shop in!</h3>
+          <hr>
+        </div>
+      </div>
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <div class="row" *ngIf="!isLoading">
+        <div class="col-xs-12 button-flex-container">
+          <div class="alert alert-info" style="width: 100%" *ngIf="!supermarkets || supermarkets.length === 0">
+            <b>No supermarkets found nearby. Try another location</b>
+          </div>
+          <button mat-raised-button
+                  color="{{chosenMarket && supermarket.supermarketName === chosenMarket.name ?
+                   'accent' : ''}}"
+                  type="button"
+                  *ngFor="let supermarket of supermarkets"
+                  (click)="onSelect(supermarket)">
+            {{supermarket.supermarketName | titlecase}}
+          </button>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-xs-12 button-flex-container">
+          <button
+            mat-raised-button
+            mat-icon-button
+            type="button"
+            (click)="getMarkets()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!chosenMarket"
+            (click)="onChooseSupermarket()">
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-1"></div>
+    <div class="col-xs-6">
+      <mat-form-field appearance="outline" id="searchbar"
+                      (keyup.enter)="onGetPositionByAddress(address.value)">
+        <mat-label>Address</mat-label>
+        <input matInput type="text" placeholder="Select an address..." #address />
+        <button mat-icon-button matSuffix>
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+      <div id="floating-panel" *ngIf="isGeolocation">
+        <button mat-raised-button style="width: 100%" (click)="getCurrentPosition()" type="button">Get Current Position</button>
+      </div>
+      <div id="map"></div>
+    </div>
+  </div>
+</div>

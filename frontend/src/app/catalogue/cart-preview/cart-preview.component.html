@@ -1,0 +1,39 @@
+<mat-card style="padding: 0; box-shadow: none;">
+  <mat-card-header routerLink="/cart">
+    <h3 class="text-center">Total: <strong style="font-size: 36px">{{cartTotal | number: '1.2'}}€</strong></h3>
+  </mat-card-header>
+  <mat-card-content routerLink="/cart">
+    <mat-card class="product-bg-card" style="padding: 1vh">
+      <h4 class="text-center" *ngIf="cartItems.length === 0">
+        Such empty!<br> Add some products from the catalogue!
+      </h4>
+      <app-cart-preview-item
+        *ngFor="let cartItem of cartItems"
+        [cartItem]="cartItem"
+        [product]="findProduct(cartItem)">
+      </app-cart-preview-item>
+    </mat-card>
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      style="width: 17vw; margin: 1vw; padding: 1vh 0"
+      [disabled]="cartItems.length === 0"
+      *ngIf="user && user.role === 'USER'"
+      (click)="onToOrder()">Order</button>
+    <button
+      type="button"
+      mat-raised-button
+      color="accent"
+      style="width: 8vw; margin: 1vw; padding: 1vh 0"
+      *ngIf="user && user.role !== 'USER'"
+      routerLink="/auth/register">Register</button>
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      style="width: 7vw; margin: 1vw; padding: 1vh 0"
+      *ngIf="user && user.role !== 'USER'"
+      routerLink="/auth/login">Login</button>
+  </mat-card-content>
+</mat-card>

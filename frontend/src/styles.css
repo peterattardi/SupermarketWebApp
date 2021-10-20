@@ -1,0 +1,150 @@
+/* You can add global styles to this file, and also import other style files */
+
+button {
+  margin: 5px;
+}
+
+#map {
+  height: 70vh;
+}
+
+#shops-map {
+  height: 400px;
+}
+
+.alert-info, .alert-danger, .alert-warning {
+  min-height: 50px;
+}
+
+.popup {
+  font-size: 10px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.button-flex-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.form-field {
+ width: 100%;
+}
+
+[mat-raised-button] {
+  width: 24%;
+}
+
+[matPrefix] {
+  margin: 0 10px 0 0;
+}
+
+.product-card {
+  width: 25%;
+  height: 82vh;
+  display: inline !important;
+  float: left;
+  padding: 1vh 0.5vw !important;
+}
+
+.product-bg-card {
+  border-radius: 0 !important;
+  border: 0;
+  box-shadow: none !important;
+  background-color: rgba(200,200,200,0.2)
+}
+
+.product-card-header {
+  height: 28vh;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.product-card-image {
+  height: 32vh;
+  border-radius: 0 !important;
+}
+
+.product-card-desc {
+  height: 18vh;
+  border-radius: 0 !important;
+}
+
+.product-card-shop {
+  padding: 8px !important;
+  height: 20vh;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.cart-sidenav {
+  width: 20%;
+  top: -200px;
+}
+
+.cart-item-card {
+  width: 33.3%;
+  display: inline !important;
+  float: left;
+  padding: 1vh 0.5vw !important;
+  height: 13vh;
+}
+
+.cart-card-bg {
+  border-radius: 0 !important;
+  border: 0;
+  box-shadow: none !important;
+  background-color: rgba(200, 200, 200, 0.2);
+  padding: 1vh 1vw !important;
+}
+
+.order-card-bg {
+  border-radius: 0 !important;
+  border: 0;
+  box-shadow: none !important;
+  background-color: rgba(200, 200, 200, 0.2);
+  padding: 1vh 0.5vw !important;
+  margin: 0;
+}
+
+.order-card {
+  display: inline !important;
+  float: left;
+  width: 24vw;
+  height: 16vh;
+  margin: 1vh;
+  cursor: pointer;
+}
+
+.account-card {
+  display: inline !important;
+  float: left;
+  width: 33vw;
+  height: 30vh;
+  margin: 2vh 3vw;
+}
+
+.shop-card {
+  display: inline !important;
+  float: left;
+  height: 75vh;
+  margin: 2vh 1vw;
+}
+
+.management-product-detail-card {
+  height: 15vh;
+  margin-top: 1vh
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@media screen and (max-width: 800px) {
+  .product-card {
+    width: 50%; /* The width is 100%, when the viewport is 800px or smaller */
+  }
+}

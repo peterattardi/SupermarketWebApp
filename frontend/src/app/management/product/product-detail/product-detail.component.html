@@ -1,0 +1,93 @@
+<mat-card *ngIf="product">
+    <img
+      [src]="(product.url ? product.url : 'http://placeimg.com/640/480')"
+      alt="{{ product.productName }}"
+      class="img-responsive"
+      style="max-height: 300px; margin: auto">
+</mat-card>
+<mat-card class="order-card-bg" *ngIf="product">
+  <mat-card>
+    <span class="mat-display-1">{{ product.productName }}</span>
+    <small class="text-muted">{{product.productBrand}}</small>
+    <div
+      class="btn-group pull-right"
+      appDropdown>
+      <button
+        type="button"
+        mat-raised-button
+        color="accent"
+        class="dropdown-toggle"
+        style="width: 100%">
+        Manage Product <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a style="cursor: pointer;" (click)="onEditProduct()">Edit Product</a></li>
+        <li><a style="cursor: pointer;" (click)="onDeleteProduct()">Delete Product</a></li>
+      </ul>
+    </div>
+  </mat-card>
+  <mat-card>
+    <div class="button-flex-container">
+      <button
+        mat-mini-fab
+        color="warn"
+        type="button"
+        [disabled]="!product.quantity || product.quantity < 1"
+        (click)="onDecrementQuantity(quantity)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <p class="text-center" *ngIf="product.quantity > 0">
+        In stock: <span class="mat-display-1"> {{product.quantity}} </span>
+      </p>
+      <p class="text-center" style="background-color: darkred; color: navajowhite" *ngIf="!(product.quantity > 0)">
+        <span class="mat-display-1">Out of stock!</span>
+      </p>
+      <mat-form-field style="width: 25%" appearance="legacy">
+        <mat-label>Quantity</mat-label>
+        <input matInput type="number" [(ngModel)]="quantity"/>
+      </mat-form-field>
+      <button
+        mat-mini-fab
+        style="color: #fff !important; background-color: #5cb85c !important;"
+        class="btn-success"
+        type="button"
+        (click)="onIncrementQuantity(quantity)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+  <mat-card class="management-product-detail-card">
+    <div class="col-xs-4">
+      <span class="mat-title">Description</span>
+    </div>
+    <div class="col-xs-8">
+      {{ product.productDescription }}
+    </div>
+  </mat-card>
+  <mat-card class="management-product-detail-card">
+    <div class="col-xs-4">
+      <span class="mat-title">Nutrition Facts</span>
+    </div>
+    <div class="col-xs-8">
+      {{ product.nutritionFacts}}
+    </div>
+  </mat-card>
+  <mat-card class="management-product-detail-card">
+    <div class="col-xs-4">
+      <span class="mat-title">Supplier ID</span>
+    </div>
+    <div class="col-xs-8">
+      {{ product.supplierId}}
+    </div>
+  </mat-card>
+  <mat-card class="management-product-detail-card">
+    <div class="col-xs-4">
+      <span class="mat-title">Supermarket Name</span>
+    </div>
+    <div class="col-xs-8">
+      {{ product.supermarketName | titlecase}}
+    </div>
+  </mat-card>
+</mat-card>
+
+<br><br>

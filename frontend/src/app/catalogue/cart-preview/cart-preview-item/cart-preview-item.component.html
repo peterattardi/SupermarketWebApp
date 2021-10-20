@@ -1,0 +1,16 @@
+<mat-card
+  style="cursor: pointer; margin: 1vh">
+  <mat-card-header matBadge="{{ cartItem.quantity }}" matBadgePosition="before">
+    <span style="font-size: large;">{{ cartItem.productName }}</span>
+    <span class="spacer"></span>
+    <small>{{cartItem.productBrand}}</small>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      {{ product ? product.unitCost + '€/cad' : '' }}
+      <span class="spacer"></span>
+      <strong style="font-size: x-large" class="pull-right">{{product.unitCost*cartItem.quantity | number: '1.2'}}€</strong>
+    </p>
+  </mat-card-content>
+</mat-card>
+

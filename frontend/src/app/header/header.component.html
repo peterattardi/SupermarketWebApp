@@ -1,0 +1,56 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a routerLink="/" class="navbar-brand">Supermarket App</a>
+    </div>
+
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li routerLinkActive="active" *ngIf="!isAdmin && isAuthenticated">
+          <a routerLink="/catalogue">Catalogue</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="isAdmin">
+          <a routerLink="/management">Manage Catalogue</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li *ngIf="isAuthenticated && !isAdmin" routerLinkActive="active">
+          <a routerLink="/cart">Cart</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="isAdmin && shop">
+          <a routerLink="{{'/management/' + shop.shopId + '/notifications'}}">Notifications</a>
+        </li>
+        <li class="dropdown" appDropdown *ngIf="isAuthenticated">
+          <a style="cursor: pointer;" class="dropdown-toggle" role="button"
+          >Account <span class="caret"></span
+          ></a>
+          <ul class="dropdown-menu">
+            <li *ngIf="isAuthenticated && !isGuest" routerLinkActive="active">
+              <a style="cursor: pointer;" routerLink="/account">Account Info</a>
+            </li>
+            <li *ngIf="isAuthenticated && isUser" routerLinkActive="active">
+              <a style="cursor: pointer;" routerLink="/orders">My Orders</a>
+            </li>
+            <li *ngIf="isGuest">
+              <a
+                style="cursor: pointer;"
+                routerLink="/auth/register">Register</a>
+            </li>
+            <li *ngIf="isGuest">
+              <a
+                style="cursor: pointer;"
+                routerLink="/auth/login">Login</a>
+            </li>
+            <li *ngIf="isAuthenticated && !isGuest">
+              <a style="cursor: pointer;" (click)="onLogout()">Logout</a>
+            </li>
+          </ul>
+        </li>
+        <li routerLinkActive="active">
+          <a routerLink="/auth/admin"
+             *ngIf="!isAdmin">Admin Area</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

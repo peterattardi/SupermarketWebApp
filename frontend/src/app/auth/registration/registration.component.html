@@ -1,0 +1,138 @@
+<div class="row">
+  <div class="col-xs-12 col-md-6 col-md-offset-3">
+    <h3 class="text-center">{{isGuest ? 'You are logged as a guest! ' : '' }}</h3>
+      <h3 class="text-center">Register in a blink of an eye!</h3>
+    <div *ngIf="isLoading" style="text-align: center;">
+      <mat-spinner></mat-spinner>
+    </div>
+    <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>E-Mail</mat-label>
+        <mat-icon matPrefix>alternate_email</mat-icon>
+        <input
+          matInput
+          type="email"
+          placeholder="email@example.com"
+          ngModel
+          name="email"
+          required
+        />
+        <mat-hint>*Required</mat-hint>
+        <mat-error>Email is invalid</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Password</mat-label>
+        <mat-icon matPrefix>lock</mat-icon>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          ngModel
+          name="password"
+          required
+          minlength="6"
+        />
+        <mat-hint>*Required</mat-hint>
+        <mat-error>Password min. 6 characters</mat-error>
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+          <mat-icon>
+            {{hide ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+        </button>
+      </mat-form-field>
+      <div class="row">
+        <div class="col-xs-6">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>First Name</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="John"
+              ngModel
+              name="firstName"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>First name is <strong>required</strong></mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-6">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Last Name</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Doe"
+              ngModel
+              name="lastName"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>Last name is <strong>required</strong></mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-3">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>City</mat-label>
+            <input
+              matInput
+              type="text"
+              ngModel
+              name="city"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>City is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-6">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              type="text"
+              ngModel
+              name="address"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>Address is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-3">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>CAP</mat-label>
+            <input
+              matInput
+              type="text"
+              ngModel
+              name="cap"
+              required
+            />
+            <mat-hint>*Required</mat-hint>
+            <mat-error>CAP is required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <br>
+      <div class="text-center">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="!authForm.valid"
+        >
+          {{authForm.touched ? 'Sign up' : 'Fill the form!'}}
+        </button>
+      </div>
+      <hr>
+      <div class="text-center">
+        <h4>
+          Are you already registered?
+          <a routerLink="/auth/login">Log in here</a>
+        </h4>
+      </div>
+    </form>
+  </div>
+</div>

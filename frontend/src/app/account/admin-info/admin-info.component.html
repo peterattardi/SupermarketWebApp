@@ -1,0 +1,30 @@
+<mat-card class="cart-card-bg" style="height: 50vh">
+  <mat-card>
+    <span class="mat-display-1">{{admin.firstName | titlecase}} Admin Account</span>
+  </mat-card>
+  <mat-card class="account-card">
+    <mat-card-title class="text-center">GENERAL INFORMATION</mat-card-title>
+    <mat-card-content>
+      <table class="table table-responsive mat-subheading-1">
+        <tr>
+          <td><strong>Email</strong></td>
+          <td>
+            {{admin.email}}
+          </td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="account-card">
+    <mat-card-title class="text-center">SUPERMARKET INFORMATION</mat-card-title><br>
+    <mat-card-content>
+      <table class="table table-responsive mat-subheading-1">
+        <tr>
+          <td><strong>Supermarket Name</strong></td>
+          <td>{{admin.firstName | titlecase}}</td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</mat-card>

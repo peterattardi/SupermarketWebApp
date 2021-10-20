@@ -1,0 +1,71 @@
+<div class="container-fluid" style="height: 90vh">
+  <div class="row">
+    <div class="col-xs-9" style="padding: 0;">
+      <h2 class="text-center"> Your Shopping Cart </h2>
+      <hr>
+
+      <div
+        class="help-block alert alert-info"
+        routerLink="/catalogue"
+        *ngIf="cartItems.length === 0">
+        <h4 class="text-center">Wow! Such empty! Add some products from the catalogue!</h4>
+      </div>
+      <mat-card *ngFor="let item of items" class="cart-card-bg" style="height: 15vh;">
+        <app-cart-item
+          [cartItem]="item.cartItem"
+          [product]="item.product">
+        </app-cart-item>
+      </mat-card>
+
+    </div>
+    <div class="col-xs-3" style="padding: 0; border-left: 1px solid rgba(0,0,0, 0.3); height: 90vh">
+      <mat-card class="cart-card-bg" *ngFor="let item of items">
+        <mat-card>
+          <mat-card-header matBadge="{{ item.cartItem.quantity }}" matBadgePosition="before">
+            <span class="spacer"></span>
+            <small class="text-right">{{item.cartItem.productBrand}}</small>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              <span style="font-size: large;">{{ item.cartItem.productName }}</span>
+              <span class="spacer"></span>
+              <strong class="mat-title pull-right">
+                {{item.product.unitCost*item.cartItem.quantity | number: '1.2'}}€
+              </strong>
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </mat-card>
+      <hr>
+      <div style="margin: 5%">
+        <span class="mat-subheading-2">Total</span>
+        <strong class="pull-right mat-display-2" style="margin: 0">{{cartTotal | number: '1.2'}}€</strong>
+      </div>
+      <hr>
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        style="width: 90%; margin: 5%; padding: 2vh 0"
+        [disabled]="cartItems.length === 0"
+        *ngIf="user && user.role === 'USER'"
+        (click)="onToOrder()">
+        Order
+      </button>
+      <button
+        type="button"
+        mat-raised-button
+        color="accent"
+        style="width: 45%; margin: 2.5%; padding: 2vh 0"
+        *ngIf="user && user.role !== 'USER'"
+        routerLink="/auth/register">Register</button>
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        style="width: 45%; margin: 2.5%; padding: 2vh 0"
+        *ngIf="user && user.role !== 'USER'"
+        routerLink="/auth/login">Login</button>
+    </div>
+  </div>
+</div>

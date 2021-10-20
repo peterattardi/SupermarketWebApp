@@ -1,0 +1,57 @@
+<mat-card class="order-card-bg" style="height: 20vh">
+  <mat-card class="order-card" style="margin: 1vh;" [routerLink]="[order.orderId]">
+    <mat-card-title>
+      <mat-icon class="text-warning" *ngIf="!order.confirmed">pending</mat-icon>
+      <mat-icon class="text-success" *ngIf="order.confirmed">check_circle</mat-icon>
+      <span class="mat-display-1">Order #{{order.orderId}}</span>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <span class="badge">{{order.supermarket | uppercase}}</span>
+      <small class="text-muted pull-right">{{ order.createdAt }}</small>
+    </mat-card-subtitle>
+  </mat-card>
+  <mat-card
+      class="order-card text-center"
+      [routerLink]="[order.orderId]"
+      style="{{delivery ? '' : 'border: 1px solid red'}}">
+    <h4>Delivery Information</h4>
+    <small class="text-muted" *ngIf="delivery">{{ delivery.address }} |
+      {{ delivery.date | date:'dd/MM/yy HH:mm' }}</small>
+    <small class="text-danger" *ngIf="!delivery">No delivery information found!</small>
+  </mat-card>
+  <mat-card
+      class="order-card text-center"
+      [routerLink]="[order.orderId]"
+      style="{{delivery ? '' : 'border: 1px solid red'}}">
+    <h4>Payment method</h4>
+    <small class="text-muted" *ngIf="delivery">{{ delivery.payment | uppercase }}</small>
+    <small class="text-danger" *ngIf="!delivery">No payment method found!</small>
+  </mat-card>
+  <div class="order-card" style="width: 7vw;">
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="tryCancelOrder()"
+      style="width: 100%; padding: 5vh 0"
+      *ngIf="order.confirmed">
+      Cancel
+    </button>
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="tryDeleteOrder()"
+      style="width: 100%; margin-top: 2vh"
+      *ngIf="!order.confirmed">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button
+      mat-raised-button
+      class="btn-success"
+      (click)="onConfirmOrder()"
+      style="width: 100%; margin-top: 1vh"
+      *ngIf="delivery && !order.confirmed">
+      Confirm
+    </button>
+  </div>
+</mat-card>
+

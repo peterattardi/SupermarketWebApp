@@ -1,0 +1,92 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12 col-md-6 col-md-offset-3">
+      <div class="row">
+        <br>
+        <div class="col-xs-12 text-center">
+          <button mat-raised-button color="accent" (mouseenter)="onChange(true)" *ngIf="supermarket && !isChange">
+            {{supermarket.name | uppercase}}
+          </button>
+          <button mat-raised-button color="warn"
+                  (click)="onResetSupermarket()"
+                  (mouseleave)="onChange(false)"
+                  *ngIf="isChange">
+            Change
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr>
+          <h2 class="text-center">Login</h2>
+          <div *ngIf="isLoading" style="text-align: center;">
+            <mat-spinner></mat-spinner>
+          </div>
+          <form #authForm="ngForm" (ngSubmit)="onLogin(authForm)" *ngIf="!isLoading && supermarket">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>E-Mail</mat-label>
+              <mat-icon matPrefix>alternate_email</mat-icon>
+              <input
+                matInput
+                type="email"
+                placeholder="email@example.com"
+                ngModel
+                name="email"
+                required
+              />
+              <mat-hint>*Required</mat-hint>
+              <mat-error>Email is invalid</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Password</mat-label>
+              <mat-icon matPrefix>lock</mat-icon>
+              <input
+                matInput
+                [type]="hide ? 'password' : 'text'"
+                ngModel
+                name="password"
+                required
+                minlength="6"
+              />
+              <mat-hint>*Required</mat-hint>
+              <mat-error>Password min. 6 characters</mat-error>
+              <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+                <mat-icon>
+                  {{hide ? 'visibility_off' : 'visibility'}}
+                </mat-icon>
+              </button>
+            </mat-form-field>
+            <div class="text-center">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!authForm.valid"
+                style="width: 100%"
+              >
+                {{authForm.touched ? 'Login' : 'Fill the form!'}}
+              </button>
+              <hr>
+              <button
+                mat-raised-button
+                [disabled]="isGuest"
+                type="button"
+                (click)="onLoginGuest()"
+                style="width: 100%">
+                {{ isGuest ? 'Logged as Guest' : 'Login as Guest'}}
+              </button>
+            </div>
+            <hr>
+            <div class="text-center">
+              <h4>
+                Are you new here?
+                <a routerLink="/auth/register">Register here</a>
+              </h4>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,41 @@
+<div class="container-fluid" style="padding: 0">
+  <mat-sidenav-container class="sidenav-container" hasBackdrop="false">
+    <mat-sidenav #drawer position="end" class="cart-sidenav" fixedInViewport
+                 [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+                 [mode]="(isHandset$ | async) ? 'push' : 'side'"
+                 [opened]="(isHandset$ | async) === false">
+
+      <mat-toolbar (click)="drawer.toggle()">
+        Close
+        <span class="spacer"></span>
+        <mat-icon>remove_shopping_cart</mat-icon>
+      </mat-toolbar>
+      <div style="height: 90vh !important; padding: 0">
+        <app-cart-preview></app-cart-preview>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content class="container-fluid">
+      <div
+        style="position: fixed; top: 11vh; right: 1vw; z-index: 1;">
+        <button
+            type="button"
+            aria-label="Toggle cart sidenav"
+            mat-fab
+            (click)="drawer.toggle()"
+            *ngIf="!drawer.opened">
+          <mat-icon
+            aria-label="Side nav toggle icon"
+            [matBadge]="cartItems.length > 0 ? cartItems.length : ''"
+            matBadgeSize="large">
+            shopping_cart
+          </mat-icon>
+        </button>
+      </div>
+      <div class="row">
+        <div class="col-xs-12" style="padding: 0">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

@@ -1,0 +1,63 @@
+<mat-card class="cart-item-card" style="width: 20%">
+  <div class="button-flex-container" style="margin-top: 2vh">
+    <button
+      mat-mini-fab
+      color="warn"
+      class="btn-danger"
+      type="button"
+      [disabled]="!cartItem.quantity || cartItem.quantity < 1"
+      (click)="onDecrementQuantity(quantity)">
+      <mat-icon>remove</mat-icon>
+    </button>
+    <mat-form-field style="width: 25%; margin: auto;" appearance="legacy">
+      <mat-label>Quantity</mat-label>
+      <input matInput type="number"  [(ngModel)]="quantity"/>
+    </mat-form-field>
+    <button
+      mat-mini-fab
+      style="color: #fff !important; background-color: #5cb85c !important;"
+      class="btn-success"
+      type="button"
+      (click)="onIncrementQuantity(quantity)">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</mat-card>
+<mat-card
+  class="cart-item-card"
+  style="width: 46.6%"
+  matBadge="{{cartItem ? cartItem.quantity : ''}}"
+  matBadgePosition="before"
+  matBadgeSize="large">
+  <div class="button-flex-container">
+    <p style="margin-top: 2vh">
+      <span class="mat-display-1">{{ cartItem.productName }}</span>
+      <small class="text-muted pull-right">{{cartItem.productBrand}}</small>
+    </p>
+  </div>
+</mat-card>
+<mat-card class="cart-item-card">
+  <div style="height: 7vh; margin: 2vh" class="button-flex-container">
+    <p style="width: 30%;">
+      <small class="text-muted">{{ product ? product.unitCost + '€/cad' : '' }}</small><br>
+      <span class="mat-subheading-1">Subtotal</span>
+    </p>
+    <p style="width: 50%">
+      <strong class="mat-display-1">
+        {{product.unitCost*cartItem.quantity | number: '1.2'}}€
+      </strong>
+    </p>
+    <button
+      mat-mini-fab
+      color="warn"
+      class="pull-right"
+      style="margin: 0"
+      (click)="tryDeleteCartItem()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</mat-card>
+
+
+
+

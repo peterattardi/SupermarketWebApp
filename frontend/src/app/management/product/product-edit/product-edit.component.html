@@ -1,0 +1,124 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" *ngIf="productForm">
+      <mat-card class="order-card-bg">
+        <mat-card class="management-product-detail-card">
+          <div class="button-flex-container">
+            <mat-form-field style="width: 45%">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="productName"
+              />
+              <mat-hint>*Required</mat-hint>
+              <mat-error>Name is <strong>required</strong></mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 45%">
+              <mat-label>Brand</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="productBrand"
+              />
+              <mat-hint>*Required</mat-hint>
+              <mat-error>Brand is <strong>required</strong></mat-error>
+            </mat-form-field>
+          </div>
+        </mat-card>
+        <mat-card class="management-product-detail-card">
+          <div class="button-flex-container">
+            <mat-form-field style="width: 60%">
+              <mat-label>Image URL</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="https://my.url/path.png"
+                formControlName="url"
+              />
+            </mat-form-field>
+            <img
+              [src]="productForm.value.url"
+              class="img-responsive"
+              alt="image url"
+              style="max-height: 15vh; margin-top: -2vh; margin-bottom: -2vh"/>
+          </div>
+        </mat-card>
+        <mat-card class="management-product-detail-card">
+          <div class="button-flex-container">
+            <mat-form-field style="width: 45%">
+              <mat-label>Description</mat-label>
+              <textarea
+                matInput
+                type="text"
+                formControlName="productDescription"
+                mat-autosize
+              ></textarea>
+            </mat-form-field>
+            <mat-form-field style="width: 45%">
+              <mat-label>Nutrition Facts</mat-label>
+              <textarea
+                matInput
+                type="text"
+                formControlName="nutritionFacts"
+                mat-autosize
+              ></textarea>
+            </mat-form-field>
+          </div>
+        </mat-card>
+        <mat-card class="management-product-detail-card">
+          <div class="button-flex-container">
+            <mat-form-field style="width: 25%">
+              <mat-label>Supplier ID</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="supplierId"
+              />
+              <mat-hint>*Required</mat-hint>
+              <mat-error>Supplier ID is <strong>required</strong></mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 25%">
+              <mat-label>Price</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="unitCost"
+                placeholder="2.99"
+              />
+              <mat-hint>*Required</mat-hint>
+              <mat-error>Price is <strong>required</strong></mat-error>
+              <mat-icon matSuffix>euro</mat-icon>
+            </mat-form-field>
+            <mat-form-field style="width: 25%">
+              <mat-label>Type</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="unitType"
+                placeholder="kg"
+              />
+            </mat-form-field>
+          </div>
+        </mat-card>
+      </mat-card>
+      <mat-card>
+        <div class="button-flex-container">
+          <button type="button" mat-raised-button color="warn" (click)="onCancel()">
+            Cancel
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="btn-success"
+            [disabled]="!productForm.valid"
+          >
+            Save
+          </button>
+        </div>
+      </mat-card>
+      <br><br><br><br>
+    </form>
+  </div>
+</div>

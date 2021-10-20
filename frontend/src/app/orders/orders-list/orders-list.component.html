@@ -1,0 +1,36 @@
+<mat-card style="margin: 1vh 1vw">
+  <mat-card-content class="text-center">
+    <span class="mat-display-3">My Orders</span>
+  </mat-card-content>
+</mat-card>
+<mat-card style="margin: 1vh 1vw; padding: 0">
+  <mat-card-title class="text-warning" style="padding: 1vh 1vw">
+    <span class="mat-display-1">Orders Pending</span>
+  </mat-card-title>
+  <mat-card-content>
+    <div
+      class="help-block alert alert-info"
+      routerLink="/cart"
+      *ngIf="pendingOrders.length === 0">
+      No pending orders found. Add products to cart and then proceed to make an order.
+    </div>
+    <app-orders-item
+      *ngFor="let order of pendingOrders"
+      [order]="order"></app-orders-item>
+  </mat-card-content>
+</mat-card>
+<mat-card style="margin: 2vh 1vw; padding: 0">
+  <mat-card-title class="text-success" style="padding: 1vh 1vw">
+    <span class="mat-display-1">Orders Confirmed</span>
+  </mat-card-title>
+  <mat-card-content>
+    <div
+      class="help-block alert alert-info"
+      *ngIf="confirmedOrders.length === 0">
+      No confirmed orders found.
+    </div>
+    <app-orders-item
+      *ngFor="let order of confirmedOrders"
+      [order]="order"></app-orders-item>
+  </mat-card-content>
+</mat-card>

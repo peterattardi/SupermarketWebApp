@@ -8,4 +8,4 @@ Frameworks and languages:
 
 Backend: Spring Boot, Mockito, JPA, mySQL;
 
-Fronted: Angular, CSS, Bootstrap, Material Design.
+Fronted: Angular, CSS, Typescript, Bootstrap, Material Design.

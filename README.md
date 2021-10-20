@@ -6,6 +6,8 @@ The goal of this project is to develop a web platform for supermarkets which wan
 
 Frameworks and languages:
 
-Backend: Spring Boot, Mockito, JPA, mySQL;
+Backend: Spring Boot, Mockito, JPA, mySQL.
 
 Fronted: Angular, CSS, Typescript, Bootstrap, Material Design.
+
+Connection Backend-Frontend: ngrok.
